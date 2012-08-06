@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<node name="LimitNode">
+    <property name="Output Columns">
+        <value>e1 (string)</value>
+        <value>e2 (integer)</value>
+    </property>
+    <property name="Cost Estimates">
+        <value>Estimated Node Cardinality: 100.0</value>
+    </property>
+    <property name="Child 0">
+        <node name="UnionAllNode">
+            <property name="Output Columns">
+                <value>e1 (string)</value>
+                <value>e2 (integer)</value>
+            </property>
+            <property name="Child 0">
+                <node name="AccessNode">
+                    <property name="Output Columns">
+                        <value>e1 (string)</value>
+                        <value>e2 (integer)</value>
+                    </property>
+                    <property name="Query">
+                        <value>SELECT g_0.e1, g_0.e2 FROM MarketData.G1 AS g_0</value>
+                    </property>
+                    <property name="Model Name">
+                        <value>MarketData</value>
+                    </property>
+                </node>
+            </property>
+            <property name="Child 1">
+                <node name="AccessNode">
+                    <property name="Output Columns">
+                        <value>e1 (string)</value>
+                        <value>e2 (integer)</value>
+                    </property>
+                    <property name="Query">
+                        <value>SELECT g_0.e1, g_0.e2 FROM MarketData.G1 AS g_0</value>
+                    </property>
+                    <property name="Model Name">
+                        <value>MarketData</value>
+                    </property>
+                </node>
+            </property>
+        </node>
+    </property>
+    <property name="Row Offset">
+        <value>null</value>
+    </property>
+    <property name="Row Limit">
+        <value>100</value>
+    </property>
+</node>
