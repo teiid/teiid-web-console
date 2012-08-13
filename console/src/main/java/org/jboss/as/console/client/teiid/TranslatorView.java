@@ -45,7 +45,7 @@ public class TranslatorView extends AbstractEntityView<Translator> implements Tr
 
     @Override
     public Widget createWidget() {
-        return createEmbeddableWidget();
+        return super.createWidget();
     }
 
     @Override
