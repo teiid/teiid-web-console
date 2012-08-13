@@ -47,7 +47,7 @@ public class SubsystemView extends AbstractEntityView<SubsystemConfiguration> im
 
     @Override
     public Widget createWidget() {
-        return createEmbeddableWidget();
+        return super.createWidget();
     }
 
     @Override
