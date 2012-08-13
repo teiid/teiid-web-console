@@ -44,7 +44,7 @@ public class TransportView extends AbstractEntityView<Transport> implements Tran
 
     @Override
     public Widget createWidget() {
-        return createEmbeddableWidget();
+        return super.createWidget();
     }
 
     @Override
