@@ -4,3 +4,9 @@
 *.jar
 *.war
 *.ear
+
+console/target
+console/war/WEB-INF
+console/war/app
+console/war/dmr_gwt
+
