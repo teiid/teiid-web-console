@@ -28,7 +28,7 @@ import org.jboss.as.console.client.teiid.model.VDB;
 import org.jboss.as.console.client.teiid.model.ValidityError;
 import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.as.console.client.widgets.forms.EntityAdapter;
-import org.jboss.as.console.spi.RuntimeLHSItemExtension;
+import org.jboss.as.console.spi.RuntimeExtension;
 import org.jboss.dmr.client.ModelNode;
 
 import com.google.gwt.core.client.Scheduler;
@@ -59,7 +59,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	
     @ProxyCodeSplit
     @NameToken("vdb-runtime")
-    @RuntimeLHSItemExtension(name="VDBS", group="Teiid", key="teiid")
+    @RuntimeExtension(name="VDBS", key="teiid")
     public interface MyProxy extends Proxy<VDBPresenter>, Place {
     }
 
@@ -122,11 +122,11 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     public void prepareFromRequest(PlaceRequest request) {
         //String name = request.getParameter("name", null);
         System.out.println("prepareFromRequest: vdb="+request.getParameterNames());
-    }    
-    
+    }
 
-	@Override
-	public void onServerSelection(String hostName, ServerInstance server) {
+
+    @Override
+    public void onServerSelection(String s, ServerInstance serverInstance, ServerSelectionEvent.Source source) {
 		Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {

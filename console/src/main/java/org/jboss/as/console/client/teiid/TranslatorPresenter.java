@@ -20,7 +20,6 @@ package org.jboss.as.console.client.teiid;
 
 import org.jboss.as.console.client.shared.subsys.RevealStrategy;
 import org.jboss.as.console.client.shared.viewframework.FrameworkView;
-import org.jboss.as.console.spi.Subsystem;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.inject.Inject;
@@ -30,13 +29,14 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.Proxy;
+import org.jboss.as.console.spi.SubsystemExtension;
 
 public class TranslatorPresenter extends Presenter<TranslatorPresenter.MyView, TranslatorPresenter.MyProxy>{
     private final RevealStrategy revealStrategy;
 
     @ProxyCodeSplit
     @NameToken("teiid-translators")
-    @Subsystem(name="Translators", group = "Teiid", key="teiid")
+    @SubsystemExtension(name="Translators", group = "Teiid", key="teiid")
     public interface MyProxy extends Proxy<TranslatorPresenter>, Place {
     }
 
