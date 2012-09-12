@@ -55,7 +55,7 @@ public class TranslatorView extends AbstractEntityView<Translator> implements Tr
 
     @Override
     protected DefaultCellTable<Translator> makeEntityTable() {
-        DefaultCellTable<Translator> table = new DefaultCellTable<Translator>(4);
+        DefaultCellTable<Translator> table = new DefaultCellTable<Translator>(5);
 
         table.addColumn(new NameColumn(), NameColumn.LABEL);
 
