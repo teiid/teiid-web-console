@@ -165,23 +165,23 @@ public interface SubsystemConfiguration {
     // cache settings
     @Binding(detypedName= "preparedplan-cache-enable")
     @FormItem(label="Enable", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", localTabName = "", tabName="Prepared Plan Cache")
-    public Boolean isPPCEnable();
-    public void setPPCEnable(Boolean flag); 
+    public Boolean isPpcEnable();
+    public void setPpcEnable(Boolean flag); 
     
     @Binding(detypedName="preparedplan-cache-name")
     @FormItem(label="Infinispan Cache Name", required=false, localTabName = "", tabName="Prepared Plan Cache")
-    public String getPPCName();
-    public void setPPCName(String str);    
+    public String getPpcName();
+    public void setPpcName(String str);    
     
     @Binding(detypedName="preparedplan-cache-infinispan-container")
     @FormItem(label="Infinispan Cache Container Name", required=false, localTabName = "", tabName="Prepared Plan Cache")
-    public String getPPCContainerName();
-    public void setPPCContainerName(String str);
+    public String getPpcContainerName();
+    public void setPpcContainerName(String str);
     
     @Binding(detypedName="distributed-cache-jgroups-stack")
     @FormItem(label="JGroups Stack", required=false, localTabName = "", tabName="Distributed Cache")
-    public String getDCJGroupsStack();
-    public void setDCJGroupsStack(String str);    
+    public String getDcJGroupsStack();
+    public void setDcJGroupsStack(String str);    
     
     @Binding(detypedName="distributed-cache-channel")
     @FormItem(label="Infinispan Channel", required=false, localTabName = "", tabName="Distributed Cache")
@@ -190,21 +190,21 @@ public interface SubsystemConfiguration {
     
     @Binding(detypedName= "resultset-cache-enable")
     @FormItem(label="Enable", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", localTabName = "", tabName="Resultset Cache")
-    public Boolean isRSCEnable();
-    public void setRSCEnable(Boolean flag); 
+    public Boolean isRscEnable();
+    public void setRscEnable(Boolean flag); 
     
     @Binding(detypedName="resultset-cache-name")
     @FormItem(label="Infinispan Cache Name", required=false, localTabName = "", tabName="Resultset Cache")
-    public String getRSCName();
-    public void setRSCName(String str);    
+    public String getRscName();
+    public void setRscName(String str);    
     
     @Binding(detypedName="resultset-cache-infinispan-container")
     @FormItem(label="Infinispan Cache Container Name", required=false, localTabName = "", tabName="Resultset Cache")
-    public String getRSCContainerName();
-    public void setRSCContainerName(String str);   
+    public String getRscContainerName();
+    public void setRscContainerName(String str);   
     
     @Binding(detypedName="resultset-cache-max-staleness")
     @FormItem(label="Max Staleness", required=false, formItemTypeForEdit="NUMBER_BOX_ALLOW_NEGATIVE", formItemTypeForAdd="NUMBER_BOX_ALLOW_NEGATIVE", localTabName = "", tabName="Resultset Cache")
-    public Integer getRSCMaxStaleness();
-    public void setRSCMaxStaleness(Integer str);     
+    public Integer getRscMaxStaleness();
+    public void setRscMaxStaleness(Integer str);     
 }

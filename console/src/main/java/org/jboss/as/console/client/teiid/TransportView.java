@@ -40,6 +40,7 @@ public class TransportView extends AbstractEntityView<Transport> implements Tran
     public TransportView(ApplicationMetaData propertyMetaData, DispatchAsync dispatcher) {
         super(Transport.class, propertyMetaData);
         bridge = new EntityToDmrBridgeImpl<Transport>(propertyMetaData, Transport.class, this, dispatcher);
+        setDescription("Tranport provides a mechanism to connect to Teiid, For ex: jdbc, odbc connections");
     }
 
     @Override
@@ -65,24 +66,10 @@ public class TransportView extends AbstractEntityView<Transport> implements Tran
         Form<Transport> form = new Form<Transport>(Transport.class);
         form.setNumColumns(1);
 
-        form.setFields(formMetaData.findAttribute("name").getFormItemForAdd(),
-                       formMetaData.findAttribute("protocol").getFormItemForAdd(),
-                       formMetaData.findAttribute("socketBinding").getFormItemForAdd(),
-                       formMetaData.findAttribute("maxSocketThreads").getFormItemForAdd(),
-                       formMetaData.findAttribute("authenticationDomain").getFormItemForAdd(),
-                       formMetaData.findAttribute("maxSessionsAllowed").getFormItemForAdd(),
-                       formMetaData.findAttribute("sessionExpirationTime").getFormItemForAdd(),
-                       formMetaData.findAttribute("sSLEnabled").getFormItemForAdd(),
-                       formMetaData.findAttribute("sSLMode").getFormItemForAdd(),
-                       formMetaData.findAttribute("sSLAuthMode").getFormItemForAdd(),
-                       formMetaData.findAttribute("sSLProtocol").getFormItemForAdd(),
-                       formMetaData.findAttribute("keyManagementAlgorithm").getFormItemForAdd(),
-                       formMetaData.findAttribute("enabledCipherSuites").getFormItemForAdd(),
-                       formMetaData.findAttribute("keystoreName").getFormItemForAdd(),
-                       formMetaData.findAttribute("keystorePassword").getFormItemForAdd(),
-                       formMetaData.findAttribute("keystoreType").getFormItemForAdd(),
-                       formMetaData.findAttribute("truststoreName").getFormItemForAdd(),
-                       formMetaData.findAttribute("truststorePassword").getFormItemForAdd());
+        form.setFields(formMetaData.findAttribute("name").getFormItemForAdd(),  //$NON-NLS-1$
+                       formMetaData.findAttribute("protocol").getFormItemForAdd(),//$NON-NLS-1$
+                       formMetaData.findAttribute("socketBinding").getFormItemForAdd(),//$NON-NLS-1$
+                       formMetaData.findAttribute("authenticationDomain").getFormItemForAdd());//$NON-NLS-1$
         return form;
     }  
     
