@@ -30,93 +30,93 @@ import org.jboss.as.console.client.widgets.forms.FormItem;
 public interface Transport extends NamedEntity {
     @Override
     @Binding(detypedName="name", key=true)
-    @FormItem(label="Name", required=true, tabName="subsys_teiid_common")
+    @FormItem(label="Name", required=true, localTabName = "", tabName="Common", order=1)
     public String getName();
     @Override
     public void setName(String str);
 
     @Binding(detypedName="protocol")
-    @FormItem(label="Wire Protocol", required=true, formItemTypeForEdit="COMBO_BOX", formItemTypeForAdd="COMBO_BOX", acceptedValues= {"teiid", "pg"}, defaultValue="teiid", tabName="subsys_teiid_common")
+    @FormItem(label="Wire Protocol", required=true, formItemTypeForEdit="COMBO_BOX", formItemTypeForAdd="COMBO_BOX", acceptedValues= {"teiid", "pg"}, defaultValue="teiid", localTabName = "", tabName="Common")
     public String getProtocol();
     public void setProtocol(String str);
     
     @Binding(detypedName="socket-binding")
-    @FormItem(label="Socket Binding", tabName="subsys_teiid_common")
+    @FormItem(label="Socket Binding", localTabName = "", tabName="Common")
     public String getSocketBinding();
     public void setSocketBinding(String str);
     
     @Binding(detypedName="max-socket-threads")
-    @FormItem(label="Max Socket Threads", formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_common", defaultValue="0")
+    @FormItem(label="Max Socket Threads", formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="Common", defaultValue="0")
     public Integer getMaxSocketThreads();
     public void setMaxSocketThreads(Integer i);
     
     @Binding(detypedName="authentication-security-domain")
-    @FormItem(label="Authentication Domain", tabName="subsys_teiid_common")
+    @FormItem(label="Authentication Domain", localTabName = "", tabName="Common")
     public String getAuthenticationDomain();
     public void setAuthenticationDomain(String str);
     
     @Binding(detypedName="authentication-max-sessions-allowed")
-    @FormItem(label="Max Sessions Allowed", formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", defaultValue="5000", tabName="subsys_teiid_common")
+    @FormItem(label="Max Sessions Allowed", formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", defaultValue="5000", localTabName = "", tabName="Common")
     public Integer getMaxSessionsAllowed();
     public void setMaxSessionsAllowed(Integer i); 
 
     @Binding(detypedName="authentication-sessions-expiration-timelimit")
-    @FormItem(label="Session Expiration Time Limit", formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", defaultValue="0", tabName="subsys_teiid_common")
+    @FormItem(label="Session Expiration Time Limit", formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", defaultValue="0", localTabName = "", tabName="Common")
     public Integer getSessionExpirationTime();
     public void setSessionExpirationTime(Integer i);   
     
     @Binding(detypedName= "ssl-enable")
-    @FormItem(label="SSL Enabled", required=false, tabName="subsys_teiid_ssl", formItemTypeForEdit="CHECK_BOX", defaultValue="false", formItemTypeForAdd="CHECK_BOX", order=1)
+    @FormItem(label="SSL Enabled", required=false, localTabName = "", tabName="SSL", formItemTypeForEdit="CHECK_BOX", defaultValue="false", formItemTypeForAdd="CHECK_BOX", order=1)
     public Boolean isSSLEnabled();
     public void setSSLEnabled(Boolean b); 
     
     @Binding(detypedName="ssl-mode")
-    @FormItem(label="Mode", tabName="subsys_teiid_ssl", formItemTypeForEdit="COMBO_BOX", formItemTypeForAdd="COMBO_BOX", acceptedValues= {"logIn", "disabled", "enabled"}, order=2)
+    @FormItem(label="Mode", localTabName = "", tabName="SSL", formItemTypeForEdit="COMBO_BOX", formItemTypeForAdd="COMBO_BOX", acceptedValues= {"logIn", "disabled", "enabled"}, order=2)
     public String getSSLMode();
     public void setSSLMode(String str);    
     
     @Binding(detypedName="ssl-authentication-mode")
-    @FormItem(label="Auth Mode", tabName="subsys_teiid_ssl", formItemTypeForEdit="COMBO_BOX", formItemTypeForAdd="COMBO_BOX", acceptedValues= {"1-way", "2-way", "anonymous"}, order=3)
+    @FormItem(label="Auth Mode", localTabName = "", tabName="SSL", formItemTypeForEdit="COMBO_BOX", formItemTypeForAdd="COMBO_BOX", acceptedValues= {"1-way", "2-way", "anonymous"}, order=3)
     public String getSSLAuthMode();
     public void setSSLAuthMode(String str);    
     
     @Binding(detypedName="ssl-ssl-protocol")
-    @FormItem(label="Protocol", tabName="subsys_teiid_ssl", order=4)
+    @FormItem(label="Protocol", localTabName = "", tabName="SSL", order=4)
     public String getSSLProtocol();
     public void setSSLProtocol(String str);     
     
     @Binding(detypedName="ssl-keymanagement-algorithm")
-    @FormItem(label="Key Management Algorithm", tabName="subsys_teiid_ssl", order=5)
+    @FormItem(label="Key Management Algorithm", localTabName = "", tabName="SSL", order=5)
     public String getKeyManagementAlgorithm();
     public void setKeyManagementAlgorithm(String str);    
     
     @Binding(detypedName="enabled-cipher-suites")
-    @FormItem(label="Enabled Cipher Suites", tabName="subsys_teiid_ssl", order=6)
+    @FormItem(label="Enabled Cipher Suites", localTabName = "", tabName="SSL", order=6)
     public String getEnabledCipherSuites();
     public void setEnabledCipherSuites(String str);    
     
     @Binding(detypedName="keystore-name")
-    @FormItem(label="Keystore Name", tabName="subsys_teiid_ssl", order=7)
+    @FormItem(label="Keystore Name", localTabName = "", tabName="SSL", order=7)
     public String getKeystoreName();
     public void setKeystoreName(String str);  
     
     @Binding(detypedName="keystore-password")
-    @FormItem(label="Keystore Password", tabName="subsys_teiid_ssl", order=7)
+    @FormItem(label="Keystore Password", localTabName = "", tabName="SSL", order=7)
     public String getKeystorePassword();
     public void setKeystorePassword(String str);  
     
     @Binding(detypedName="keystore-type")
-    @FormItem(label="Keystore Type", tabName="subsys_teiid_ssl", order=8)
+    @FormItem(label="Keystore Type", localTabName = "", tabName="SSL", order=8)
     public String getKeystoreType();
     public void setKeystoreType(String str);   
     
     @Binding(detypedName="truststore-name")
-    @FormItem(label="Truststore Name", tabName="subsys_teiid_ssl", order=9)
+    @FormItem(label="Truststore Name", localTabName = "", tabName="SSL", order=9)
     public String getTruststoreName();
     public void setTruststoreName(String str);  
     
     @Binding(detypedName="keystore-password")
-    @FormItem(label="Keystore Password", tabName="subsys_teiid_ssl", order=10)
+    @FormItem(label="Keystore Password", localTabName = "", tabName="SSL", order=10)
     public String getTruststorePassword();
     public void setTruststorePassword(String str);     
 }

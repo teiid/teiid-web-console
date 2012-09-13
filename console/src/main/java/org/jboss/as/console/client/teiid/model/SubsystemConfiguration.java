@@ -24,199 +24,187 @@ import org.jboss.as.console.client.widgets.forms.FormItem;
 
 /**
  * Model for a Engine
- *
+ * the deprecated "localLabel" and "localTabName" with empty strings are required to workaround the i18n issues that are not
+ * fixed.
  */
 @Address("/subsystem=teiid")
 public interface SubsystemConfiguration {
-	
-    @Binding(detypedName="async-thread-pool")
-    @FormItem(label="Asynchronous Thread Pool", required=true, tabName="subsys_teiid_common")
-    public String getAsyncThreadPool();
-    public void setAsyncThreadPool(String pool);
-    
+	    
     @Binding(detypedName= "allow-env-function")
-    @FormItem(label="Allow ENV Function", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX",tabName="subsys_teiid_common")
+    @FormItem(label="Allow ENV Function", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX",localTabName = "", tabName="Common")
     public Boolean isAllowEnvFunction();
     public void setAllowEnvFunction(Boolean allow);    
     
+    @Binding(detypedName="async-thread-pool")
+    @FormItem(label="Asynchronous Thread Pool", required=true, localTabName = "", tabName="Threads")
+    public String getAsyncThreadPool();
+    public void setAsyncThreadPool(String pool);
+    
     @Binding(detypedName="max-threads")
-    @FormItem(label="Max Threads", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_common")
+    @FormItem(label="Max Threads", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="Threads")
     public Integer getMaxThreads();
     public void setMaxThreads(Integer i);  
     
     @Binding(detypedName="max-active-plans")
-    @FormItem(label="Max Active Plans", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_common")
+    @FormItem(label="Max Active Plans", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="Threads")
     public Integer getMaxActivePlans();
     public void setMaxActivePlans(Integer i);
-
     
     @Binding(detypedName="thread-count-for-source-concurrency")
-    @FormItem(label="Max # Source Concurrent Threads", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_common")
+    @FormItem(label="Max # Source Concurrent Threads", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="Threads")
     public Integer getMaxConcurrentThreads();
     public void setMaxConcurrentThreads(Integer i);
     
     @Binding(detypedName="time-slice-in-millseconds")
-    @FormItem(label="Time Slice", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_common")
+    @FormItem(label="Time Slice", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="Threads")
     public Integer getTimeSlice();
     public void setTimeSlice(Integer i);    
     
     
     @Binding(detypedName="max-row-fetch-size")
-    @FormItem(label="Max Rows Fetch Size", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_common")
+    @FormItem(label="Max Rows Fetch Size", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="Common")
     public Integer getMaxRowsFetchSize();
     public void setMaxRowsFetchSize(Integer i);    
     
     @Binding(detypedName="lob-chunk-size-in-kb")
-    @FormItem(label="Lob Chunk Size", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_common")
+    @FormItem(label="Lob Chunk Size", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="Common")
     public Integer getLobChunkSize();
     public void setLobChunkSize(Integer i);
     
     @Binding(detypedName="query-threshold-in-seconds")
-    @FormItem(label="Query Threshhold", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_common")
+    @FormItem(label="Query Threshhold", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="Common")
     public Integer getQueryThreshold();
     public void setQueryThreshold(Integer i);
     
     @Binding(detypedName="max-source-rows-allowed")
-    @FormItem(label="Max Source Rows", required=false, formItemTypeForEdit="NUMBER_BOX_ALLOW_NEGATIVE", formItemTypeForAdd="NUMBER_BOX_ALLOW_NEGATIVE", tabName="subsys_teiid_common")
+    @FormItem(label="Max Source Rows", required=false, formItemTypeForEdit="NUMBER_BOX_ALLOW_NEGATIVE", formItemTypeForAdd="NUMBER_BOX_ALLOW_NEGATIVE", localTabName = "", tabName="Common")
     public Integer getMaxSourceRows();
     public void setMaxSourceRows(Integer i);
     
     @Binding(detypedName= "exception-on-max-source-rows")
-    @FormItem(label="Throw Exception on Max Source Rows", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", tabName="subsys_teiid_common")
+    @FormItem(label="Throw Exception on Max Source Rows", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", localTabName = "", tabName="Common")
     public Boolean isThrowExceptionOnMaxSourceRows();
     public void setThrowExceptionOnMaxSourceRows(Boolean allow);
     
     @Binding(detypedName= "detect-change-events")
-    @FormItem(label="Detect Change Event", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", tabName="subsys_teiid_common")
+    @FormItem(label="Detect Change Event", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", localTabName = "", tabName="Common")
     public Boolean isDetectChangeEvents();
     public void setDetectChangeEvents(Boolean allow);    
     
     @Binding(detypedName="query-timeout")
-    @FormItem(label="Query Timeout", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_common")
+    @FormItem(label="Query Timeout", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="Common")
     public Long getQueryTimeout();
     public void setQueryTimeout(Long i);   
     
     @Binding(detypedName="workmanager")
-    @FormItem(label="Work Manager", required=false, tabName="subsys_teiid_common")
+    @FormItem(label="Work Manager", required=false, localTabName = "", tabName="Threads")
     public String getWorkManager();
     public void setWorkManager(String pool);    
     
     // buffer manager stuff
     @Binding(detypedName= "buffer-service-use-disk")
-    @FormItem(label="Use Disk", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", tabName="subsys_teiid_buffermanager")
+    @FormItem(label="Use Disk", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", localTabName = "", tabName="BufferManager")
     public Boolean isUseDisk();
     public void setUseDisk(Boolean allow); 
     
     @Binding(detypedName="buffer-service-processor-batch-size")
-    @FormItem(label="Processor Batch Size", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_buffermanager")
+    @FormItem(label="Processor Batch Size", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="BufferManager", subgroup="Batch Sizes")
     public Integer getProcessorBatchSize();
     public void setProcessorBatchSize(Integer i);
     
     @Binding(detypedName="buffer-service-connector-batch-size")
-    @FormItem(label="Connector Batch Size", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_buffermanager")
+    @FormItem(label="Connector Batch Size", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="BufferManager", subgroup="Batch Sizes")
     public Integer getConnectorBatchSize();
     public void setConnectorBatchSize(Integer i);
     
     @Binding(detypedName="buffer-service-max-processing-kb")
-    @FormItem(label="Max Processing Size(KB)", required=false, formItemTypeForEdit="NUMBER_BOX_ALLOW_NEGATIVE", formItemTypeForAdd="NUMBER_BOX_ALLOW_NEGATIVE", tabName="subsys_teiid_buffermanager")
+    @FormItem(label="Max Processing Size(KB)", required=false, formItemTypeForEdit="NUMBER_BOX_ALLOW_NEGATIVE", formItemTypeForAdd="NUMBER_BOX_ALLOW_NEGATIVE", localTabName = "", tabName="BufferManager")
     public Integer getMaxProcessingSize();
     public void setMaxProcessingSize(Integer i);
     
     @Binding(detypedName="buffer-service-max-reserve-kb")
-    @FormItem(label="Max Reserve Size(KB)", required=false, formItemTypeForEdit="NUMBER_BOX_ALLOW_NEGATIVE", formItemTypeForAdd="NUMBER_BOX_ALLOW_NEGATIVE", tabName="subsys_teiid_buffermanager")
+    @FormItem(label="Max Reserved Memory(KB)", required=false, formItemTypeForEdit="NUMBER_BOX_ALLOW_NEGATIVE", formItemTypeForAdd="NUMBER_BOX_ALLOW_NEGATIVE", localTabName = "", tabName="BufferManager")
     public Integer getMaxReserveSize();
     public void setMaxReserveSize(Integer i);
     
     @Binding(detypedName="buffer-service-max-file-size")
-    @FormItem(label="Max File Size", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_buffermanager")
+    @FormItem(label="Max Buffer File Size (MB)", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="BufferManager")
     public Long getMaxFileSize();
     public void setMaxFileSize(Long i);
     
     @Binding(detypedName="buffer-service-max-buffer-space")
-    @FormItem(label="Max Buffer Size", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_buffermanager")
+    @FormItem(label="Max Storage Space(MB)", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="BufferManager")
     public Long getMaxBufferSize();
     public void setMaxBufferSize(Long i);
     
     @Binding(detypedName="buffer-service-max-open-files")
-    @FormItem(label="Max Reserve Size(KB)", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_buffermanager")
+    @FormItem(label="Max Open Files", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="BufferManager")
     public Integer getMaxOpenFiles();
     public void setMaxOpenFiles(Integer i);    
     
     @Binding(detypedName="buffer-service-memory-buffer-space")
-    @FormItem(label="Direct Memory Size", required=false, formItemTypeForEdit="NUMBER_BOX_ALLOW_NEGATIVE", formItemTypeForAdd="NUMBER_BOX_ALLOW_NEGATIVE", tabName="subsys_teiid_buffermanager")
+    @FormItem(label="Direct Memory Size(MB)", required=false, formItemTypeForEdit="NUMBER_BOX_ALLOW_NEGATIVE", formItemTypeForAdd="NUMBER_BOX_ALLOW_NEGATIVE", localTabName = "", tabName="BufferManager")
     public Integer getDirectMemorySize();
     public void setDirectMemorySize(Integer i);    
     
     @Binding(detypedName= "buffer-service-memory-buffer-off-heap")
-    @FormItem(label="Use Off Heap Memory", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", tabName="subsys_teiid_buffermanager")
+    @FormItem(label="Use Off Heap Memory", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", localTabName = "", tabName="BufferManager")
     public Boolean isUseOffHeapMemory();
     public void setUseOffHeapMemory(Boolean allow); 
     
     @Binding(detypedName="buffer-service-max-storage-object-size")
-    @FormItem(label="Max Object Storage Size", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_buffermanager")
+    @FormItem(label="Max Single Object Storage Size(bytes)", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="BufferManager")
     public Integer getObjectStorageSize();
     public void setObjectStorageSize(Integer i);    
     
     @Binding(detypedName= "buffer-service-inline-lobs")
-    @FormItem(label="Inline LOBs", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", tabName="subsys_teiid_buffermanager")
+    @FormItem(label="Inline LOBs", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", localTabName = "", tabName="BufferManager")
     public Boolean isInlineLobs();
     public void setInlineLobs(Boolean allow);   
     
     // cache settings
-    @Binding(detypedName="preparedplan-cache-max-entries")
-    @FormItem(label="Max Entries", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_cache", subgroup="subsys_teiid_pp_cache")
-    public Integer getPPCacheMaxEntries();
-    public void setPPCacheMaxEntries(Integer i);     
+    @Binding(detypedName= "preparedplan-cache-enable")
+    @FormItem(label="Enable", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", localTabName = "", tabName="Prepared Plan Cache")
+    public Boolean isPPCEnable();
+    public void setPPCEnable(Boolean flag); 
     
-    @Binding(detypedName="preparedplan-cache-max-age-in-seconds")
-    @FormItem(label="Max Age(secs)", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", tabName="subsys_teiid_cache", subgroup="subsys_teiid_pp_cache")
-    public Integer getPPCacheMaxAge();
-    public void setPPCacheMaxAge(Integer i);  
+    @Binding(detypedName="preparedplan-cache-name")
+    @FormItem(label="Infinispan Cache Name", required=false, localTabName = "", tabName="Prepared Plan Cache")
+    public String getPPCName();
+    public void setPPCName(String str);    
+    
+    @Binding(detypedName="preparedplan-cache-infinispan-container")
+    @FormItem(label="Infinispan Cache Container Name", required=false, localTabName = "", tabName="Prepared Plan Cache")
+    public String getPPCContainerName();
+    public void setPPCContainerName(String str);
     
     @Binding(detypedName="distributed-cache-jgroups-stack")
-    @FormItem(label="JGroups Stack", required=false, tabName="subsys_teiid_cache", subgroup="subsys_teiid_ds_cache")
+    @FormItem(label="JGroups Stack", required=false, localTabName = "", tabName="Distributed Cache")
     public String getDCJGroupsStack();
     public void setDCJGroupsStack(String str);    
     
     @Binding(detypedName="distributed-cache-channel")
-    @FormItem(label="Infinispan Channel", required=false, tabName="subsys_teiid_cache", subgroup="subsys_teiid_ds_cache")
+    @FormItem(label="Infinispan Channel", required=false, localTabName = "", tabName="Distributed Cache")
     public String getInfinispanChannel();
     public void setInfinispanChannel(String str);     
     
     @Binding(detypedName= "resultset-cache-enable")
-    @FormItem(label="Enable", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", tabName="subsys_teiid_cache", subgroup="subsys_teiid_rs_cache")
+    @FormItem(label="Enable", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", localTabName = "", tabName="Resultset Cache")
     public Boolean isRSCEnable();
     public void setRSCEnable(Boolean flag); 
     
     @Binding(detypedName="resultset-cache-name")
-    @FormItem(label="Infinispan Cache Name", required=false, tabName="subsys_teiid_cache", subgroup="subsys_teiid_rs_cache")
+    @FormItem(label="Infinispan Cache Name", required=false, localTabName = "", tabName="Resultset Cache")
     public String getRSCName();
     public void setRSCName(String str);    
     
-    @Binding(detypedName="resultset-cache-container-name")
-    @FormItem(label="Infinispan Cache Container Name", required=false, tabName="subsys_teiid_cache", subgroup="subsys_teiid_rs_cache")
+    @Binding(detypedName="resultset-cache-infinispan-container")
+    @FormItem(label="Infinispan Cache Container Name", required=false, localTabName = "", tabName="Resultset Cache")
     public String getRSCContainerName();
     public void setRSCContainerName(String str);   
     
     @Binding(detypedName="resultset-cache-max-staleness")
-    @FormItem(label="Max Staleness", required=false, formItemTypeForEdit="NUMBER_BOX_ALLOW_NEGATIVE", formItemTypeForAdd="NUMBER_BOX_ALLOW_NEGATIVE", tabName="subsys_teiid_cache", subgroup="subsys_teiid_rs_cache")
+    @FormItem(label="Max Staleness", required=false, formItemTypeForEdit="NUMBER_BOX_ALLOW_NEGATIVE", formItemTypeForAdd="NUMBER_BOX_ALLOW_NEGATIVE", localTabName = "", tabName="Resultset Cache")
     public Integer getRSCMaxStaleness();
     public void setRSCMaxStaleness(Integer str);     
-    
-    // modules
-//    @Binding(detypedName="policy-decider-module")
-//    @FormItem(label="Policy Decider Module", required=false, tabName="subsys_teiid_extensions")
-//    public String getPolicyDeciderModules();
-//    public void setPolicyDeciderModule(String s); 
-//    
-//    @Binding(detypedName="authorization-validator-module")
-//    @FormItem(label="Authorization Validator Module", required=false, tabName="subsys_teiid_extensions")
-//    public String getAuthValidatorModule();
-//    public void setAuthValidatorModule(String s); 
-//    
-//    @Binding(detypedName="metadata-repository-module")
-//    @FormItem(label="Metadata Repository Module", required=false, tabName="subsys_teiid_extensions")
-//    public String getMetadaRepositoryModule();
-//    public void setMetadaRepositoryModule(String s); 
-    
 }
