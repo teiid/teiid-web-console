@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <modelVersion>4.0.0</modelVersion>
-    <name>Console</name>
+    <name>Teiid Console</name>
     <groupId>org.jboss.teiid</groupId>
     <artifactId>console</artifactId>
     <packaging>war</packaging>
@@ -124,7 +124,7 @@
 
     <!-- Plugins -->
     <build>
-        <finalName>extension-${project.artifactId}</finalName>
+        <finalName>teiid-${project.artifactId}</finalName>
         <outputDirectory>war/WEB-INF/classes</outputDirectory>
 
         <resources>
@@ -219,6 +219,7 @@
                 <version>2.2.1</version>
                 <configuration>
                     <descriptors>
+                        <descriptor>scripts/assembly.xml</descriptor>
                         <descriptor>scripts/export.xml</descriptor>
                     </descriptors>
                 </configuration>
@@ -257,11 +258,7 @@
                         <configuration>
                             <outputDiagnostics>false</outputDiagnostics>
                             <processors>
-                                <processor>org.jboss.as.console.spi.ExtensionProcessor</processor>
-                                <processor>org.jboss.as.console.spi.ExtensionBindingProcessor</processor>
-                                <processor>org.jboss.as.console.spi.BeanFactoryProcessor</processor>
-                                <processor>org.jboss.as.console.spi.SubsystemProcessor</processor>
-                                <processor>org.jboss.as.console.spi.RuntimeExtensionProcessor</processor>
+                                <processor>org.jboss.as.console.spi.SPIProcessor</processor>
                             </processors>
                         </configuration>
                     </execution>
