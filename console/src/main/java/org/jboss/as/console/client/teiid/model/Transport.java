@@ -41,7 +41,7 @@ public interface Transport extends NamedEntity {
     public void setProtocol(String str);
     
     @Binding(detypedName="socket-binding")
-    @FormItem(label="Socket Binding", localTabName = "", tabName="Common")
+    @FormItem(label="Socket Binding Name (refers to port)", localTabName = "", tabName="Common")
     public String getSocketBinding();
     public void setSocketBinding(String str);
     
@@ -51,7 +51,7 @@ public interface Transport extends NamedEntity {
     public void setMaxSocketThreads(Integer i);
     
     @Binding(detypedName="authentication-security-domain")
-    @FormItem(label="Authentication Domain", localTabName = "", tabName="Common")
+    @FormItem(label="Authentication Security Domain", localTabName = "", tabName="Common")
     public String getAuthenticationDomain();
     public void setAuthenticationDomain(String str);
     
@@ -67,23 +67,23 @@ public interface Transport extends NamedEntity {
     
     @Binding(detypedName= "ssl-enable")
     @FormItem(label="SSL Enabled", required=false, localTabName = "", tabName="SSL", formItemTypeForEdit="CHECK_BOX", defaultValue="false", formItemTypeForAdd="CHECK_BOX", order=1)
-    public Boolean isSSLEnabled();
-    public void setSSLEnabled(Boolean b); 
+    public Boolean isSslEnabled();
+    public void setSslEnabled(Boolean b); 
     
     @Binding(detypedName="ssl-mode")
     @FormItem(label="Mode", localTabName = "", tabName="SSL", formItemTypeForEdit="COMBO_BOX", formItemTypeForAdd="COMBO_BOX", acceptedValues= {"logIn", "disabled", "enabled"}, order=2)
-    public String getSSLMode();
-    public void setSSLMode(String str);    
+    public String getSslMode();
+    public void setSslMode(String str);    
     
     @Binding(detypedName="ssl-authentication-mode")
     @FormItem(label="Auth Mode", localTabName = "", tabName="SSL", formItemTypeForEdit="COMBO_BOX", formItemTypeForAdd="COMBO_BOX", acceptedValues= {"1-way", "2-way", "anonymous"}, order=3)
-    public String getSSLAuthMode();
-    public void setSSLAuthMode(String str);    
+    public String getSslAuthMode();
+    public void setSslAuthMode(String str);    
     
     @Binding(detypedName="ssl-ssl-protocol")
     @FormItem(label="Protocol", localTabName = "", tabName="SSL", order=4)
-    public String getSSLProtocol();
-    public void setSSLProtocol(String str);     
+    public String getSslProtocol();
+    public void setSslProtocol(String str);     
     
     @Binding(detypedName="ssl-keymanagement-algorithm")
     @FormItem(label="Key Management Algorithm", localTabName = "", tabName="SSL", order=5)

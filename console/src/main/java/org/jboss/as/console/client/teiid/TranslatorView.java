@@ -41,6 +41,7 @@ public class TranslatorView extends AbstractEntityView<Translator> implements Tr
     public TranslatorView(ApplicationMetaData propertyMetaData, DispatchAsync dispatcher) {
         super(Translator.class, propertyMetaData);
         bridge = new EntityToDmrBridgeImpl<Translator>(propertyMetaData, Translator.class, this, dispatcher);
+        setDescription("Provides translation services for physical sources, which can be integrated using a Teiid's VDB");
     }
 
     @Override
