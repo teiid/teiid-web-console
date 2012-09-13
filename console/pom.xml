@@ -124,7 +124,7 @@
 
     <!-- Plugins -->
     <build>
-        <finalName>teiid-${project.artifactId}</finalName>
+        <finalName>teiid-${project.artifactId}-${project.version}</finalName>
         <outputDirectory>war/WEB-INF/classes</outputDirectory>
 
         <resources>

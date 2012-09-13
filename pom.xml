@@ -34,7 +34,7 @@
 
     <modules>
         <module>console</module>
-        <!--module>as7-application</module-->
+        <module>build</module>
     </modules>
 
     <!-- Repositories -->
