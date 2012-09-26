@@ -40,7 +40,7 @@ public class TransportView extends AbstractEntityView<Transport> implements Tran
     public TransportView(ApplicationMetaData propertyMetaData, DispatchAsync dispatcher) {
         super(Transport.class, propertyMetaData);
         bridge = new EntityToDmrBridgeImpl<Transport>(propertyMetaData, Transport.class, this, dispatcher);
-        setDescription("Tranport provides a mechanism to connect to Teiid, For ex: jdbc, odbc connections");
+        setDescription("Transport provides a mechanism to connect to Teiid, For ex: jdbc, odbc connections");
     }
 
     @Override
