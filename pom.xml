@@ -20,7 +20,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <name>Teiid Console Parent</name>
+    <name>Teiid Console :: Parent</name>
     <groupId>org.jboss.teiid</groupId>
     <artifactId>teiid-console-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
@@ -33,8 +33,9 @@
     </properties>
 
     <modules>
-        <module>console</module>
-        <module>build</module>
+        <module>gui</module>
+        <module>app</module>
+        <module>dist</module>
     </modules>
 
     <!-- Repositories -->

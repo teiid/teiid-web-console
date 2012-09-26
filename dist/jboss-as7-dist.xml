@@ -1,0 +1,42 @@
+<!--This script builds a zip for Teiid Server Installation -->
+<assembly>
+  
+  <id>jboss-as7</id>
+  
+  <formats>
+    <format>zip</format>
+  </formats>
+  
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+          
+    <fileSet>
+        <directory>target/kits/jboss-as7</directory>
+        <outputDirectory>/</outputDirectory>      
+        <includes>
+          <include>**/*.sh</include>
+        </includes>   
+        <fileMode>755</fileMode>  
+        <directoryMode>0755</directoryMode>    
+    </fileSet> 
+          
+    <fileSet>
+        <directory>target/kits/jboss-as7</directory>
+        <outputDirectory>/</outputDirectory>      
+        <excludes>
+          <exclude>**/*.sh</exclude>
+        </excludes>      
+        <fileMode>0644</fileMode>
+        <directoryMode>0755</directoryMode>
+    </fileSet>
+          
+    <fileSet>
+        <directory>../gui/target</directory>
+        <includes>
+            <include>teiid-console-${project.version}-resources.jar</include>
+        </includes>                
+        <outputDirectory>modules/org/jboss/as/console/teiid</outputDirectory>
+    </fileSet>
+  </fileSets>
+</assembly>
