@@ -5,11 +5,10 @@
 *.war
 *.ear
 
-console/target
-console/war/WEB-INF
-console/war/app
-console/war/dmr_gwt
+gui/target
 .project
 .classpath
 .settings
-build/target
+dist/target
+app/target
+app/war
