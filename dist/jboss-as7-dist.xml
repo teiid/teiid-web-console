@@ -32,7 +32,7 @@
     </fileSet>
           
     <fileSet>
-        <directory>../gui/target</directory>
+        <directory>../app/target</directory>
         <includes>
             <include>teiid-console-${project.version}-resources.jar</include>
         </includes>                
