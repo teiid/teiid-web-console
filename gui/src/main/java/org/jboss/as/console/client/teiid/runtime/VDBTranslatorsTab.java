@@ -3,7 +3,6 @@ package org.jboss.as.console.client.teiid.runtime;
 import java.util.Comparator;
 
 import org.jboss.as.console.client.teiid.model.KeyValuePair;
-import org.jboss.as.console.client.teiid.model.MaterializedView;
 import org.jboss.as.console.client.teiid.model.VDB;
 import org.jboss.as.console.client.teiid.model.VDBTranslator;
 import org.jboss.as.console.client.teiid.runtime.VDBView.TableSelectionCallback;
@@ -78,7 +77,7 @@ public class VDBTranslatorsTab extends VDBProvider {
         final DefaultCellTable propertiesTable = VDBView.buildPropertiesTable(); 
         //propertiesTable.p
         propertyProvider.addDataDisplay(propertiesTable);   
-        VDBView.onTableSectionChange(translatorsTable, new TableSelectionCallback<VDBTranslator> (){
+        VDBView.onTableSectionChange(translatorsTable, new TableSelectionCallback<VDBTranslator> () {
 			@Override
 			public void onSelectionChange(VDBTranslator translator) {
 				propertyProvider.getList().clear();
@@ -88,8 +87,12 @@ public class VDBTranslatorsTab extends VDBProvider {
         DefaultPager propertiesTablePager = new DefaultPager();
         propertiesTablePager.setDisplay(propertiesTable);
         
+        Label descritpionsLabel = new Label("This tab shows overridden translators in a VDB");
+        descritpionsLabel.getElement().setAttribute("style", "margin-top:5px;margin-bottom:5px;");
+        
         // build overall panel
         VerticalPanel formPanel = new VerticalPanel();
+        formPanel.add(descritpionsLabel.asWidget());
         formPanel.add(translatorsTable.asWidget());
         formPanel.add(translatorsTablePager);
         formPanel.add(form.asWidget());

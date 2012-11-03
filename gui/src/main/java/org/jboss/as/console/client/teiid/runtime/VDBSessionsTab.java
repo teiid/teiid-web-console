@@ -56,13 +56,13 @@ public class VDBSessionsTab extends VDBProvider {
         VDBView.onTableSectionChange(vdbTable, new TableSelectionCallback<VDB> (){
 			@Override
 			public void onSelectionChange(VDB selection) {
-				if (selection != null) {
+				if (selection != null && isActive(selection)) {
 					setVdbName(selection.getName());
 					setVdbVersion(selection.getVersion());
 					refresh();
 				}
 				else {
-					sessionProvider.setList(Collections.EMPTY_LIST);
+					sessionProvider.getList().clear();
 				}
 			}
         });        

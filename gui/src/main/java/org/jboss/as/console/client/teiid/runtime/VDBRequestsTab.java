@@ -1,6 +1,6 @@
 package org.jboss.as.console.client.teiid.runtime;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -8,7 +8,6 @@ import java.util.List;
 import org.jboss.as.console.client.teiid.model.Request;
 import org.jboss.as.console.client.teiid.model.VDB;
 import org.jboss.as.console.client.teiid.runtime.VDBView.TableSelectionCallback;
-import org.jboss.as.console.client.teiid.widgets.DefaultPopUpWindow;
 import org.jboss.as.console.client.teiid.widgets.QueryPlanPopUpWindow;
 import org.jboss.ballroom.client.widgets.common.DefaultButton;
 import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
@@ -24,8 +23,8 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
@@ -36,7 +35,9 @@ public class VDBRequestsTab extends VDBProvider {
 	private VDBPresenter presenter;
 	private ListDataProvider<Request> requestProvider = new ListDataProvider<Request>();
 	private DefaultCellTable requestsTable;
-	private boolean showSourceQueries = false;
+	private ListDataProvider<Request> sourceRequestProvider = new ListDataProvider<Request>();
+	private DefaultCellTable sourceRequestsTable;
+	
 	
 	public VDBRequestsTab(VDBPresenter presenter) {
 		this.presenter = presenter;
@@ -50,53 +51,70 @@ public class VDBRequestsTab extends VDBProvider {
 				refresh();
 			}
 		});
-		
-		final CheckBox sourceQueryBtn = new CheckBox("Show Source Queries");
-		sourceQueryBtn.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent arg0) {
-				showSourceQueries = sourceQueryBtn.getValue();
-				refresh();
-			}
-		});
-		sourceQueryBtn.setValue(this.showSourceQueries);
+		refreshBtn.getElement().setAttribute("style", "margin-bottom:10px;");
 		
 		ListHandler<Request> sortHandler = new ListHandler<Request>(this.requestProvider.getList());
-        this.requestsTable = getRequestsTable(sortHandler);
+        this.requestsTable = getRequestsTable(sortHandler, false);
         this.requestProvider.addDataDisplay(this.requestsTable);        
         
         VDBView.onTableSectionChange(vdbTable, new TableSelectionCallback<VDB> (){
 			@Override
 			public void onSelectionChange(VDB selection) {
-				if (selection != null) {
+				if (selection != null && isActive(selection)) {
 					setVdbName(selection.getName());
 					setVdbVersion(selection.getVersion());
 					refresh();
 				}
 				else {
-					requestProvider.setList(Collections.EMPTY_LIST);
+					requestProvider.getList().clear();
+					sourceRequestProvider.getList().clear();
 				}
 			}
         });        
         DefaultPager requestsTablePager = new DefaultPager();
         requestsTablePager.setDisplay(this.requestsTable);
+        
+        
+        // source requests table
+		ListHandler<Request> sourceSortHandler = new ListHandler<Request>(this.sourceRequestProvider.getList());
+        this.sourceRequestsTable = getRequestsTable(sourceSortHandler, true);
+        this.sourceRequestProvider.addDataDisplay(this.sourceRequestsTable);        
+        
+        VDBView.onTableSectionChange(this.requestsTable, new TableSelectionCallback<Request> (){
+			@Override
+			public void onSelectionChange(Request selection) {
+				if (selection != null) {
+					refreshSources(selection);
+				}
+				else {
+					sourceRequestProvider.getList().clear();
+				}
+			}
+        });        
+        DefaultPager sourceRequestsTablePager = new DefaultPager();
+        sourceRequestsTablePager.setDisplay(this.sourceRequestsTable);
+        
                 
         // build overall panel
         VerticalPanel formPanel = new VerticalPanel();
         formPanel.add(refreshBtn);
-        formPanel.add(sourceQueryBtn);
         formPanel.add(this.requestsTable.asWidget());
         formPanel.add(requestsTablePager);
+        formPanel.add(new Label("Source Queries"));
+        formPanel.add(this.sourceRequestsTable.asWidget());
+        formPanel.add(sourceRequestsTablePager);
         formPanel.setCellHorizontalAlignment(refreshBtn,HasHorizontalAlignment.ALIGN_RIGHT);
-        formPanel.setCellHorizontalAlignment(sourceQueryBtn,HasHorizontalAlignment.ALIGN_LEFT);
         
         return formPanel;  
     }
 
-	private DefaultCellTable getRequestsTable(ListHandler<Request> sortHandler) {
+	private DefaultCellTable getRequestsTable(ListHandler<Request> sortHandler, final boolean sourceTable) {
 		ProvidesKey<Request> keyProvider = new ProvidesKey<Request>() {
             @Override
             public Object getKey(Request item) {
+            	if (sourceTable) {
+            		return item.getNodeId();
+            	}
                 return item.getExecutionId();
             }
         };
@@ -107,6 +125,9 @@ public class VDBRequestsTab extends VDBProvider {
         TextColumn<Request> executionIdColumn = new TextColumn<Request>() {
             @Override
             public String getValue(Request record) {
+            	if (sourceTable) {
+            		return String.valueOf(record.getNodeId());
+            	}
                 return String.valueOf(record.getExecutionId());
             }
         };
@@ -171,7 +192,6 @@ public class VDBRequestsTab extends VDBProvider {
 				showPlanDialog(request);
 			}
         });        
-        
         Column<Request, String> cancelBtn = new Column<Request, String>(new ButtonCell()) {
             @Override
             public String getValue(Request record) {
@@ -188,12 +208,19 @@ public class VDBRequestsTab extends VDBProvider {
         table.setSelectionModel(new SingleSelectionModel<Request>(keyProvider));
         
         table.setTitle("Requests");
-        table.addColumn(executionIdColumn, "Execution Id");
+        if (sourceTable) {
+        	table.addColumn(executionIdColumn, "Node Id");
+        }
+        else {
+        	table.addColumn(executionIdColumn, "Execution Id");
+        }
         table.addColumn(sessionIdColumn, "Session Id");
         table.addColumn(timeColumn, "Start Time");
         table.addColumn(cmdColumn, "Command");
-        table.addColumn(planBtn, "Query Plan");
-        table.addColumn(cancelBtn, "Cancel Query");
+        if (!sourceTable) {
+        	table.addColumn(planBtn, "Query Plan");
+        	table.addColumn(cancelBtn, "Cancel Query");
+        }
 		
         // sets initial sorting
         table.getColumnSortList().push(executionIdColumn);        
@@ -201,18 +228,18 @@ public class VDBRequestsTab extends VDBProvider {
 	}	
 	
 	public void setRequests(List<Request> requests) {
+		this.requestProvider.getList().clear();
 		if (requests != null && !requests.isEmpty()) {
-			this.requestProvider.getList().clear();
 			this.requestProvider.getList().addAll(requests);
 			this.requestsTable.getSelectionModel().setSelected(requests.get(0), true);
 		}
 		else {
-			this.requestProvider.getList().clear();
+			this.sourceRequestProvider.getList().clear();
 		}
 	}
 	
 	private void refresh() {
-		presenter.getRequests(getVdbName(), getVdbVersion(), this.showSourceQueries);
+		presenter.getRequests(getVdbName(), getVdbVersion(), false);
 	}
 	
 	private void cancelQuery(Request request) {
@@ -224,11 +251,31 @@ public class VDBRequestsTab extends VDBProvider {
 	}
 	
 	public void setQueryPlan(String plan) {
-		QueryPlanPopUpWindow showPlanDialogBox = new QueryPlanPopUpWindow("Query Plan", SafeHtmlUtils.htmlEscape(plan));
+		QueryPlanPopUpWindow showPlanDialogBox = new QueryPlanPopUpWindow("Query Plan", plan);
 		showPlanDialogBox.show();
 	}
 	
 	public void cancelSubmitted(Request request) {
 		refresh();
 	}
+	
+	private void refreshSources(Request selection) {
+		presenter.getSourceRequests(selection);
+	}	
+	
+	public void setSourceRequests(Request selection, List<Request> requests) {
+		this.sourceRequestProvider.getList().clear();
+		if (requests != null && !requests.isEmpty()) {
+			ArrayList<Request> sourceOnly = new ArrayList<Request>();
+			for (Request request:requests) {
+				if (request.isSourceRequest() && request.getExecutionId().equals(selection.getExecutionId())) {
+					sourceOnly.add(request);
+				}
+			}
+			if (!sourceOnly.isEmpty()) {
+				this.sourceRequestProvider.getList().addAll(sourceOnly);
+				this.sourceRequestsTable.getSelectionModel().setSelected(sourceOnly.get(0), true);
+			}
+		}
+	}	
 }

@@ -258,6 +258,11 @@ public class VDBModelsTab extends VDBProvider {
             	return "";
             }
         };    
+        translatorNameColumn.setFieldUpdater(new FieldUpdater<Model, String>() {
+            public void update(int index, Model model, String value) {
+            	changeTranslatorName(model, value);
+            }
+        });         
         translatorNameColumn.setSortable(true);
         sortHandler.setComparator(translatorNameColumn, new Comparator<Model>() {
 			@Override
@@ -362,4 +367,9 @@ public class VDBModelsTab extends VDBProvider {
 		SourceMapping sm = model.getSourceMappings().get(0);
 		this.presenter.assignDataSource(getVdbName(), getVdbVersion(), model.getName(), sm.getSourceName(), sm.getTranslatorName(), dataSourceName);
 	}
+	
+	public void changeTranslatorName(Model model, String translatorName) {
+		SourceMapping sm = model.getSourceMappings().get(0);
+		this.presenter.assignDataSource(getVdbName(), getVdbVersion(), model.getName(), sm.getSourceName(), translatorName, sm.getJndiName());
+	}	
 }

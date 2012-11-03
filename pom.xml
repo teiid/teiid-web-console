@@ -21,7 +21,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <name>Teiid Console :: Parent</name>
-    <groupId>org.jboss.teiid</groupId>
+    <groupId>org.jboss.teiid.web-console</groupId>
     <artifactId>teiid-console-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -31,6 +31,53 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    
+    <scm>
+        <connection>scm:git:git://github.com/teiid/teiid-web-console.git</connection>
+        <developerConnection>scm:git:git@github.com:teiid/teiid-web-console.git</developerConnection>
+        <url>http://github.com/teiid/teiid-web-console</url>
+    </scm>
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License</name>
+            <url>http://www.gnu.org/licenses/lgpl.html</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    <url>${site.url}</url>
+    <developers>
+        <developer>
+            <name>Steve Hawkins</name>
+            <id>steve</id>
+            <email>shawkins@redhat.com</email>
+            <organization>Red Hat</organization>
+            <roles>
+                <role>Project Lead</role>
+            </roles>
+            <timezone>-6</timezone>
+        </developer>
+        <developer>
+            <name>Ramesh Reddy</name>
+            <id>ramesh</id>
+            <email>rareddy@redhat.com</email>
+            <organization>Red Hat</organization>
+            <roles>
+                <role>Project Lead</role>
+            </roles>
+            <timezone>-6</timezone>
+        </developer>
+        <developer>
+            <name>Van Halbert</name>
+            <id>van</id>
+            <email>vhalbert@redhat.com</email>
+            <organization>Red Hat</organization>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>-6</timezone>
+        </developer>
+    </developers>    
 
     <modules>
         <module>gui</module>
