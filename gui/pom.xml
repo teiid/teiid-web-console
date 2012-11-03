@@ -2,7 +2,7 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <name>Teiid Console :: GUI</name>
-    <groupId>org.jboss.teiid</groupId>
+    <groupId>org.jboss.teiid.web-console</groupId>
     <artifactId>console-extensions</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0-SNAPSHOT</version>

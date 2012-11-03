@@ -1,5 +1,6 @@
 package org.jboss.as.console.client.teiid.runtime;
 
+import org.jboss.as.console.client.teiid.model.VDB;
 import org.jboss.as.console.client.teiid.runtime.VDBView.TabProvider;
 
 public abstract class VDBProvider implements TabProvider{
@@ -32,5 +33,7 @@ public abstract class VDBProvider implements TabProvider{
 	public void setPolicyName(String policyName) {
 		this.policyName = policyName;
 	}
-	
+	public boolean isActive(VDB vdb) {
+		return vdb.getStatus().equals("ACTIVE");
+	}
 }

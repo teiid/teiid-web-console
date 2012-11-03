@@ -1,7 +1,5 @@
 package org.jboss.as.console.client.teiid.widgets;
 
-import java.util.Arrays;
-
 import org.jboss.ballroom.client.widgets.window.DefaultWindow;
 import org.jboss.ballroom.client.widgets.window.TrappedFocusPanel;
 import org.jboss.ballroom.client.widgets.window.WindowContentBuilder;
@@ -79,18 +77,22 @@ public class QueryPlanPopUpWindow extends DefaultWindow {
 	        return new HTML(html.toSafeHtml());
 		}
 		
-		PlanNode node = new PlanNode("Limit Node");
-		node.addProperty("output columns", Arrays.asList("e1", "e2"));
-		PlanNode node1 = new PlanNode("Union node");
-		node.addChildNode(node1);
+        SafeHtmlBuilder html = new SafeHtmlBuilder();
+        html.appendHtmlConstant("<pre style='font-family:tahoma, verdana, sans-serif;' id='detail-message' word-break:break-all;>");
+        html.appendEscaped(content);
+        html.appendHtmlConstant("</pre>");
 
-		//PlanNode node = PlanNode.fromXML(content);
-		System.out.println(node);
-		return new QueryPlanTreeParser().parse(node).asWidget();
+        final HTML widget = new HTML(html.toSafeHtml());
+        widget.getElement().setAttribute("style", "margin:5px");
+        return widget;
+		
+//		PlanNode node = new PlanNode("Limit Node");
+//		node.addProperty("output columns", Arrays.asList("e1", "e2"));
+//		PlanNode node1 = new PlanNode("Union node");
+//		node.addChildNode(node1);
+//
+//		//PlanNode node = PlanNode.fromXML(content);
+//		System.out.println(node);
+//		return new QueryPlanTreeParser().parse(node).asWidget();
 	}
-
-	
-	
-	
-
 }

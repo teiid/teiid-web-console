@@ -86,9 +86,14 @@ public class VDBCachingTab extends VDBProvider {
         VDBView.onTableSectionChange(vdbTable, new TableSelectionCallback<VDB> (){
 			@Override
 			public void onSelectionChange(VDB vdb) {
-				setVdbName(vdb.getName());
-				setVdbVersion(vdb.getVersion());
-				refresh();
+				if (vdb != null && isActive(vdb)) {
+					setVdbName(vdb.getName());
+					setVdbVersion(vdb.getVersion());
+					refresh();
+				}
+				else {
+					setQueryResults(null, MaterializedView.class.getName());
+				}
 			}
         });
         DefaultPager propertiesTablePager = new DefaultPager();
@@ -233,11 +238,16 @@ public class VDBCachingTab extends VDBProvider {
 	}
 	
 	public <T> void setQueryResults(List<T> results, String clazz) {
-		if (results != null && clazz.equals(MaterializedView.class.getName())) {
-			this.matviewProvider.getList().clear();
-			this.matviewProvider.getList().addAll((List<MaterializedView>) results);
-			if (!results.isEmpty()) {
-				this.matviewTable.getSelectionModel().setSelected(results.get(0), true);
+		if (clazz.equals(MaterializedView.class.getName())) {
+			if (results != null) {
+				this.matviewProvider.getList().clear();
+				this.matviewProvider.getList().addAll((List<MaterializedView>) results);
+				if (!results.isEmpty()) {
+					this.matviewTable.getSelectionModel().setSelected(results.get(0), true);
+				}
+			}
+			else {
+				this.matviewProvider.getList().clear();
 			}
 		}
 		else if (clazz.equals(INVALIDATE)) {
@@ -268,6 +278,11 @@ public class VDBCachingTab extends VDBProvider {
 			this.hitRatio.setValue(cache.getHitRatio());
 			this.totalEntries.setValue(cache.getTotalEntries());
 			this.requestCount.setValue(cache.getRequestCount());
+		}
+		else {
+			this.hitRatio.setValue(0.0);
+			this.totalEntries.setValue(0);
+			this.requestCount.setValue(0);			
 		}
 	}
 }

@@ -22,7 +22,6 @@
 
 package org.jboss.as.console.client.teiid.widgets;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
