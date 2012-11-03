@@ -87,7 +87,7 @@ public class VDBSummaryTab extends VDBProvider {
 					importedVDBProvider.setList(vdb.getVDBImports());
 				}
 				else {
-					importedVDBProvider.setList(Collections.EMPTY_LIST);
+					importedVDBProvider.getList().clear();
 				}
 			}
         });   
@@ -168,9 +168,9 @@ public class VDBSummaryTab extends VDBProvider {
 
 	private CaptionPanel createConnectionTypePanel(DefaultCellTable vdbTable) {
 		CaptionPanel connTypeCaptionPanel = new CaptionPanel("Connection Type");
-		final RadioButton noneBtn = new RadioButton("ConnectionType", "None");
-		final RadioButton byVersionBtn = new RadioButton("ConnectionType", "By Version");
-		final RadioButton byAnyBtn = new RadioButton("ConnectionType", "Any");
+		final RadioButton noneBtn = new RadioButton("ConnectionType", "None - disallow new connections");
+		final RadioButton byVersionBtn = new RadioButton("ConnectionType", "By Version - Allow with version or earliest versioned vdb when no other vdb marked as ANY");
+		final RadioButton byAnyBtn = new RadioButton("ConnectionType", "Any - Allow with or without a version");
 		DefaultButton applyBtn = new DefaultButton("Apply", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent arg0) {
@@ -185,6 +185,7 @@ public class VDBSummaryTab extends VDBProvider {
 				}
 			}
 		});
+		
 		VerticalPanel connTypePanel = new VerticalPanel();
 		connTypePanel.add(noneBtn);
 		connTypePanel.add(byVersionBtn);

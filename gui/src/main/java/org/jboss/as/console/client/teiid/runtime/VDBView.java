@@ -59,7 +59,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 	
 	@Override
 	public void setDeployedVDBs(List<VDB> vdbs) {
-		if (!vdbs.isEmpty()) {
+		if (vdbs != null && !vdbs.isEmpty()) {
 			this.vdbProvider.getList().clear();
 			this.vdbProvider.getList().addAll(vdbs);
 	        this.vdbTable.getSelectionModel().setSelected(vdbs.get(0), true);
@@ -263,9 +263,9 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 				.setHeadline("Deployed Virtual Databases")
 				.setTopLevelTools(toolStrip)
 				.setMaster("Deployed VDBS", table)
-				.addDetail("Summay", new VDBSummaryTab(this.presenter).getPanel(table))
+				.addDetail("Summary", new VDBSummaryTab(this.presenter).getPanel(table))
 				.addDetail("Models", this.vdbModelsTab.getPanel(table))
-				.addDetail("Translators", new VDBTranslatorsTab(this.presenter).getPanel(table))
+				.addDetail("Overrides", new VDBTranslatorsTab(this.presenter).getPanel(table))
 				.addDetail("Caching", this.vdbCachingTab.getPanel(table))
 				.addDetail("Data Roles", new VDBDataRolesTab(this.presenter).getPanel(table))
 				.addDetail("Requests", this.vdbRequestsTab.getPanel(table))
@@ -327,6 +327,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 				return record.getMessage();
 			}
 		};
+		
 		errors.setTitle("Validation Errors");
 		errors.addColumn(modelPath, "Path");
 		errors.addColumn(errorMsg, "Error/Warnings");
@@ -399,5 +400,10 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 	@Override
 	public void setCacheStatistics(CacheStatistics cache) {
 		this.vdbCachingTab.setCacheStatistics(cache);
+	}
+
+	@Override
+	public void setSourceRequests(Request selection, List<Request> requests) {
+		this.vdbRequestsTab.setSourceRequests(selection, requests);
 	}	
 }

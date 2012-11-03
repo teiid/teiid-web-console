@@ -4,7 +4,6 @@ import static org.jboss.dmr.client.ModelDescriptionConstants.ADDRESS;
 import static org.jboss.dmr.client.ModelDescriptionConstants.OP;
 import static org.jboss.dmr.client.ModelDescriptionConstants.RESULT;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.jboss.as.console.client.Console;
@@ -32,8 +31,8 @@ import org.jboss.as.console.spi.RuntimeExtension;
 import org.jboss.dmr.client.ModelNode;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -59,7 +58,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	
     @ProxyCodeSplit
     @NameToken("vdb-runtime")
-    @RuntimeExtension(name="VDBS", key="teiid")
+    @RuntimeExtension(name="Virtual Databases", key="teiid")
     public interface MyProxy extends Proxy<VDBPresenter>, Place {
     }
 
@@ -77,6 +76,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
         void connectionTypeChanged(String vdbName, int version);
 		void vdbReloaded(String vdbName, int version);
 		void setCacheStatistics(CacheStatistics cache);
+		void setSourceRequests(Request selection, List<Request> requests);
     }
     
 	@Inject
@@ -116,12 +116,9 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	@Override
 	protected void onReveal() {
 		super.onReveal();
-		System.out.println("On reveal");
 	}
 	
     public void prepareFromRequest(PlaceRequest request) {
-        //String name = request.getParameter("name", null);
-        System.out.println("prepareFromRequest: vdb="+request.getParameterNames());
     }
 
 
@@ -130,7 +127,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 		Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
-				System.out.println("scheduled execute");
 				refresh(true);
 			}
 		});
@@ -144,7 +140,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     public void refresh(final boolean paging) {
         if(!serverSelection.isActive()) {
             Console.warning(Console.CONSTANTS.common_err_server_not_active());
-            getView().setDeployedVDBs(Collections.EMPTY_LIST);
+            getView().setDeployedVDBs(null);
             return;
         }
         
@@ -556,5 +552,33 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
                 }
             }
         });		
+	}
+
+	public void getSourceRequests(final Request selection) {
+        if(!serverSelection.isActive()) {
+        	getView().setSourceRequests(selection, null);
+        }
+        
+        ModelNode address = RuntimeBaseAddress.get();
+        address.add("subsystem", "teiid");
+        ModelNode operation = new ModelNode();
+        operation.get(OP).set("list-requests-per-session");
+        operation.get(ADDRESS).set(address);
+        operation.get("session").set(new ModelNode().set(selection.getSessionId()));
+        operation.get("include-source").set(new ModelNode().set(true));
+
+        dispatcher.execute(new DMRAction(operation), new SimpleCallback<DMRResponse>() {
+            @Override
+            public void onSuccess(DMRResponse result) {
+                ModelNode response  = result.get();
+                if (response.get(RESULT).isDefined()) {
+	                List<Request> requests = requestAdaptor.fromDMRList(response.get(RESULT).asList());
+	                getView().setSourceRequests(selection, requests);    
+                }
+                else {
+                	getView().setSourceRequests(selection, null);
+                }
+            }
+        });    	
 	}
 }
