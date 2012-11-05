@@ -5,7 +5,7 @@
     <groupId>org.jboss.teiid.web-console</groupId>
     <artifactId>teiid-console</artifactId>
     <packaging>war</packaging>
-    <version>1.0.0.SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <!-- Parent -->
     <parent>
