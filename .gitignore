@@ -13,3 +13,4 @@ dist/target
 app/target
 app/war
 app/gwt-unitCache
+target
