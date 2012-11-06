@@ -5,7 +5,7 @@
     <groupId>org.jboss.teiid.web-console</groupId>
     <artifactId>teiid-console</artifactId>
     <packaging>war</packaging>
-    <version>1.0.CR1</version>
+    <version>1.1.0-SNAPSHOT</version>
 
     <!-- Parent -->
     <parent>
@@ -58,8 +58,4 @@
             </plugin>
         </plugins>
     </build>
-
-  <scm>
-    <tag>1.0.x</tag>
-  </scm>
 </project>
