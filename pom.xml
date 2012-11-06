@@ -22,7 +22,7 @@
     <name>Teiid Console :: Parent</name>
     <groupId>org.jboss.teiid.web-console</groupId>
     <artifactId>teiid-console-parent</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <description>Teiid AS7 Web Console</description>
@@ -89,52 +89,52 @@
                 <module>app</module>
                 <module>dist</module>
             </modules>
-          <build>
-            <plugins>
-              <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                  <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
-                </configuration>
-              </plugin>
-              <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-              </plugin>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <version>2.5.1</version>
-            </plugin>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-surefire-plugin</artifactId>
-              <version>2.12.4</version>
-            </plugin>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>2.5</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-            </plugin>
-            </plugins>
-          </build>
         </profile>
     </profiles>
 
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-release-plugin</artifactId>
+            <version>2.3.2</version>
+            <configuration>
+              <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.4</version>
+          </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.5.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.12.4</version>
+        </plugin>
+        <plugin>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>2.5</version>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>2.2.1</version>
+        </plugin>
+        </plugins>
+      </build>
     <modules>
         <module>gui</module>
         <module>app</module>
         <module>dist</module>
     </modules>
 
-    <!-- Repositories -->
+    <!--
     <repositories>
         <repository>
             <id>jboss-public-repository-group</id>
@@ -166,7 +166,6 @@
 
     </pluginRepositories>
 
-    <!-- DistributionManagement -->
     <distributionManagement>
         <repository>
             <id>jboss-releases-repository</id>
@@ -181,6 +180,6 @@
         </snapshotRepository>
 
     </distributionManagement>
-
+-->
 </project>
 
