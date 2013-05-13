@@ -1,21 +1,26 @@
 package org.jboss.as.console.client.teiid.runtime;
 
-import static org.jboss.dmr.client.ModelDescriptionConstants.ADDRESS;
-import static org.jboss.dmr.client.ModelDescriptionConstants.OP;
-import static org.jboss.dmr.client.ModelDescriptionConstants.RESULT;
+import static org.jboss.dmr.client.ModelDescriptionConstants.*;
 
 import java.util.List;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.mvp.client.Presenter;
+import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.proxy.Place;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
+import com.gwtplatform.mvp.client.proxy.Proxy;
 import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.domain.model.ServerInstance;
 import org.jboss.as.console.client.domain.model.SimpleCallback;
 import org.jboss.as.console.client.shared.BeanFactory;
-import org.jboss.as.console.client.shared.dispatch.DispatchAsync;
-import org.jboss.as.console.client.shared.dispatch.impl.DMRAction;
-import org.jboss.as.console.client.shared.dispatch.impl.DMRResponse;
 import org.jboss.as.console.client.shared.runtime.RuntimeBaseAddress;
-import org.jboss.as.console.client.shared.state.CurrentServerSelection;
-import org.jboss.as.console.client.shared.state.ServerSelectionEvent;
+import org.jboss.as.console.client.shared.state.GlobalServerSelection;
 import org.jboss.as.console.client.shared.subsys.RevealStrategy;
 import org.jboss.as.console.client.teiid.model.CacheStatistics;
 import org.jboss.as.console.client.teiid.model.DataModelFactory;
@@ -29,25 +34,16 @@ import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.as.console.client.widgets.forms.EntityAdapter;
 import org.jboss.as.console.spi.RuntimeExtension;
 import org.jboss.dmr.client.ModelNode;
-
-import com.google.gwt.core.client.Scheduler;
-import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.annotations.NameToken;
-import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
-import com.gwtplatform.mvp.client.proxy.Place;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
-import com.gwtplatform.mvp.client.proxy.Proxy;
+import org.jboss.dmr.client.dispatch.DispatchAsync;
+import org.jboss.dmr.client.dispatch.impl.DMRAction;
+import org.jboss.dmr.client.dispatch.impl.DMRResponse;
 
 @SuppressWarnings("nls")
-public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.MyProxy> implements ServerSelectionEvent.ServerSelectionListener {
+public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.MyProxy> implements GlobalServerSelection.ServerSelectionListener {
    
 	private DispatchAsync dispatcher;
     private RevealStrategy revealStrategy;
-    private CurrentServerSelection serverSelection;
+    private ServerInstance serverSelection;
     private DataModelFactory factory;
     private PlaceManager placeManager;	
     private EntityAdapter<VDB> vdbAdaptor;
@@ -82,16 +78,14 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	@Inject
 	public VDBPresenter(EventBus eventBus, MyView view, MyProxy proxy,
 			DispatchAsync dispatcher, ApplicationMetaData metaData,
-			RevealStrategy revealStrategy,
-			CurrentServerSelection serverSelection, BeanFactory factory,
+			RevealStrategy revealStrategy, BeanFactory factory,
 			PlaceManager placeManager) {
         super(eventBus, view, proxy);
 
         this.dispatcher = dispatcher;
         this.revealStrategy = revealStrategy;
         this.placeManager = placeManager;
-        this.serverSelection = serverSelection;
-        this.factory = (DataModelFactory)factory;
+        this.factory = factory;
         this.vdbAdaptor = new EntityAdapter<VDB>(VDB.class, metaData);
         this.requestAdaptor = new EntityAdapter<Request>(Request.class, metaData);
         this.sessionAdaptor = new EntityAdapter<Session>(Session.class, metaData);
@@ -104,8 +98,8 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
         super.onBind();
         getView().setPresenter(this);
         getView().setDataModelFactory(this.factory);
-        getEventBus().addHandler(ServerSelectionEvent.TYPE, VDBPresenter.this);
-    }	
+        getEventBus().addHandler(GlobalServerSelection.TYPE, this);
+    }
 	
     @Override
     protected void onReset() {
@@ -123,7 +117,9 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 
 
     @Override
-    public void onServerSelection(String s, ServerInstance serverInstance, ServerSelectionEvent.Source source) {
+    public void onServerSelection(final ServerInstance server)
+    {
+        this.serverSelection = server;
 		Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
 			@Override
 			public void execute() {
@@ -138,7 +134,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 	
     public void refresh(final boolean paging) {
-        if(!serverSelection.isActive()) {
+        if(!isServerActive()) {
             Console.warning(Console.CONSTANTS.common_err_server_not_active());
             getView().setDeployedVDBs(null);
             return;
@@ -176,7 +172,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }	
     
     public void removeRoleName(final String vdbName, final int version, final String dataRole, final String mappedRole) {
-        if(!serverSelection.isActive()) {
+        if(!isServerActive()) {
             Console.warning(Console.CONSTANTS.common_err_server_not_active());
             return;
         }
@@ -200,7 +196,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }
     
     public void addRoleName(final String vdbName, final int version, final String dataRole, final String mappedRole) {
-        if(!serverSelection.isActive()) {
+        if(!isServerActive()) {
             Console.warning(Console.CONSTANTS.common_err_server_not_active());
             return;
         }
@@ -224,7 +220,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }    
     
     public void getRequests(String vdbName, int version, boolean includeSourceQueries) {
-        if(!serverSelection.isActive()) {
+        if(!isServerActive()) {
         	getView().setVDBRequests(null);
         }
         
@@ -253,7 +249,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }
     
     public void getQueryPlan(Request request) {
-        if(!serverSelection.isActive()) {
+        if(!isServerActive()) {
         	getView().setQueryPlan("No Server Found");
         }
         
@@ -280,7 +276,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }
     
     public void cancelRequest(final Request request) {
-        if(!serverSelection.isActive()) {
+        if(!isServerActive()) {
         	getView().cancelSubmitted(request);
         }
         
@@ -308,7 +304,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }
 
     public void getSchema(String vdbName, int version, String modelName) {
-        if(!serverSelection.isActive()) {
+        if(!isServerActive()) {
         	getView().setModelSchema("No Active Server Found");
         }
         
@@ -336,7 +332,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }
 
 	public void getSessions(final String vdbName, final int version) {
-        if(!serverSelection.isActive()) {
+        if(!isServerActive()) {
         	getView().setVDBRequests(null);
         }
         
@@ -364,7 +360,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
 	public void terminateSession(final Session session) {
-        if(!serverSelection.isActive()) {
+        if(!isServerActive()) {
         	getView().terminateSessionSubmitted(session);
         }
         
@@ -391,7 +387,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 	
 	public <T> void executeQuery(final String vdbName, final int version, final String sql, final String clazz) {
-        if(!serverSelection.isActive()) {
+        if(!isServerActive()) {
         	getView().setQueryResults(null, clazz);
         }
         
@@ -432,7 +428,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
 	public void clearCache(final String vdbName, final int version, final String cacheType) {
-        if(!serverSelection.isActive()) {
+        if(!isServerActive()) {
         	return;
         }
         
@@ -454,7 +450,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
 	public void changeConnectionType(final String vdbName, final int version, final String connType) {
-        if(!serverSelection.isActive()) {
+        if(!isServerActive()) {
         	return;
         }
         
@@ -480,7 +476,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 			final String modelName, final String sourceName,
 			final String translatorName, final String dataSourceName) {
 
-		if(!serverSelection.isActive()) {
+		if(!isServerActive()) {
         	return;
         }
         
@@ -506,7 +502,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
 	public void reloadVDB(final String vdbName, final int version) {
-		if(!serverSelection.isActive()) {
+		if(!isServerActive()) {
         	return;
         }
         
@@ -528,7 +524,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
 	public void getCacheStatistics() {
-		if(!serverSelection.isActive()) {
+		if(!isServerActive()) {
         	return;
         }
         
@@ -555,7 +551,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
 	public void getSourceRequests(final Request selection) {
-        if(!serverSelection.isActive()) {
+        if(!isServerActive()) {
         	getView().setSourceRequests(selection, null);
         }
         
@@ -581,4 +577,8 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
             }
         });    	
 	}
+
+    private boolean isServerActive() {
+        return serverSelection != null && serverSelection.isRunning();
+    }
 }
