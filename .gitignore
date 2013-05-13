@@ -4,11 +4,13 @@
 *.jar
 *.war
 *.ear
+*.iml
 
 gui/target
 .project
 .classpath
 .settings
+.idea
 dist/target
 app/target
 app/war

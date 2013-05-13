@@ -3,24 +3,6 @@ package org.jboss.as.console.client.teiid.runtime;
 import java.util.Comparator;
 import java.util.List;
 
-import org.jboss.as.console.client.Console;
-import org.jboss.as.console.client.core.SuspendableViewImpl;
-import org.jboss.as.console.client.shared.viewframework.builder.MultipleToOneLayout;
-import org.jboss.as.console.client.teiid.model.CacheStatistics;
-import org.jboss.as.console.client.teiid.model.DataModelFactory;
-import org.jboss.as.console.client.teiid.model.KeyValuePair;
-import org.jboss.as.console.client.teiid.model.Request;
-import org.jboss.as.console.client.teiid.model.Session;
-import org.jboss.as.console.client.teiid.model.VDB;
-import org.jboss.as.console.client.teiid.model.ValidityError;
-import org.jboss.as.console.client.teiid.widgets.TeiidIcons;
-import org.jboss.as.console.client.widgets.pages.PagedView;
-import org.jboss.ballroom.client.widgets.icons.Icons;
-import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
-import org.jboss.ballroom.client.widgets.tabs.FakeTabPanel;
-import org.jboss.ballroom.client.widgets.tools.ToolButton;
-import org.jboss.ballroom.client.widgets.tools.ToolStrip;
-
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.ImageResourceCell;
@@ -40,6 +22,23 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import org.jboss.as.console.client.Console;
+import org.jboss.as.console.client.core.SuspendableViewImpl;
+import org.jboss.as.console.client.layout.MultipleToOneLayout;
+import org.jboss.as.console.client.teiid.model.CacheStatistics;
+import org.jboss.as.console.client.teiid.model.DataModelFactory;
+import org.jboss.as.console.client.teiid.model.KeyValuePair;
+import org.jboss.as.console.client.teiid.model.Request;
+import org.jboss.as.console.client.teiid.model.Session;
+import org.jboss.as.console.client.teiid.model.VDB;
+import org.jboss.as.console.client.teiid.model.ValidityError;
+import org.jboss.as.console.client.teiid.widgets.TeiidIcons;
+import org.jboss.as.console.client.widgets.pages.PagedView;
+import org.jboss.ballroom.client.widgets.icons.Icons;
+import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
+import org.jboss.ballroom.client.widgets.tabs.FakeTabPanel;
+import org.jboss.ballroom.client.widgets.tools.ToolButton;
+import org.jboss.ballroom.client.widgets.tools.ToolStrip;
 
 @SuppressWarnings("nls")
 public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView {
@@ -305,7 +304,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 		});
 	}
 
-	static DefaultCellTable buildErrorTable() {
+	static DefaultCellTable<ValidityError> buildErrorTable() {
 		ProvidesKey<ValidityError> keyProvider = new ProvidesKey<ValidityError>() {
 			@Override
 			public Object getKey(ValidityError item) {
@@ -313,7 +312,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 			}
 		};
 		
-		DefaultCellTable errors = new DefaultCellTable<ValidityError>(5,keyProvider);
+		DefaultCellTable<ValidityError> errors = new DefaultCellTable<ValidityError>(5,keyProvider);
 
 		TextColumn<ValidityError> modelPath = new TextColumn<ValidityError>() {
 			@Override
@@ -335,14 +334,14 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 		return errors;
 	}
 	
-	static DefaultCellTable buildPropertiesTable() {
+	static DefaultCellTable<KeyValuePair> buildPropertiesTable() {
 		ProvidesKey<KeyValuePair> keyProvider = new ProvidesKey<KeyValuePair>() {
 			@Override
 			public Object getKey(KeyValuePair item) {
 				return item.getKey();
 			}
 		};
-		DefaultCellTable propertiesTable = new DefaultCellTable<KeyValuePair>(8, keyProvider);
+		DefaultCellTable<KeyValuePair> propertiesTable = new DefaultCellTable<KeyValuePair>(8, keyProvider);
 
 		TextColumn<KeyValuePair> nameColumn = new TextColumn<KeyValuePair>() {
 			@Override
