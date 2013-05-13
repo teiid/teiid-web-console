@@ -41,6 +41,7 @@ import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
+import org.jboss.dmr.client.dispatch.DispatchAsync;
 
 @SuppressWarnings("nls")
 public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.MyProxy> implements ServerSelectionEvent.ServerSelectionListener {
