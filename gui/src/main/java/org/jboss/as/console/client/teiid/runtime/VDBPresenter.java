@@ -28,6 +28,9 @@ import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.domain.model.ServerInstance;
 import org.jboss.as.console.client.domain.model.SimpleCallback;
 import org.jboss.as.console.client.shared.BeanFactory;
+import org.jboss.as.console.client.shared.dispatch.DispatchAsync;
+import org.jboss.as.console.client.shared.dispatch.impl.DMRAction;
+import org.jboss.as.console.client.shared.dispatch.impl.DMRResponse;
 import org.jboss.as.console.client.shared.runtime.RuntimeBaseAddress;
 import org.jboss.as.console.client.shared.state.GlobalServerSelection;
 import org.jboss.as.console.client.shared.subsys.RevealStrategy;
@@ -43,9 +46,6 @@ import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.as.console.client.widgets.forms.EntityAdapter;
 import org.jboss.as.console.spi.RuntimeExtension;
 import org.jboss.dmr.client.ModelNode;
-import org.jboss.dmr.client.dispatch.DispatchAsync;
-import org.jboss.dmr.client.dispatch.impl.DMRAction;
-import org.jboss.dmr.client.dispatch.impl.DMRResponse;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.inject.Inject;
@@ -55,8 +55,6 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.Place;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 
 @SuppressWarnings("nls")
@@ -66,7 +64,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     private RevealStrategy revealStrategy;
     private ServerInstance serverSelection;
     private DataModelFactory factory;
-    private PlaceManager placeManager;	
     private EntityAdapter<VDB> vdbAdaptor;
     private EntityAdapter<Request> requestAdaptor;
     private EntityAdapter<Session> sessionAdaptor;
@@ -99,13 +96,11 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	@Inject
 	public VDBPresenter(EventBus eventBus, MyView view, MyProxy proxy,
 			DispatchAsync dispatcher, ApplicationMetaData metaData,
-			RevealStrategy revealStrategy, BeanFactory factory,
-			PlaceManager placeManager) {
+			RevealStrategy revealStrategy, BeanFactory factory) {
         super(eventBus, view, proxy);
 
         this.dispatcher = dispatcher;
         this.revealStrategy = revealStrategy;
-        this.placeManager = placeManager;
         this.factory = (DataModelFactory)factory;
         this.vdbAdaptor = new EntityAdapter<VDB>(VDB.class, metaData);
         this.requestAdaptor = new EntityAdapter<Request>(Request.class, metaData);
@@ -133,12 +128,8 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 		super.onReveal();
 	}
 	
-    public void prepareFromRequest(PlaceRequest request) {
-    }
-
     @Override
-    public void onServerSelection(final ServerInstance server)
-    {
+    public void onServerSelection(final ServerInstance server) {
         this.serverSelection = server;
 		Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
 			@Override
@@ -602,6 +593,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
     private boolean isServerActive() {
-        return serverSelection != null && serverSelection.isRunning();
+        return ((serverSelection== null) || (serverSelection != null && serverSelection.isRunning()));
     }
 }
