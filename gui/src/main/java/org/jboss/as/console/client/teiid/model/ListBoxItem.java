@@ -1,5 +1,3 @@
-package org.jboss.as.console.client.teiid.model;
-
 /*
  * JBoss, Home of Professional Open Source
  * Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors
@@ -18,7 +16,7 @@ package org.jboss.as.console.client.teiid.model;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-
+package org.jboss.as.console.client.teiid.model;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -47,7 +45,7 @@ public class ListBoxItem extends FormItem<List<String>> {
         listBox.setTitle(title);
         listBox.setVisibleItemCount(5);
         listBox.setTabIndex(0);
-        listBox.setHeight("50px");
+        listBox.setHeight("50px");  //$NON-NLS-1$
 
         valueChangeHandler = new ChangeHandler() {
             @Override

@@ -1,0 +1,4 @@
+JBoss-Product-Release-Name: Teiid
+JBoss-Product-Release-Version: + Teiid 8.4
+JBoss-Product-Console-Slot: teiid
+

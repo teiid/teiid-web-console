@@ -1,24 +1,36 @@
+/* 
+ * JBoss, Home of Professional Open Source 
+ * Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors
+ * as indicated by the @author tags. All rights reserved. 
+ * See the copyright.txt in the distribution for a 
+ * full listing of individual contributors.
+ *
+ * This copyrighted material is made available to anyone wishing to use, 
+ * modify, copy, or redistribute it subject to the terms and conditions 
+ * of the GNU Lesser General Public License, v. 2.1. 
+ * This program is distributed in the hope that it will be useful, but WITHOUT A 
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+ * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details. 
+ * You should have received a copy of the GNU Lesser General Public License, 
+ * v.2.1 along with this distribution; if not, write to the Free Software 
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+ * MA  02110-1301, USA.
+ */
 package org.jboss.as.console.client.teiid.runtime;
 
-import static org.jboss.dmr.client.ModelDescriptionConstants.*;
+import static org.jboss.dmr.client.ModelDescriptionConstants.ADDRESS;
+import static org.jboss.dmr.client.ModelDescriptionConstants.OP;
+import static org.jboss.dmr.client.ModelDescriptionConstants.RESULT;
 
 import java.util.List;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.mvp.client.Presenter;
-import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.annotations.NameToken;
-import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
-import com.gwtplatform.mvp.client.proxy.Place;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
-import com.gwtplatform.mvp.client.proxy.Proxy;
 import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.domain.model.ServerInstance;
 import org.jboss.as.console.client.domain.model.SimpleCallback;
 import org.jboss.as.console.client.shared.BeanFactory;
+import org.jboss.as.console.client.shared.dispatch.DispatchAsync;
+import org.jboss.as.console.client.shared.dispatch.impl.DMRAction;
+import org.jboss.as.console.client.shared.dispatch.impl.DMRResponse;
 import org.jboss.as.console.client.shared.runtime.RuntimeBaseAddress;
 import org.jboss.as.console.client.shared.state.GlobalServerSelection;
 import org.jboss.as.console.client.shared.subsys.RevealStrategy;
@@ -34,9 +46,16 @@ import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.as.console.client.widgets.forms.EntityAdapter;
 import org.jboss.as.console.spi.RuntimeExtension;
 import org.jboss.dmr.client.ModelNode;
-import org.jboss.dmr.client.dispatch.DispatchAsync;
-import org.jboss.dmr.client.dispatch.impl.DMRAction;
-import org.jboss.dmr.client.dispatch.impl.DMRResponse;
+
+import com.google.gwt.core.client.Scheduler;
+import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.mvp.client.Presenter;
+import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.proxy.Place;
+import com.gwtplatform.mvp.client.proxy.Proxy;
 
 @SuppressWarnings("nls")
 public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.MyProxy> implements GlobalServerSelection.ServerSelectionListener {
@@ -45,7 +64,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     private RevealStrategy revealStrategy;
     private ServerInstance serverSelection;
     private DataModelFactory factory;
-    private PlaceManager placeManager;	
     private EntityAdapter<VDB> vdbAdaptor;
     private EntityAdapter<Request> requestAdaptor;
     private EntityAdapter<Session> sessionAdaptor;
@@ -78,14 +96,12 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	@Inject
 	public VDBPresenter(EventBus eventBus, MyView view, MyProxy proxy,
 			DispatchAsync dispatcher, ApplicationMetaData metaData,
-			RevealStrategy revealStrategy, BeanFactory factory,
-			PlaceManager placeManager) {
+			RevealStrategy revealStrategy, BeanFactory factory) {
         super(eventBus, view, proxy);
 
         this.dispatcher = dispatcher;
         this.revealStrategy = revealStrategy;
-        this.placeManager = placeManager;
-        this.factory = factory;
+        this.factory = (DataModelFactory)factory;
         this.vdbAdaptor = new EntityAdapter<VDB>(VDB.class, metaData);
         this.requestAdaptor = new EntityAdapter<Request>(Request.class, metaData);
         this.sessionAdaptor = new EntityAdapter<Session>(Session.class, metaData);
@@ -112,13 +128,8 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 		super.onReveal();
 	}
 	
-    public void prepareFromRequest(PlaceRequest request) {
-    }
-
-
     @Override
-    public void onServerSelection(final ServerInstance server)
-    {
+    public void onServerSelection(final ServerInstance server) {
         this.serverSelection = server;
 		Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
 			@Override
@@ -265,11 +276,15 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
             @Override
             public void onSuccess(DMRResponse result) {
                 ModelNode response  = result.get();
+                String plan =  null;
                 if (response.get(RESULT).isDefined()) {
-	                getView().setQueryPlan(response.get(RESULT).asString());    
+                	plan = response.get(RESULT).asString();
+                }
+                if (plan != null && !plan.trim().isEmpty()) {
+                	getView().setQueryPlan(plan);
                 }
                 else {
-                	getView().setQueryPlan("No Plan found, query might have finished executing!");
+                	getView().setQueryPlan("<node name=\"query\"><property name=\"noplan\">No Plan found, query might have finished executing!</property></node>");
                 }
             }
         });    	
@@ -279,7 +294,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
         if(!isServerActive()) {
         	getView().cancelSubmitted(request);
         }
-        
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
         ModelNode operation = new ModelNode();
@@ -335,7 +349,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
         if(!isServerActive()) {
         	getView().setVDBRequests(null);
         }
-        
+
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
         ModelNode operation = new ModelNode();
@@ -479,8 +493,8 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 		if(!isServerActive()) {
         	return;
         }
-        
-        ModelNode address = RuntimeBaseAddress.get();
+
+		ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
         ModelNode operation = new ModelNode();
         operation.get(OP).set("assign-datasource");
@@ -579,6 +593,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
     private boolean isServerActive() {
-        return serverSelection != null && serverSelection.isRunning();
+        return ((serverSelection== null) || (serverSelection != null && serverSelection.isRunning()));
     }
 }

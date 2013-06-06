@@ -22,11 +22,15 @@
 
 package org.jboss.as.console.client.teiid.widgets;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
+import com.google.gwt.xml.client.XMLParser;
 
 public class PlanNode {
 
@@ -48,6 +52,17 @@ public class PlanNode {
 		public List<String> getValues() {
 			return values;
 		}
+		
+		public String getValuesAsCSV() {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < values.size(); i++) {
+				sb.append(values.get(i));
+				if (i < values.size()) {
+					sb.append(",");//$NON-NLS-1$
+				}
+			}
+			return sb.toString();
+		}		
 		
 		public void setValues(List<String> values) {
 			this.values = values;
@@ -153,14 +168,15 @@ public class PlanNode {
         }
     }	
     
-    /*
 	public static PlanNode fromXml(String planString) {
 		Document messageDom = XMLParser.parse(planString);
 		NodeList nodes = messageDom.getElementsByTagName("node");//$NON-NLS-1$
 		Node node = nodes.item(0);
 		String nodeName = node.getAttributes().getNamedItem("name").getNodeValue(); //$NON-NLS-1$
+		PlanNode root = new PlanNode("QueryPlan"); //$NON-NLS-1$
 		PlanNode planNode = new PlanNode(nodeName);
-		planNode.setParent(null);
+		planNode.setParent(root);
+		root.addChildNode(planNode);
 		buildNode(node, planNode);
 		return planNode;
 	}
@@ -169,27 +185,35 @@ public class PlanNode {
 		NodeList childNodes = parentXMLNode.getChildNodes();
 		for (int i = 0; i < childNodes.getLength(); i++) {
 			
+//			String n =
+//					rootElement.getElementsByTagName("ID").item(0).getNodeName();
+//					String v =
+//					rootElement.getElementsByTagName("ID").item(0).getChildNodes().item(0).getNodeValue(); 			
+			
 			Node childXMLNode = childNodes.item(i);
+			ArrayList<String> values = new ArrayList<String>();
 			if (childXMLNode.getNodeName().equals("property")) { //$NON-NLS-1$
 				String propertyName = childXMLNode.getAttributes().getNamedItem("name").getNodeValue(); //$NON-NLS-1$
 				
 				NodeList valueXMLNodes = childXMLNode.getChildNodes();
 				for (int valueIdx=0; valueIdx < valueXMLNodes.getLength(); valueIdx++) {
 					Node valueXMLNode = valueXMLNodes.item(valueIdx);
-					ArrayList<String> values = new ArrayList<String>();
 					if (valueXMLNode.getNodeName().equals("value")) { //$NON-NLS-1$
-						values.add(valueXMLNode.getNodeValue());
+						String v = valueXMLNode.getChildNodes().item(0).getNodeValue();
+						System.out.println(propertyName+":"+v);//$NON-NLS-1$
+						values.add(v);
 					}
 					else if (valueXMLNode.getNodeName().equals("node")) { //$NON-NLS-1$
 						String name = valueXMLNode.getAttributes().getNamedItem("name").getNodeValue(); //$NON-NLS-1$
 						PlanNode childNode = new PlanNode(name);
 						node.addChildNode(buildNode(valueXMLNode, childNode));
 					}
+				}
+				if (!values.isEmpty()) {
 					node.addProperty(propertyName, values);
 				}
 			}
 		}
 	   return node;
 	}
-	*/
 }

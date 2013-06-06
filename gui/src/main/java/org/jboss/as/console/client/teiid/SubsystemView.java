@@ -20,8 +20,7 @@ package org.jboss.as.console.client.teiid;
 
 import java.util.EnumSet;
 
-import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
+import org.jboss.as.console.client.shared.dispatch.DispatchAsync;
 import org.jboss.as.console.client.shared.viewframework.AbstractEntityView;
 import org.jboss.as.console.client.shared.viewframework.EntityDetails;
 import org.jboss.as.console.client.shared.viewframework.EntityEditor;
@@ -33,7 +32,9 @@ import org.jboss.as.console.client.teiid.model.SubsystemConfiguration;
 import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.ballroom.client.widgets.forms.FormAdapter;
 import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
-import org.jboss.dmr.client.dispatch.DispatchAsync;
+
+import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 public class SubsystemView extends AbstractEntityView<SubsystemConfiguration> implements SubsystemPresenter.MyView, FrameworkPresenter {
     private final EntityToDmrBridge<SubsystemConfiguration> bridge;
@@ -42,7 +43,7 @@ public class SubsystemView extends AbstractEntityView<SubsystemConfiguration> im
     public SubsystemView(ApplicationMetaData propertyMetaData, DispatchAsync dispatcher) {
         super(SubsystemConfiguration.class, propertyMetaData, EnumSet.of(FrameworkButton.ADD, FrameworkButton.REMOVE));
         bridge = new SingleEntityToDmrBridgeImpl<SubsystemConfiguration>(propertyMetaData, SubsystemConfiguration.class, this, dispatcher);
-        setDescription("Distributed query engine, that parses, plans and excutes user's SQL commands and provides results");
+        setDescription("Distributed query engine, that parses, plans and excutes user's SQL commands and provides results");//$NON-NLS-1$
     }
 
     @Override
@@ -80,6 +81,6 @@ public class SubsystemView extends AbstractEntityView<SubsystemConfiguration> im
 
     @Override
     protected String getEntityDisplayName() {
-        return "Query Engine";
+        return "Query Engine";//$NON-NLS-1$
     }
 }

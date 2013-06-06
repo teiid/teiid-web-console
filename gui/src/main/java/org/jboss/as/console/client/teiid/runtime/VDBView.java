@@ -1,30 +1,29 @@
+/* 
+ * JBoss, Home of Professional Open Source 
+ * Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors
+ * as indicated by the @author tags. All rights reserved. 
+ * See the copyright.txt in the distribution for a 
+ * full listing of individual contributors.
+ *
+ * This copyrighted material is made available to anyone wishing to use, 
+ * modify, copy, or redistribute it subject to the terms and conditions 
+ * of the GNU Lesser General Public License, v. 2.1. 
+ * This program is distributed in the hope that it will be useful, but WITHOUT A 
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+ * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details. 
+ * You should have received a copy of the GNU Lesser General Public License, 
+ * v.2.1 along with this distribution; if not, write to the Free Software 
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+ * MA  02110-1301, USA.
+ */
 package org.jboss.as.console.client.teiid.runtime;
 
 import java.util.Comparator;
 import java.util.List;
 
-import com.google.gwt.cell.client.ButtonCell;
-import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.ImageResourceCell;
-import com.google.gwt.cell.client.NumberCell;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.ProvidesKey;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SingleSelectionModel;
 import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.core.SuspendableViewImpl;
-import org.jboss.as.console.client.layout.MultipleToOneLayout;
+import org.jboss.as.console.client.shared.viewframework.builder.MultipleToOneLayout;
 import org.jboss.as.console.client.teiid.model.CacheStatistics;
 import org.jboss.as.console.client.teiid.model.DataModelFactory;
 import org.jboss.as.console.client.teiid.model.KeyValuePair;
@@ -39,6 +38,27 @@ import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
 import org.jboss.ballroom.client.widgets.tabs.FakeTabPanel;
 import org.jboss.ballroom.client.widgets.tools.ToolButton;
 import org.jboss.ballroom.client.widgets.tools.ToolStrip;
+
+import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.ImageResourceCell;
+import com.google.gwt.cell.client.NumberCell;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.ProvidesKey;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 @SuppressWarnings("nls")
 public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView {
@@ -98,10 +118,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 
 		pages = new PagedView();
 
-		// this.basicMetrics = new BasicMetrics(this.presenter);
-
 		pages.addPage(Console.CONSTANTS.common_label_back(), mainPageAsWidget());
-		// pages.addPage("Basic Metrics", basicMetrics.asWidget());
 
 		// default page
 		pages.showPage(0);
@@ -258,7 +275,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 
 		// Page layout
 		MultipleToOneLayout layout = new MultipleToOneLayout().setPlain(true)
-				.setTitle("VDB Panel").setDescription("")
+				.setTitle("VDB Panel").setDescription(new SafeHtmlBuilder().appendHtmlConstant("").toSafeHtml())
 				.setHeadline("Deployed Virtual Databases")
 				.setTopLevelTools(toolStrip)
 				.setMaster("Deployed VDBS", table)
@@ -365,7 +382,6 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 	@Override
 	public void onResume() {
 		super.onResume();
-		System.out.println("called on on resume on view");
 	}
 
 	@Override

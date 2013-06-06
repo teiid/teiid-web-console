@@ -18,8 +18,7 @@
  */
 package org.jboss.as.console.client.teiid;
 
-import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
+import org.jboss.as.console.client.shared.dispatch.DispatchAsync;
 import org.jboss.as.console.client.shared.viewframework.AbstractEntityView;
 import org.jboss.as.console.client.shared.viewframework.Columns;
 import org.jboss.as.console.client.shared.viewframework.EntityToDmrBridge;
@@ -30,7 +29,9 @@ import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.ballroom.client.widgets.forms.Form;
 import org.jboss.ballroom.client.widgets.forms.FormAdapter;
 import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
-import org.jboss.dmr.client.dispatch.DispatchAsync;
+
+import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 public class TransportView extends AbstractEntityView<Transport> implements TransportPresenter.MyView, FrameworkPresenter {
     private final EntityToDmrBridgeImpl<Transport> bridge;
@@ -39,7 +40,7 @@ public class TransportView extends AbstractEntityView<Transport> implements Tran
     public TransportView(ApplicationMetaData propertyMetaData, DispatchAsync dispatcher) {
         super(Transport.class, propertyMetaData);
         bridge = new EntityToDmrBridgeImpl<Transport>(propertyMetaData, Transport.class, this, dispatcher);
-        setDescription("Transport provides a mechanism to connect to Teiid, For ex: jdbc, odbc connections");
+        setDescription("Transport provides a mechanism to connect to Teiid, For ex: jdbc, odbc connections"); //$NON-NLS-1$
     }
 
     @Override
@@ -74,6 +75,6 @@ public class TransportView extends AbstractEntityView<Transport> implements Tran
     
     @Override
     protected String getEntityDisplayName() {
-        return "Transports";
+        return "Transports";//$NON-NLS-1$
     }
 }

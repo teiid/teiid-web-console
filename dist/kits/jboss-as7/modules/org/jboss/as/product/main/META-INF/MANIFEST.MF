@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Archiver-Version: Plexus Archiver
-Created-By: Teiid Team
-JBoss-Product-Release-Name: Teiid
-JBoss-Product-Release-Version: 8.2.Beta2
-JBoss-Product-Console-Slot: teiid
-

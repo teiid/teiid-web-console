@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
-        <version>6</version>
+        <version>10</version>
     </parent>
     <description>Teiid AS7 Web Console</description>
 
