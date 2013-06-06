@@ -22,7 +22,6 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import org.jboss.as.console.spi.BeanFactoryExtension;
 
 
-@SuppressWarnings("deprecation")
 @BeanFactoryExtension
 public interface DataModelFactory {
 	AutoBean<SubsystemConfiguration> getSubSystemModel();
@@ -41,4 +40,5 @@ public interface DataModelFactory {
 	AutoBean<Session> getSession();
 	AutoBean<MaterializedView> getMaterializedView();
 	AutoBean<CacheStatistics> getCacheStatistics();
+	AutoBean<EngineStatistics> getEngineStatistics();
 }
