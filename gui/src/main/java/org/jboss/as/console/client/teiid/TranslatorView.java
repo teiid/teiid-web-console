@@ -40,7 +40,7 @@ public class TranslatorView extends AbstractEntityView<Translator> implements Tr
     public TranslatorView(ApplicationMetaData propertyMetaData, DispatchAsync dispatcher) {
         super(Translator.class, propertyMetaData);
         bridge = new EntityToDmrBridgeImpl<Translator>(propertyMetaData, Translator.class, this, dispatcher);
-        setDescription("Provides translation services for physical sources, which can be integrated using a Teiid's VDB");
+        setDescription("Provides translation services for physical sources, which can be integrated using a Teiid's VDB");//$NON-NLS-1$
     }
 
     @Override
@@ -65,7 +65,7 @@ public class TranslatorView extends AbstractEntityView<Translator> implements Tr
                 return record.getModuleName();
             }
         };
-        table.addColumn(cacheContainerColumn, "Module Name");
+        table.addColumn(cacheContainerColumn, "Module Name");//$NON-NLS-1$
 
         return table;
     }
@@ -75,13 +75,13 @@ public class TranslatorView extends AbstractEntityView<Translator> implements Tr
         Form<Translator> form = new Form<Translator>(beanType);
         form.setNumColumns(1);
 
-        form.setFields(formMetaData.findAttribute("name").getFormItemForAdd(),
-                       formMetaData.findAttribute("moduleName").getFormItemForAdd());
+        form.setFields(formMetaData.findAttribute("name").getFormItemForAdd(),//$NON-NLS-1$
+                       formMetaData.findAttribute("moduleName").getFormItemForAdd());//$NON-NLS-1$
         return form;
     }  
     
     @Override
     protected String getEntityDisplayName() {
-        return "Translators";
+        return "Translators";//$NON-NLS-1$
     }
 }

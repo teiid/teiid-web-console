@@ -42,7 +42,7 @@ public class SubsystemView extends AbstractEntityView<SubsystemConfiguration> im
     public SubsystemView(ApplicationMetaData propertyMetaData, DispatchAsync dispatcher) {
         super(SubsystemConfiguration.class, propertyMetaData, EnumSet.of(FrameworkButton.ADD, FrameworkButton.REMOVE));
         bridge = new SingleEntityToDmrBridgeImpl<SubsystemConfiguration>(propertyMetaData, SubsystemConfiguration.class, this, dispatcher);
-        setDescription("Distributed query engine, that parses, plans and excutes user's SQL commands and provides results");
+        setDescription("Distributed query engine, that parses, plans and excutes user's SQL commands and provides results");//$NON-NLS-1$
     }
 
     @Override
@@ -80,6 +80,6 @@ public class SubsystemView extends AbstractEntityView<SubsystemConfiguration> im
 
     @Override
     protected String getEntityDisplayName() {
-        return "Query Engine";
+        return "Query Engine";//$NON-NLS-1$
     }
 }
