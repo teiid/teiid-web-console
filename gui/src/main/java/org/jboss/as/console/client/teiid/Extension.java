@@ -1,9 +1,8 @@
 package org.jboss.as.console.client.teiid;
 
+import com.google.gwt.inject.client.AsyncProvider;
 import org.jboss.as.console.client.teiid.runtime.VDBPresenter;
 import org.jboss.as.console.spi.GinExtension;
-
-import com.google.gwt.inject.client.AsyncProvider;
 
 
 @GinExtension("org.jboss.as.console.TeiidExtension")

@@ -85,7 +85,7 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
         this.dispatcher = dispatcher;
         this.revealStrategy = revealStrategy;
         this.placeManager = placeManager;
-        this.factory = factory;
+        this.factory = (DataModelFactory) factory;
         this.vdbAdaptor = new EntityAdapter<VDB>(VDB.class, metaData);
         this.requestAdaptor = new EntityAdapter<Request>(Request.class, metaData);
         this.sessionAdaptor = new EntityAdapter<Session>(Session.class, metaData);

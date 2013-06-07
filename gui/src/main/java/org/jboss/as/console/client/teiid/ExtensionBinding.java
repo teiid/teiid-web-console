@@ -1,5 +1,7 @@
 package org.jboss.as.console.client.teiid;
 
+import com.google.inject.Singleton;
+import org.jboss.as.console.client.teiid.model.DataModelFactory;
 import org.jboss.as.console.client.teiid.runtime.VDBPresenter;
 import org.jboss.as.console.client.teiid.runtime.VDBView;
 import org.jboss.as.console.spi.GinExtensionBinding;
@@ -29,8 +31,6 @@ public class ExtensionBinding extends AbstractPresenterModule {
         bindPresenter(VDBPresenter.class,
         		VDBPresenter.MyView.class,
                 VDBView.class,
-                VDBPresenter.MyProxy.class);         
+                VDBPresenter.MyProxy.class);
     }
-
-
 }
