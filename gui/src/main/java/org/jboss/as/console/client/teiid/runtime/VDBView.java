@@ -24,7 +24,7 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.core.SuspendableViewImpl;
-import org.jboss.as.console.client.layout.MultipleToOneLayout;
+import org.jboss.as.console.client.shared.viewframework.builder.MultipleToOneLayout;
 import org.jboss.as.console.client.teiid.model.CacheStatistics;
 import org.jboss.as.console.client.teiid.model.DataModelFactory;
 import org.jboss.as.console.client.teiid.model.KeyValuePair;

@@ -20,6 +20,7 @@ package org.jboss.as.console.client.teiid;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import org.jboss.as.console.client.shared.dispatch.DispatchAsync;
 import org.jboss.as.console.client.shared.viewframework.AbstractEntityView;
 import org.jboss.as.console.client.shared.viewframework.Columns;
 import org.jboss.as.console.client.shared.viewframework.EntityToDmrBridge;
@@ -30,7 +31,6 @@ import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.ballroom.client.widgets.forms.Form;
 import org.jboss.ballroom.client.widgets.forms.FormAdapter;
 import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
-import org.jboss.dmr.client.dispatch.DispatchAsync;
 
 public class TransportView extends AbstractEntityView<Transport> implements TransportPresenter.MyView, FrameworkPresenter {
     private final EntityToDmrBridgeImpl<Transport> bridge;

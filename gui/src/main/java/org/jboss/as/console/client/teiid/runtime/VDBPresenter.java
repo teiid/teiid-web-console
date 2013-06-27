@@ -19,6 +19,9 @@ import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.domain.model.ServerInstance;
 import org.jboss.as.console.client.domain.model.SimpleCallback;
 import org.jboss.as.console.client.shared.BeanFactory;
+import org.jboss.as.console.client.shared.dispatch.DispatchAsync;
+import org.jboss.as.console.client.shared.dispatch.impl.DMRAction;
+import org.jboss.as.console.client.shared.dispatch.impl.DMRResponse;
 import org.jboss.as.console.client.shared.runtime.RuntimeBaseAddress;
 import org.jboss.as.console.client.shared.state.GlobalServerSelection;
 import org.jboss.as.console.client.shared.subsys.RevealStrategy;
@@ -34,9 +37,6 @@ import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.as.console.client.widgets.forms.EntityAdapter;
 import org.jboss.as.console.spi.RuntimeExtension;
 import org.jboss.dmr.client.ModelNode;
-import org.jboss.dmr.client.dispatch.DispatchAsync;
-import org.jboss.dmr.client.dispatch.impl.DMRAction;
-import org.jboss.dmr.client.dispatch.impl.DMRResponse;
 
 @SuppressWarnings("nls")
 public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.MyProxy> implements GlobalServerSelection.ServerSelectionListener {
