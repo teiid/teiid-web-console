@@ -6,6 +6,7 @@
 *.ear
 *.iml
 
+app/overlays
 gui/target
 .project
 .classpath

@@ -20,6 +20,8 @@ package org.jboss.as.console.client.teiid;
 
 import java.util.EnumSet;
 
+import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import org.jboss.as.console.client.shared.dispatch.DispatchAsync;
 import org.jboss.as.console.client.shared.viewframework.AbstractEntityView;
 import org.jboss.as.console.client.shared.viewframework.EntityDetails;
@@ -32,9 +34,6 @@ import org.jboss.as.console.client.teiid.model.SubsystemConfiguration;
 import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.ballroom.client.widgets.forms.FormAdapter;
 import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
-
-import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
 
 public class SubsystemView extends AbstractEntityView<SubsystemConfiguration> implements SubsystemPresenter.MyView, FrameworkPresenter {
     private final EntityToDmrBridge<SubsystemConfiguration> bridge;
