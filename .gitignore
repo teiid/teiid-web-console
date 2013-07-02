@@ -6,6 +6,7 @@
 *.ear
 *.iml
 
+app/overlays
 gui/target
 .project
 .classpath
@@ -13,6 +14,7 @@ gui/target
 .idea
 dist/target
 app/target
+app/overlays
 app/war
 app/gwt-unitCache
 target
