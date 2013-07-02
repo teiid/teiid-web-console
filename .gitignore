@@ -13,6 +13,7 @@ gui/target
 .idea
 dist/target
 app/target
+app/overlays
 app/war
 app/gwt-unitCache
 target
