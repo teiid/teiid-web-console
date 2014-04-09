@@ -22,7 +22,7 @@
 	<parent>
         <groupId>org.jboss.teiid</groupId>
         <artifactId>teiid-parent</artifactId>
-        <version>8.4.1</version>    
+        <version>8.6.0.Final</version>
 	</parent>
     <modelVersion>4.0.0</modelVersion>
     <name>Teiid Console :: Parent</name>
@@ -92,5 +92,33 @@
         <module>app</module>
         <module>dist</module>
     </modules>
+    <repositories>
+        <repository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Maven Repository Group</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+            <layout>default</layout>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Maven Repository Group</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+            <layout>default</layout>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
 
