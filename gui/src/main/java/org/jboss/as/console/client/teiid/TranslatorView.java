@@ -18,9 +18,7 @@
  */
 package org.jboss.as.console.client.teiid;
 
-import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
+import org.jboss.as.console.client.shared.dispatch.DispatchAsync;
 import org.jboss.as.console.client.shared.viewframework.AbstractEntityView;
 import org.jboss.as.console.client.shared.viewframework.Columns.NameColumn;
 import org.jboss.as.console.client.shared.viewframework.EntityToDmrBridge;
@@ -31,7 +29,10 @@ import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.ballroom.client.widgets.forms.Form;
 import org.jboss.ballroom.client.widgets.forms.FormAdapter;
 import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
-import org.jboss.dmr.client.dispatch.DispatchAsync;
+
+import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 public class TranslatorView extends AbstractEntityView<Translator> implements TranslatorPresenter.MyView, FrameworkPresenter {
     private final EntityToDmrBridgeImpl<Translator> bridge;
@@ -40,7 +41,7 @@ public class TranslatorView extends AbstractEntityView<Translator> implements Tr
     public TranslatorView(ApplicationMetaData propertyMetaData, DispatchAsync dispatcher) {
         super(Translator.class, propertyMetaData);
         bridge = new EntityToDmrBridgeImpl<Translator>(propertyMetaData, Translator.class, this, dispatcher);
-        setDescription("Provides translation services for physical sources, which can be integrated using a Teiid's VDB");
+        setDescription("Provides translation services for physical sources, which can be integrated using a Teiid's VDB");//$NON-NLS-1$
     }
 
     @Override
@@ -65,7 +66,7 @@ public class TranslatorView extends AbstractEntityView<Translator> implements Tr
                 return record.getModuleName();
             }
         };
-        table.addColumn(cacheContainerColumn, "Module Name");
+        table.addColumn(cacheContainerColumn, "Module Name");//$NON-NLS-1$
 
         return table;
     }
@@ -75,13 +76,13 @@ public class TranslatorView extends AbstractEntityView<Translator> implements Tr
         Form<Translator> form = new Form<Translator>(beanType);
         form.setNumColumns(1);
 
-        form.setFields(formMetaData.findAttribute("name").getFormItemForAdd(),
-                       formMetaData.findAttribute("moduleName").getFormItemForAdd());
+        form.setFields(formMetaData.findAttribute("name").getFormItemForAdd(),//$NON-NLS-1$
+                       formMetaData.findAttribute("moduleName").getFormItemForAdd());//$NON-NLS-1$
         return form;
     }  
     
     @Override
     protected String getEntityDisplayName() {
-        return "Translators";
+        return "Translators";//$NON-NLS-1$
     }
 }

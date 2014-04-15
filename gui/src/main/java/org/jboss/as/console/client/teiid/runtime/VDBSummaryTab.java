@@ -1,3 +1,21 @@
+/* 
+ * JBoss, Home of Professional Open Source 
+ * Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors
+ * as indicated by the @author tags. All rights reserved. 
+ * See the copyright.txt in the distribution for a 
+ * full listing of individual contributors.
+ *
+ * This copyrighted material is made available to anyone wishing to use, 
+ * modify, copy, or redistribute it subject to the terms and conditions 
+ * of the GNU Lesser General Public License, v. 2.1. 
+ * This program is distributed in the hope that it will be useful, but WITHOUT A 
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+ * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details. 
+ * You should have received a copy of the GNU Lesser General Public License, 
+ * v.2.1 along with this distribution; if not, write to the Free Software 
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+ * MA  02110-1301, USA.
+ */
 package org.jboss.as.console.client.teiid.runtime;
 
 import java.util.ArrayList;
@@ -167,7 +185,7 @@ public class VDBSummaryTab extends VDBProvider {
 	}
 
 	private CaptionPanel createConnectionTypePanel(DefaultCellTable vdbTable) {
-		CaptionPanel connTypeCaptionPanel = new CaptionPanel("Connection Type");
+		CaptionPanel captionPanel = new CaptionPanel("Connection Type");
 		final RadioButton noneBtn = new RadioButton("ConnectionType", "None - disallow new connections");
 		final RadioButton byVersionBtn = new RadioButton("ConnectionType", "By Version - Allow with version or earliest versioned vdb when no other vdb marked as ANY");
 		final RadioButton byAnyBtn = new RadioButton("ConnectionType", "Any - Allow with or without a version");
@@ -194,9 +212,9 @@ public class VDBSummaryTab extends VDBProvider {
 		connTypePanel.setCellHorizontalAlignment(noneBtn,HasHorizontalAlignment.ALIGN_LEFT);
 		connTypePanel.setCellHorizontalAlignment(byVersionBtn,HasHorizontalAlignment.ALIGN_LEFT);
 		connTypePanel.setCellHorizontalAlignment(byAnyBtn,HasHorizontalAlignment.ALIGN_LEFT);
-		connTypeCaptionPanel.add(connTypePanel);
-		connTypeCaptionPanel.setWidth("40%");
-		connTypeCaptionPanel.getElement().setAttribute("style", "font-weight:bold;");
+		captionPanel.add(connTypePanel);		
+		captionPanel.setWidth("40%");
+		captionPanel.getElement().setAttribute("style", "font-weight:bold;");
 		
         VDBView.onTableSectionChange(vdbTable, new TableSelectionCallback<VDB> (){
 			@Override
@@ -220,7 +238,7 @@ public class VDBSummaryTab extends VDBProvider {
 				}
 			}
         });		
-		return connTypeCaptionPanel;
+		return captionPanel;
 	}
 	
 	private void changeConnectionType(String type) {
