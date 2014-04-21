@@ -49,7 +49,7 @@ public class ExtensionBinding extends AbstractPresenterModule {
         bindPresenter(VDBPresenter.class,
         		VDBPresenter.MyView.class,
                 VDBView.class,
-                VDBPresenter.MyProxy.class);   
+                VDBPresenter.MyProxy.class);
         
         bindPresenter(TeiidPresenter.class,
         		TeiidPresenter.MyView.class,
