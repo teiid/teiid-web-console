@@ -49,4 +49,24 @@ public interface DataPermission {
 	@Binding(detypedName="allow-execute")
 	public Boolean isAllowExecute();
 	public void setAllowExecute(Boolean flag);
+	
+    @Binding(detypedName="allow-language")
+    public Boolean isAllowLanguage();
+    public void setAllowLanguage(Boolean flag);	
+    
+    @Binding(detypedName="condition")
+    public String getCondition();
+    public void setCondition(String value);
+    
+    @Binding(detypedName="mask")
+    public String getMask();
+    public void setMask(String value);
+
+    @Binding(detypedName="order")
+    public Integer getOrder();
+    public void setOrder(Integer value);
+    
+    @Binding(detypedName="constraint")
+    public Boolean isConstraint();
+    public void setConstraint(Boolean value);
 }

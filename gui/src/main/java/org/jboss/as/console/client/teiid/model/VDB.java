@@ -53,7 +53,7 @@ public interface VDB {
     public List<DataPolicy> getDataPolicies();
     public void setDataPolicies(List<DataPolicy> policies);
     
-    @Binding(detypedName="dynamic")
+    @Binding(detypedName="xml-deployment")
     public Boolean isDynamic();
     public void setDynamic(Boolean flag);
     

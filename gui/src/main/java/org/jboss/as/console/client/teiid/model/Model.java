@@ -62,4 +62,8 @@ public interface Model {
     @Binding(detypedName="metadata-type")
     public String getMetadataType();
     public void setMetadataType(String type);
+    
+    @Binding(detypedName="metadata-status")
+    public String getMetadataStatus();
+    public void setMetadataStatus(String status);
 }

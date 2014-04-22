@@ -22,33 +22,20 @@ import java.util.List;
 
 import org.jboss.as.console.client.widgets.forms.Binding;
 
-public interface DataPolicy {
-	
-	@Binding(detypedName="policy-name", key=true)
-	public String getName();
-	public void setName(String name);
-	
-	@Binding(detypedName="policy-description")
-	public String getDescription();
-	public void setDescription(String desc);
-	
-	@Binding(detypedName="data-permissions", listType="org.jboss.as.console.client.teiid.model.DataPermission")
-	public List<DataPermission> getPermissions();
-	public void setPermissions(List<DataPermission> permissions);
-	
-	@Binding(detypedName="mapped-role-names", listType="java.lang.String")
-	public List<String> getMappedRoleNames();
-	public void setMappedRoleNames(List<String> roleNames);
-	
-	@Binding(detypedName="any-authenticated")
-	public Boolean isAnyAuthenticated();
-	public void setAnyAuthenticated(Boolean flag);
-	
-	@Binding(detypedName="allow-create-temp-tables")
-	public Boolean isAllowCreateTemporaryTables();
-	public void setAllowCreateTemporaryTables(Boolean flag);
+public interface TeiidLogger {
+    @Binding(detypedName="category", key=true)
+    public String getName();
+    public void setName(String value);
 
-    @Binding(detypedName="grant-all")
-    public Boolean isGrantAll();
-    public void setGrantAll(Boolean flag);  	
+    @Binding(detypedName="level")
+    String getLevel();
+    public void setLevel(String value);
+
+    @Binding(detypedName="use-parent-handlers")
+    public Boolean isUseParentHandlers();
+    public void setUseParentHandlers(Boolean value);
+    
+    @Binding(detypedName="handlers", listType="java.lang.String")
+    public List<String> getHandlers();
+    public void setHandlers(List<String> value);
 }

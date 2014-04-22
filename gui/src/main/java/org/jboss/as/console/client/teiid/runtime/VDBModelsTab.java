@@ -22,12 +22,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import org.jboss.as.console.client.teiid.model.DataModelFactory;
-import org.jboss.as.console.client.teiid.model.KeyValuePair;
-import org.jboss.as.console.client.teiid.model.Model;
-import org.jboss.as.console.client.teiid.model.SourceMapping;
-import org.jboss.as.console.client.teiid.model.VDB;
-import org.jboss.as.console.client.teiid.model.ValidityError;
+import org.jboss.as.console.client.teiid.model.*;
 import org.jboss.as.console.client.teiid.runtime.VDBView.TableSelectionCallback;
 import org.jboss.as.console.client.teiid.widgets.DefaultPopUpWindow;
 import org.jboss.ballroom.client.widgets.forms.Form;
@@ -289,7 +284,21 @@ public class VDBModelsTab extends VDBProvider {
 				SourceMapping sm2 = o2.getSourceMappings().get(0);
 				return sm1.getTranslatorName().compareTo(sm2.getTranslatorName());
 			}
-		});        
+		});    
+        
+        TextColumn<Model> schemaStatusColumn = new TextColumn<Model>() {
+            @Override
+            public String getValue(Model record) {
+                return record.getMetadataStatus();
+            }
+        };    
+        schemaStatusColumn.setSortable(true);
+        sortHandler.setComparator(schemaStatusColumn, new Comparator<Model>() {
+            @Override
+            public int compare(Model o1, Model o2) {
+                return o1.getMetadataStatus().compareTo(o2.getMetadataStatus());
+            }
+        });        
         
         Column<Model, String> schemaBtn = new Column<Model, String>(new ButtonCell()) {
             @Override
@@ -312,6 +321,7 @@ public class VDBModelsTab extends VDBProvider {
         modelsTable.addColumn(sourceNameColumn, "Source Name");
         modelsTable.addColumn(translatorNameColumn, "Translator Name");
         modelsTable.addColumn(jndiNameColumn, "Datasource JNDI Name");
+        modelsTable.addColumn(schemaStatusColumn, "Schema Status");
         modelsTable.addColumn(schemaBtn, "Schema");
         
         modelsTable.setSelectionModel(new SingleSelectionModel<Model>(keyProvider));

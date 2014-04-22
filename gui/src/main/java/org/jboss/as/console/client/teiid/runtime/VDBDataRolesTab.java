@@ -20,16 +20,11 @@ package org.jboss.as.console.client.teiid.runtime;
 
 import java.util.List;
 
-import org.jboss.as.console.client.teiid.model.DataPermission;
-import org.jboss.as.console.client.teiid.model.DataPolicy;
+import org.jboss.as.console.client.teiid.model.*;
 import org.jboss.as.console.client.teiid.model.ListBoxItem;
-import org.jboss.as.console.client.teiid.model.Model;
-import org.jboss.as.console.client.teiid.model.VDB;
 import org.jboss.as.console.client.teiid.runtime.VDBView.TableSelectionCallback;
 import org.jboss.as.console.client.teiid.widgets.TeiidIcons;
-import org.jboss.ballroom.client.widgets.forms.ButtonItem;
-import org.jboss.ballroom.client.widgets.forms.Form;
-import org.jboss.ballroom.client.widgets.forms.TextItem;
+import org.jboss.ballroom.client.widgets.forms.*;
 import org.jboss.ballroom.client.widgets.icons.Icons;
 import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
 import org.jboss.ballroom.client.widgets.tables.DefaultPager;
@@ -55,6 +50,7 @@ public class VDBDataRolesTab extends VDBProvider {
 	private ListDataProvider<DataPolicy> dataPolicyProvider = new ListDataProvider<DataPolicy>();
 	private DefaultCellTable dataPermissionsTable;
 	private Form<DataPolicy> mappedRolesForm;
+	private Form<DataPermission> conditionPanel;
 	
 	public VDBDataRolesTab(VDBPresenter presenter) {
 		this.presenter = presenter;
@@ -98,6 +94,7 @@ public class VDBDataRolesTab extends VDBProvider {
 					dataPermissionProvider.getList().clear();
 					if (!permissions.isEmpty()) {
 						dataPermissionProvider.getList().addAll(permissions);
+						conditionPanel.edit(permissions.get(0));
 					}
 					mappedRolesForm.edit(policies.get(0));
 				}
@@ -117,7 +114,7 @@ public class VDBDataRolesTab extends VDBProvider {
         form.setFields(descriptionLabel);
         form.bind(policyTable);        
         
-        // PPermissions in Policy
+        // Permissions in Policy
         Label permissionsLabel = new Label("Permissions");
         permissionsLabel.getElement().setAttribute("style", "margin-top:10px;margin-bottom:10px;font-weight:bold;");
         
@@ -129,9 +126,12 @@ public class VDBDataRolesTab extends VDBProvider {
 			@Override
 			public void onSelectionChange(DataPolicy selection) {
 				if (selection != null) {
-					setPolicyName(selection.getName());
+					setPolicyName(selection.getName());					
 					dataPermissionProvider.getList().clear();
 					dataPermissionProvider.getList().addAll(selection.getPermissions());
+					if (!selection.getPermissions().isEmpty()) {
+					    dataPermissionsTable.getSelectionModel().setSelected(selection.getPermissions().get(0), true);
+					}
 				}
 				else {
 					setPolicyName(null);
@@ -142,6 +142,17 @@ public class VDBDataRolesTab extends VDBProvider {
         DefaultPager dataPermissionsTablePager = new DefaultPager();
         dataPermissionsTablePager.setDisplay(this.dataPermissionsTable);
         
+        // conditions panel
+        this.conditionPanel = new Form<DataPermission>(DataPermission.class);
+        this.conditionPanel.setNumColumns(2);
+        this.conditionPanel.setEnabled(false);
+
+        TextItem conditionLabel = new TextItem("condition", "Condition");
+        CheckBoxItem constraintLabel = new CheckBoxItem("constraint", "Filter");
+        TextItem maskLabel = new TextItem("mask", "Mask");
+        NumberBoxItem maskOrderLabel = new NumberBoxItem("order", "Mask Order");
+        this.conditionPanel.setFields(constraintLabel, conditionLabel,maskLabel, maskOrderLabel);
+        this.conditionPanel.bind(this.dataPermissionsTable);  
         
         // mapped role names
         this.mappedRolesForm = new Form<DataPolicy>(DataPolicy.class);
@@ -161,7 +172,7 @@ public class VDBDataRolesTab extends VDBProvider {
         btnPanel.add(new Label("           ")); // to align under the box.
         btnPanel.add(addBtn.asWidget());
         btnPanel.add(removeBtn.asWidget());
-        
+                
         CaptionPanel captionPanel = new CaptionPanel("Manage Data Roles");
         VerticalPanel mappedRolesPanel = new VerticalPanel();
         mappedRolesPanel.add(mappedRolesForm.asWidget());
@@ -195,7 +206,8 @@ public class VDBDataRolesTab extends VDBProvider {
         formPanel.add(form.asWidget());
         formPanel.add(permissionsLabel.asWidget());
         formPanel.add(this.dataPermissionsTable.asWidget()); 
-        formPanel.add(dataPermissionsTablePager);
+        formPanel.add(dataPermissionsTablePager);        
+        formPanel.add(conditionPanel.asWidget());
         formPanel.add(captionPanel.asWidget());
         return formPanel;  
     }
@@ -246,12 +258,28 @@ public class VDBDataRolesTab extends VDBProvider {
 				}
 				return res;
 			}
-		};         
+		};  
+		
+        Column<DataPolicy, ImageResource> grantAllColumn = new Column<DataPolicy, ImageResource>(
+                new ImageResourceCell()) {
+            @Override
+            public ImageResource getValue(DataPolicy record) {
+                ImageResource res = null;
+                if (record.isGrantAll()) {
+                    res = Icons.INSTANCE.status_good();
+                    
+                } else {
+                    res = TeiidIcons.INSTANCE.status_not_ok();
+                }
+                return res;
+            }
+        };		
         
         table.setTitle("Data Policies");
         table.addColumn(nameColumn, "Policy Name");
         table.addColumn(anyAuthenticatedColumn, "Allows Any Authenticated User");
         table.addColumn(allowCreateTempTablesColumn, "Allows Creation Of Temp Tables");
+        table.addColumn(grantAllColumn, "Grant All");
         table.setSelectionModel(new SingleSelectionModel<DataPolicy>(keyProvider));
 		return table;
 	}	
@@ -342,6 +370,19 @@ public class VDBDataRolesTab extends VDBProvider {
 				return res;
 			}
 		}; 		
+        Column<DataPermission, ImageResource> alterColumn = new Column<DataPermission, ImageResource>(
+                new ImageResourceCell()) {
+            @Override
+            public ImageResource getValue(DataPermission permission) {
+                ImageResource res = null;
+                if (permission.isAllowAlter() == null || !permission.isAllowAlter()) {
+                    res = TeiidIcons.INSTANCE.status_not_ok();
+                } else {
+                    res = Icons.INSTANCE.status_good();
+                }
+                return res;
+            }
+        };		
         
         table.setTitle("Data Permissions");
         table.addColumn(nameColumn, "Resource Name");
@@ -350,6 +391,7 @@ public class VDBDataRolesTab extends VDBProvider {
         table.addColumn(updateColumn, "Update");
         table.addColumn(deleteColumn, "Delete");
         table.addColumn(executeColumn, "Execute");
+        table.addColumn(alterColumn, "Alter");
         table.setSelectionModel(new SingleSelectionModel<DataPermission>(keyProvider));
 		return table;
 	}	
