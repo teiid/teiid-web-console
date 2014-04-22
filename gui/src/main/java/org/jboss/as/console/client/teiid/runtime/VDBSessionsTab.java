@@ -241,11 +241,12 @@ public class VDBSessionsTab extends VDBProvider {
 	}
 	
 	private void refresh() {
-		presenter.getSessions(getVdbName(), getVdbVersion());
+	    this.sessionProvider.getList().clear();
+		this.presenter.getSessions(getVdbName(), getVdbVersion());
 	}
 	
 	private void terminate(Session session) {
-		presenter.terminateSession(session);
+		this.presenter.terminateSession(session);
 	}
 	
 	public void terminateSubmitted(Session session) {

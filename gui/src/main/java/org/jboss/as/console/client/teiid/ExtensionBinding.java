@@ -36,6 +36,7 @@ public class ExtensionBinding extends AbstractPresenterModule {
         		SubsystemPresenter.MyView.class,
                 SubsystemView.class,
                 SubsystemPresenter.MyProxy.class);
+        
         bindPresenter(TranslatorPresenter.class,
         		TranslatorPresenter.MyView.class,
                 TranslatorView.class,
@@ -54,6 +55,10 @@ public class ExtensionBinding extends AbstractPresenterModule {
         bindPresenter(TeiidPresenter.class,
         		TeiidPresenter.MyView.class,
                 TeiidView.class,
-                TeiidPresenter.MyProxy.class);         
+                TeiidPresenter.MyProxy.class); 
+//        bindPresenter(AuditPresenter.class, 
+//                AuditPresenter.MyView.class, 
+//                AuditView.class, 
+//                AuditPresenter.MyProxy.class);
     }
 }

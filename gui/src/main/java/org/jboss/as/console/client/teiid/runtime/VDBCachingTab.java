@@ -35,13 +35,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.CaptionPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.NumberLabel;
-import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -146,6 +140,8 @@ public class VDBCachingTab extends VDBProvider {
 		preparedPlanBtn.setEnabled(true);
 		clearCachePanel.add(resultSetBtn);
 		clearCachePanel.add(preparedPlanBtn);
+		clearCachePanel.setCellHorizontalAlignment(resultSetBtn, HasHorizontalAlignment.ALIGN_LEFT);
+		clearCachePanel.setCellHorizontalAlignment(preparedPlanBtn, HasHorizontalAlignment.ALIGN_LEFT);
 		clearCachePanel.add(clearBtn);
 		clearCacheCaptionPanel.add(clearCachePanel);
         

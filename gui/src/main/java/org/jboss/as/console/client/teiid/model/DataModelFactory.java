@@ -18,8 +18,9 @@
  */
 package org.jboss.as.console.client.teiid.model;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
 import org.jboss.as.console.spi.BeanFactoryExtension;
+
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 
 @BeanFactoryExtension
@@ -41,4 +42,5 @@ public interface DataModelFactory {
 	AutoBean<MaterializedView> getMaterializedView();
 	AutoBean<CacheStatistics> getCacheStatistics();
 	AutoBean<EngineStatistics> getEngineStatistics();
+	AutoBean<TeiidLogger> getTeiidLoggers();
 }

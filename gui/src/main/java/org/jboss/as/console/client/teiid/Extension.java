@@ -19,9 +19,10 @@
 package org.jboss.as.console.client.teiid;
 
 import org.jboss.as.console.client.teiid.runtime.TeiidPresenter;
-import com.google.gwt.inject.client.AsyncProvider;
 import org.jboss.as.console.client.teiid.runtime.VDBPresenter;
 import org.jboss.as.console.spi.GinExtension;
+
+import com.google.gwt.inject.client.AsyncProvider;
 
 
 @GinExtension("org.jboss.as.console.TeiidExtension")
@@ -31,4 +32,5 @@ public interface Extension {
     AsyncProvider<TransportPresenter> getTransportPresenter();
     AsyncProvider<VDBPresenter> getVDBPresenter();
     AsyncProvider<TeiidPresenter> getTeiidPresenter();
+    //AsyncProvider<AuditPresenter> getAuditPresenter();
 }
