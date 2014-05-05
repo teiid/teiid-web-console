@@ -31,12 +31,15 @@ import org.jboss.as.console.client.shared.subsys.RevealStrategy;
 import org.jboss.as.console.client.teiid.model.TeiidLogger;
 import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.as.console.client.widgets.forms.EntityAdapter;
+import org.jboss.as.console.spi.SubsystemExtension;
 import org.jboss.dmr.client.ModelNode;
 
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
+import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 
@@ -51,11 +54,11 @@ public class AuditPresenter extends Presenter<AuditPresenter.MyView, AuditPresen
     private RevealStrategy revealStrategy;
     private EntityAdapter<TeiidLogger> loggerAdaptor;
     
-    /*
+    
     @ProxyCodeSplit
     @NameToken("teiid-audit")
-    @SubsystemExtension(name="Audit", group = "Teiid", key="teiid")
-    
+    @SubsystemExtension(name="Audit Log", group = "Teiid", key="teiid")
+    /*
     @AccessControl(resources = {
             "{selected.profile}/subsystem=logging"
     })
@@ -73,6 +76,7 @@ public class AuditPresenter extends Presenter<AuditPresenter.MyView, AuditPresen
         void logHandlerRemoved(String handlerName, boolean removed);
         void loggerAdded(String context, boolean added);
         void loggerRemoved(String context, boolean removed);
+        void handlerExists(String context, String name, boolean dbAppender, boolean exists);
     }	
     
 	@Inject
@@ -131,6 +135,35 @@ public class AuditPresenter extends Presenter<AuditPresenter.MyView, AuditPresen
         });
 	}
 	
+    public void checkHandler(final String context, final String name, final boolean dbAppender) {
+        ModelNode address = RuntimeBaseAddress.get();
+        address.add("subsystem", "logging");
+        if (dbAppender) {
+            address.add("async-handler", name);
+        }
+        else {
+            address.add("periodic-rotating-file-handler", name);
+        }
+        ModelNode operation = new ModelNode();
+        operation.get(OP).set("read-resource");
+        operation.get(ADDRESS).set(address);
+        
+        this.dispatch.execute(new DMRAction(operation),new SimpleCallback<DMRResponse>() {
+            @Override
+            public void onSuccess(DMRResponse result) {
+                ModelNode response = result.get();
+                if (isSucess(response)) {
+                    getView().handlerExists(context, name, dbAppender, true);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                getView().handlerExists(context, name, dbAppender, false);
+            }
+        });
+    }	
+	
     public void addOrRemoveLogger(final String context, final boolean addOperation) {
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "logging");
@@ -159,6 +192,9 @@ public class AuditPresenter extends Presenter<AuditPresenter.MyView, AuditPresen
 
             @Override
             public void onFailure(Throwable caught) {
+                if (addOperation) {
+                    getView().addLogger(context);    
+                }                
             }
         });
     }	

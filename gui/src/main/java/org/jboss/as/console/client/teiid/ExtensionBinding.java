@@ -56,9 +56,9 @@ public class ExtensionBinding extends AbstractPresenterModule {
         		TeiidPresenter.MyView.class,
                 TeiidView.class,
                 TeiidPresenter.MyProxy.class); 
-//        bindPresenter(AuditPresenter.class, 
-//                AuditPresenter.MyView.class, 
-//                AuditView.class, 
-//                AuditPresenter.MyProxy.class);
+        bindPresenter(AuditPresenter.class, 
+                AuditPresenter.MyView.class, 
+                AuditView.class, 
+                AuditPresenter.MyProxy.class);
     }
 }
