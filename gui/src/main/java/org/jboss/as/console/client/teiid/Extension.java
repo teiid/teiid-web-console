@@ -32,5 +32,5 @@ public interface Extension {
     AsyncProvider<TransportPresenter> getTransportPresenter();
     AsyncProvider<VDBPresenter> getVDBPresenter();
     AsyncProvider<TeiidPresenter> getTeiidPresenter();
-    //AsyncProvider<AuditPresenter> getAuditPresenter();
+    AsyncProvider<AuditPresenter> getAuditPresenter();
 }

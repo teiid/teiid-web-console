@@ -47,9 +47,10 @@ public class AuditView extends DisposableViewImpl implements AuditPresenter.MyVi
 	public Widget createWidget() {
 		SimpleLayout layout = new SimpleLayout().setTitle("Audit Logging")
 				.setHeadline("Audit/Command Logging")
-				.setDescription("Audit/Command Logging for Teiid Subsystem")
-				.addContent("Audit/Command Logging", createLogPanel());
-
+				.setDescription("Turn On/Off Audit/Command Logging. By default file handler(s) " +
+				        "will be added. Alternatively, add TEIID_COMMAND_LOG/TEIID_AUDIT_LOG " +
+				        "handlers to override the default handlers")
+				.addContent("Audit/Command Logging for Teiid Subsystem", createLogPanel());
         return layout.build();	
 	}
 	
@@ -76,7 +77,6 @@ public class AuditView extends DisposableViewImpl implements AuditPresenter.MyVi
         captionPanel.add(selectionPanel);        
         captionPanel.setWidth("40%");
         captionPanel.getElement().setAttribute("style", "font-weight:bold;");
-            
         return captionPanel;
     }	
 
@@ -145,33 +145,69 @@ public class AuditView extends DisposableViewImpl implements AuditPresenter.MyVi
 
     @Override
     public void addLogger(String context) {
+        // first check if DB based handler exists
         if (context.equals(AuditPresenter.CTX_AUDITLOGGING) ) {
-            presenter.addFileHandler("TEIID_AUDIT_LOG", "teiid-audit.log");
-            presenter.addLogger(context, "DEBUG", "TEIID_AUDIT_LOG");
+            presenter.checkHandler(context, "TEIID_AUDIT_LOG", true);
         }
         
         if (context.equals(AuditPresenter.CTX_COMMANDLOGGING)) {
-            presenter.addFileHandler("TEIID_COMMAND_LOG", "teiid-command.log");
-            presenter.addLogger(context, "DEBUG", "TEIID_COMMAND_LOG");
+            presenter.checkHandler(context, "TEIID_COMMAND_LOG", true);
         }
         
         // no handler for this, should go in root log
         if (context.equals(AuditPresenter.CTX_TRACELOGGING)) {
             presenter.addLogger(context, "TRACE", null);
         }
-        
+    }
+    
+    @Override
+    public void handlerExists(String context, String name, boolean dbAppender, boolean exists) {
+        // if handler exists, proceed to creating the logger
+        if (exists) {            
+            if (context.equals(AuditPresenter.CTX_AUDITLOGGING) ) {
+                presenter.addLogger(context, "DEBUG", "TEIID_AUDIT_LOG");
+            }
+            
+            if (context.equals(AuditPresenter.CTX_COMMANDLOGGING)) {
+                presenter.addLogger(context, "DEBUG", "TEIID_COMMAND_LOG");
+            }            
+        }
+        else {
+            // if the first request was to check db handler, now check for file based handler
+            if (dbAppender) {
+                if (context.equals(AuditPresenter.CTX_AUDITLOGGING) ) {
+                    presenter.checkHandler(context, "TEIID_AUDIT_LOG", false);
+                }
+                
+                if (context.equals(AuditPresenter.CTX_COMMANDLOGGING)) {
+                    presenter.checkHandler(context, "TEIID_COMMAND_LOG", false);
+                }                
+            }
+            else {
+                // if file based handler also does not exist, then add a file based handler
+                if (context.equals(AuditPresenter.CTX_AUDITLOGGING) ) {
+                    presenter.addFileHandler("TEIID_AUDIT_LOG", "teiid-audit.log");
+                    presenter.addLogger(context, "DEBUG", "TEIID_AUDIT_LOG");
+                }
+                
+                if (context.equals(AuditPresenter.CTX_COMMANDLOGGING)) {
+                    presenter.addFileHandler("TEIID_COMMAND_LOG", "teiid-command.log");
+                    presenter.addLogger(context, "DEBUG", "TEIID_COMMAND_LOG");
+                }     
+            }
+        }
     }
 
     @Override
     public void deleteLogger(String context) {
         if (context.equals(AuditPresenter.CTX_AUDITLOGGING)) {
             presenter.removeLogger(context);
-            presenter.removeFileHandler("TEIID_AUDIT_LOG");
+            //presenter.removeFileHandler("TEIID_AUDIT_LOG");
         }
         
         if (context.equals(AuditPresenter.CTX_COMMANDLOGGING)) {
             presenter.removeLogger(context);
-            presenter.removeFileHandler("TEIID_COMMAND_LOG");
+            //presenter.removeFileHandler("TEIID_COMMAND_LOG");
         }
         
         // no handler for this, should go in root log
