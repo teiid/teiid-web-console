@@ -20,6 +20,7 @@ package org.jboss.as.console.client.teiid;
 
 import org.jboss.as.console.client.shared.subsys.RevealStrategy;
 import org.jboss.as.console.client.shared.viewframework.FrameworkView;
+import org.jboss.as.console.spi.AccessControl;
 import org.jboss.as.console.spi.SubsystemExtension;
 
 import com.google.inject.Inject;
@@ -38,11 +39,9 @@ public class SubsystemPresenter extends Presenter<SubsystemPresenter.MyView, Sub
     @ProxyCodeSplit
     @NameToken("teiid")
     @SubsystemExtension(name="Query Engine", group = "Teiid", key="teiid")
-    /*
     @AccessControl(resources = {
             "{selected.profile}/subsystem=teiid"
     })
-    */    
     public interface MyProxy extends Proxy<SubsystemPresenter>, Place {
     }
 

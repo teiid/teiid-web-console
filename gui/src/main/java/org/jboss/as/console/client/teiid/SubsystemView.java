@@ -20,12 +20,18 @@ package org.jboss.as.console.client.teiid;
 
 import java.util.EnumSet;
 
-import org.jboss.as.console.client.shared.dispatch.DispatchAsync;
-import org.jboss.as.console.client.shared.viewframework.*;
+import org.jboss.as.console.client.shared.viewframework.AbstractEntityView;
+import org.jboss.as.console.client.shared.viewframework.EntityDetails;
+import org.jboss.as.console.client.shared.viewframework.EntityEditor;
+import org.jboss.as.console.client.shared.viewframework.EntityToDmrBridge;
+import org.jboss.as.console.client.shared.viewframework.FrameworkButton;
+import org.jboss.as.console.client.shared.viewframework.FrameworkPresenter;
+import org.jboss.as.console.client.shared.viewframework.SingleEntityToDmrBridgeImpl;
 import org.jboss.as.console.client.teiid.model.SubsystemConfiguration;
 import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.ballroom.client.widgets.forms.FormAdapter;
 import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
+import org.jboss.dmr.client.dispatch.DispatchAsync;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
