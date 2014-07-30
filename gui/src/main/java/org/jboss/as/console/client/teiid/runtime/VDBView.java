@@ -23,8 +23,14 @@ import java.util.List;
 
 import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.core.SuspendableViewImpl;
-import org.jboss.as.console.client.shared.viewframework.builder.MultipleToOneLayout;
-import org.jboss.as.console.client.teiid.model.*;
+import org.jboss.as.console.client.layout.MultipleToOneLayout;
+import org.jboss.as.console.client.teiid.model.CacheStatistics;
+import org.jboss.as.console.client.teiid.model.DataModelFactory;
+import org.jboss.as.console.client.teiid.model.KeyValuePair;
+import org.jboss.as.console.client.teiid.model.Request;
+import org.jboss.as.console.client.teiid.model.Session;
+import org.jboss.as.console.client.teiid.model.VDB;
+import org.jboss.as.console.client.teiid.model.ValidityError;
 import org.jboss.as.console.client.teiid.widgets.TeiidIcons;
 import org.jboss.as.console.client.widgets.pages.PagedView;
 import org.jboss.ballroom.client.widgets.icons.Icons;

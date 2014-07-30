@@ -28,17 +28,25 @@ import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.domain.model.ServerInstance;
 import org.jboss.as.console.client.domain.model.SimpleCallback;
 import org.jboss.as.console.client.shared.BeanFactory;
-import org.jboss.as.console.client.shared.dispatch.DispatchAsync;
-import org.jboss.as.console.client.shared.dispatch.impl.DMRAction;
-import org.jboss.as.console.client.shared.dispatch.impl.DMRResponse;
 import org.jboss.as.console.client.shared.runtime.RuntimeBaseAddress;
 import org.jboss.as.console.client.shared.state.GlobalServerSelection;
 import org.jboss.as.console.client.shared.subsys.RevealStrategy;
-import org.jboss.as.console.client.teiid.model.*;
+import org.jboss.as.console.client.teiid.model.CacheStatistics;
+import org.jboss.as.console.client.teiid.model.DataModelFactory;
+import org.jboss.as.console.client.teiid.model.MaterializedView;
+import org.jboss.as.console.client.teiid.model.Model;
+import org.jboss.as.console.client.teiid.model.Request;
+import org.jboss.as.console.client.teiid.model.Session;
+import org.jboss.as.console.client.teiid.model.VDB;
+import org.jboss.as.console.client.teiid.model.ValidityError;
 import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.as.console.client.widgets.forms.EntityAdapter;
+import org.jboss.as.console.spi.AccessControl;
 import org.jboss.as.console.spi.RuntimeExtension;
 import org.jboss.dmr.client.ModelNode;
+import org.jboss.dmr.client.dispatch.DispatchAsync;
+import org.jboss.dmr.client.dispatch.impl.DMRAction;
+import org.jboss.dmr.client.dispatch.impl.DMRResponse;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.inject.Inject;
@@ -67,13 +75,11 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     @ProxyCodeSplit
     @NameToken("vdb-runtime")
     @RuntimeExtension(name="Virtual Databases", key="teiid")
-    /*
     @AccessControl(
         resources = {
                 "/{selected.host}/{selected.server}/subsystem=teiid"
         } 
     )
-    */    
     public interface MyProxy extends Proxy<VDBPresenter>, Place {
     }
 

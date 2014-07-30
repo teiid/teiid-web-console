@@ -20,6 +20,7 @@ package org.jboss.as.console.client.teiid;
 
 import org.jboss.as.console.client.shared.subsys.RevealStrategy;
 import org.jboss.as.console.client.shared.viewframework.FrameworkView;
+import org.jboss.as.console.spi.AccessControl;
 import org.jboss.as.console.spi.SubsystemExtension;
 
 import com.google.inject.Inject;
@@ -37,11 +38,9 @@ public class TranslatorPresenter extends Presenter<TranslatorPresenter.MyView, T
     @ProxyCodeSplit
     @NameToken("teiid-translators")
     @SubsystemExtension(name="Translators", group = "Teiid", key="teiid")
-    /*
     @AccessControl(resources = {
             "{selected.profile}/subsystem=teiid/translator=*"
     })
-    */        
     public interface MyProxy extends Proxy<TranslatorPresenter>, Place {
     }
 
