@@ -1,24 +1,12 @@
-<!--
-  ~ JBoss, Home of Professional Open Source
-  ~ Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors
-  ~ as indicated by the @author tags. All rights reserved.
-  ~ See the copyright.txt in the distribution for a
-  ~ full listing of individual contributors.
-  ~
-  ~ This copyrighted material is made available to anyone wishing to use,
-  ~ modify, copy, or redistribute it subject to the terms and conditions
-  ~ of the GNU Lesser General Public License, v. 2.1.
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT A
-  ~ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-  ~ PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-  ~ You should have received a copy of the GNU Lesser General Public License,
-  ~ v.2.1 along with this distribution; if not, write to the Free Software
-  ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-  ~ MA  02110-1301, USA.
-  -->
+<!-- ~ JBoss, Home of Professional Open Source ~ Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors ~ as indicated by the @author tags. All rights reserved. ~ See the copyright.txt in the distribution for a ~ full listing of individual contributors. ~ ~ This copyrighted material is made available to anyone wishing to use, ~ modify, copy, or redistribute it subject to the terms and conditions ~ of the GNU Lesser General Public License, v. 2.1. ~ This program is distributed in 
+    the hope that it will be useful, but WITHOUT A ~ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A ~ PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. ~ You should have received a copy of the GNU Lesser General Public License, ~ v.2.1 along with this distribution; if not, write to the Free Software ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, ~ MA 02110-1301, USA. -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+    <parent>
+        <groupId>org.jboss.integration-platform</groupId>
+        <artifactId>jboss-integration-platform-parent</artifactId>
+        <version>6.0.0.CR13</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
     <name>Teiid Console :: Parent</name>
     <groupId>org.jboss.teiid.web-console</groupId>
@@ -30,26 +18,17 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Overrides to allow the release process to commit: https://jira.codehaus.org/browse/MRELEASE-812 -->
+        <version.release.plugin>2.5</version.release.plugin>        
     </properties>
-    
+
     <scm>
         <connection>scm:git:git://github.com/teiid/teiid-web-console.git</connection>
         <developerConnection>scm:git:git@github.com:teiid/teiid-web-console.git</developerConnection>
         <url>http://github.com/teiid/teiid-web-console</url>
-      <tag>HEAD</tag>
-  </scm>
-  <distributionManagement>
-    <repository>
-      <id>jboss-releases-repository</id>
-      <name>JBoss Releases Repository</name>
-      <url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</url>
-    </repository>
-    <snapshotRepository>
-      <id>jboss-snapshots-repository</id>
-      <name>JBoss Snapshots Repository</name>
-      <url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
+        <tag>HEAD</tag>
+    </scm>
+
     <licenses>
         <license>
             <name>GNU Lesser General Public License</name>
@@ -80,13 +59,13 @@
             </roles>
             <timezone>-6</timezone>
         </developer>
-    </developers>    
+    </developers>
     <profiles>
         <profile>
-          <id>release</id>
-          <properties>
-            <maven.javadoc.skip>true</maven.javadoc.skip>
-          </properties>
+            <id>release</id>
+            <properties>
+                <maven.javadoc.skip>true</maven.javadoc.skip>
+            </properties>
             <modules>
                 <module>gui</module>
                 <module>app</module>
