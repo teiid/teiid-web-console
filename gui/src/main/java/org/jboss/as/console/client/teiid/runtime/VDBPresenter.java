@@ -25,11 +25,9 @@ import static org.jboss.dmr.client.ModelDescriptionConstants.RESULT;
 import java.util.List;
 
 import org.jboss.as.console.client.Console;
-import org.jboss.as.console.client.domain.model.ServerInstance;
 import org.jboss.as.console.client.domain.model.SimpleCallback;
 import org.jboss.as.console.client.shared.BeanFactory;
 import org.jboss.as.console.client.shared.runtime.RuntimeBaseAddress;
-import org.jboss.as.console.client.shared.state.GlobalServerSelection;
 import org.jboss.as.console.client.shared.subsys.RevealStrategy;
 import org.jboss.as.console.client.teiid.model.CacheStatistics;
 import org.jboss.as.console.client.teiid.model.DataModelFactory;
@@ -48,7 +46,6 @@ import org.jboss.dmr.client.dispatch.DispatchAsync;
 import org.jboss.dmr.client.dispatch.impl.DMRAction;
 import org.jboss.dmr.client.dispatch.impl.DMRResponse;
 
-import com.google.gwt.core.client.Scheduler;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
@@ -60,11 +57,11 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 
 
 @SuppressWarnings("nls")
-public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.MyProxy> implements GlobalServerSelection.ServerSelectionListener {
+public class VDBPresenter extends
+		Presenter<VDBPresenter.MyView, VDBPresenter.MyProxy> {
    
 	private DispatchAsync dispatcher;
     private RevealStrategy revealStrategy;
-    private ServerInstance serverSelection;
     private DataModelFactory factory;
     private EntityAdapter<VDB> vdbAdaptor;
     private EntityAdapter<Request> requestAdaptor;
@@ -121,9 +118,9 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
         super.onBind();
         getView().setPresenter(this);
         getView().setDataModelFactory(this.factory);
-        getEventBus().addHandler(GlobalServerSelection.TYPE, this);
     }
 	
+        
     @Override
     protected void onReset() {
         super.onReset();
@@ -135,28 +132,12 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 		super.onReveal();
 	}
 	
-    @Override
-    public void onServerSelection(final ServerInstance server) {
-        this.serverSelection = server;
-		Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-			@Override
-			public void execute() {
-				refresh(true);
-			}
-		});
-	}
-
 	@Override
 	protected void revealInParent() {
 		revealStrategy.revealInRuntimeParent(this);
 	}
 	
     public void refresh(final boolean paging) {
-        if(!isServerActive()) {
-            Console.warning(Console.CONSTANTS.common_err_server_not_active());
-            getView().setDeployedVDBs(null);
-            return;
-        }
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -190,10 +171,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }	
     
     public void removeRoleName(final String vdbName, final int version, final String dataRole, final String mappedRole) {
-        if(!isServerActive()) {
-            Console.warning(Console.CONSTANTS.common_err_server_not_active());
-            return;
-        }
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -214,10 +191,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }
     
     public void addRoleName(final String vdbName, final int version, final String dataRole, final String mappedRole) {
-        if(!isServerActive()) {
-            Console.warning(Console.CONSTANTS.common_err_server_not_active());
-            return;
-        }
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -238,9 +211,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }    
     
     public void getRequests(String vdbName, int version, boolean includeSourceQueries) {
-        if(!isServerActive()) {
-        	getView().setVDBRequests(null);
-        }
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -267,9 +237,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }
     
     public void getQueryPlan(Request request) {
-        if(!isServerActive()) {
-        	getView().setQueryPlan("No Server Found");
-        }
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -298,9 +265,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }
     
     public void cancelRequest(final Request request) {
-        if(!isServerActive()) {
-        	getView().cancelSubmitted(request);
-        }
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
         ModelNode operation = new ModelNode();
@@ -325,9 +289,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }
 
     public void getSchema(String vdbName, int version, String modelName) {
-        if(!isServerActive()) {
-        	getView().setModelSchema("No Active Server Found");
-        }
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -353,9 +314,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
     }
 
 	public void getSessions(final String vdbName, final int version) {
-        if(!isServerActive()) {
-        	getView().setVDBRequests(null);
-        }
 
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -381,9 +339,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
 	public void terminateSession(final Session session) {
-        if(!isServerActive()) {
-        	getView().terminateSessionSubmitted(session);
-        }
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -408,9 +363,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 	
 	public <T> void executeQuery(final String vdbName, final int version, final String sql, final String clazz) {
-        if(!isServerActive()) {
-        	getView().setQueryResults(null, clazz);
-        }
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -449,9 +401,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
 	public void clearCache(final String vdbName, final int version, final String cacheType) {
-        if(!isServerActive()) {
-        	return;
-        }
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -471,9 +420,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
 	public void changeConnectionType(final String vdbName, final int version, final String connType) {
-        if(!isServerActive()) {
-        	return;
-        }
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -497,10 +443,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 			final String modelName, final String sourceName,
 			final String translatorName, final String dataSourceName) {
 
-		if(!isServerActive()) {
-        	return;
-        }
-
 		ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
         ModelNode operation = new ModelNode();
@@ -523,9 +465,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
 	public void reloadVDB(final String vdbName, final int version) {
-		if(!isServerActive()) {
-        	return;
-        }
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -545,9 +484,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
 	public void getCacheStatistics() {
-		if(!isServerActive()) {
-        	return;
-        }
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -572,10 +508,6 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
 	}
 
 	public void getSourceRequests(final Request selection) {
-        if(!isServerActive()) {
-        	getView().setSourceRequests(selection, null);
-        }
-        
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
         ModelNode operation = new ModelNode();
@@ -598,8 +530,4 @@ public class VDBPresenter extends Presenter<VDBPresenter.MyView, VDBPresenter.My
             }
         });    	
 	}
-
-    private boolean isServerActive() {
-        return ((serverSelection== null) || (serverSelection != null && serverSelection.isRunning()));
-    }
 }
