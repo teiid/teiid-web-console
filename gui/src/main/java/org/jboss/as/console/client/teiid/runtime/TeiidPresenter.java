@@ -27,7 +27,7 @@ import org.jboss.as.console.client.shared.dispatch.DispatchAsync;
 import org.jboss.as.console.client.shared.dispatch.impl.DMRAction;
 import org.jboss.as.console.client.shared.dispatch.impl.DMRResponse;
 import org.jboss.as.console.client.shared.runtime.RuntimeBaseAddress;
-import org.jboss.as.console.client.shared.state.ServerSelectionChanged;
+import org.jboss.as.console.client.shared.state.ReloadEvent;
 import org.jboss.as.console.client.shared.subsys.RevealStrategy;
 import org.jboss.as.console.client.teiid.model.EngineStatistics;
 import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
@@ -46,7 +46,7 @@ import com.gwtplatform.mvp.client.proxy.Place;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 
 public class TeiidPresenter extends Presenter<TeiidPresenter.MyView, TeiidPresenter.MyProxy> 
-	implements ServerSelectionChanged.ChangeListener {
+	implements ReloadEvent.ReloadListener {
 
 	private DispatchAsync dispatcher;
     private RevealStrategy revealStrategy;
@@ -85,11 +85,11 @@ public class TeiidPresenter extends Presenter<TeiidPresenter.MyView, TeiidPresen
     protected void onBind() {
         super.onBind();
         getView().setPresenter(this);
-        getEventBus().addHandler(ServerSelectionChanged.TYPE, this);
+        getEventBus().addHandler(ReloadEvent.TYPE, this);
     }	
     
     @Override
-    public void onServerSelectionChanged(boolean isRunning) {
+    public void onReload() {
         Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
             public void execute() {
