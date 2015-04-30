@@ -5,11 +5,15 @@
     <groupId>org.jboss.teiid.web-console</groupId>
     <artifactId>console-extensions</artifactId>
     <packaging>jar</packaging>
-    <version>2.5.1-SNAPSHOT</version>
+    <version>2.5.1</version>
 
     <parent>
         <groupId>org.jboss.as</groupId>
         <artifactId>jboss-as-console-extension</artifactId>
         <version>2.5.1</version>
     </parent>
+
+  <scm>
+    <tag>2.5.1</tag>
+  </scm>
 </project>
