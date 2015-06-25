@@ -22,6 +22,7 @@ import static org.jboss.dmr.client.ModelDescriptionConstants.ADDRESS;
 import static org.jboss.dmr.client.ModelDescriptionConstants.OP;
 import static org.jboss.dmr.client.ModelDescriptionConstants.RESULT;
 
+import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.domain.model.SimpleCallback;
 import org.jboss.as.console.client.shared.runtime.RuntimeBaseAddress;
 import org.jboss.as.console.client.shared.state.ReloadEvent;
@@ -130,6 +131,10 @@ public class TeiidPresenter extends Presenter<TeiidPresenter.MyView, TeiidPresen
                 	getView().setEngineStatistics(null);
                 }
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to retrieve query engine statistics for Teiid", caught.getMessage());
+            }             
         });		
 	}	
 }

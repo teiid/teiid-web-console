@@ -22,6 +22,7 @@ import static org.jboss.dmr.client.ModelDescriptionConstants.ADDRESS;
 import static org.jboss.dmr.client.ModelDescriptionConstants.OP;
 import static org.jboss.dmr.client.ModelDescriptionConstants.RESULT;
 
+import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.domain.model.SimpleCallback;
 import org.jboss.as.console.client.shared.runtime.RuntimeBaseAddress;
 import org.jboss.as.console.client.shared.subsys.RevealStrategy;
@@ -252,7 +253,8 @@ public class AuditPresenter extends Presenter<AuditPresenter.MyView, AuditPresen
             }   
             @Override
             public void onFailure(Throwable caught) {
-            }
+                Console.error("Failed to remove log handler "+name, caught.getMessage());
+            } 
         });	    
 	}
 
@@ -299,7 +301,8 @@ public class AuditPresenter extends Presenter<AuditPresenter.MyView, AuditPresen
             }
             @Override
             public void onFailure(Throwable caught) {
-            }
+                Console.error("Failed to remove logger "+context, caught.getMessage());
+            } 
         });               
     }
 }
