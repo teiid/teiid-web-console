@@ -168,6 +168,11 @@ public class VDBPresenter extends
 	                getView().setDeployedVDBs(vdbs);
                 }
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to get list of current VDBs deployed in the system",
+                        caught.getMessage());
+            }                         
         });        
     }	
     
@@ -187,6 +192,11 @@ public class VDBPresenter extends
             @Override
             public void onSuccess(DMRResponse result) {
                 Console.info(mappedRole+ " role removed from VDB "+vdbName+"."+version);
+            }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to remove '"+mappedRole+"' role from the VDB = " +vdbName+"."+version,
+                        caught.getMessage());
             }
         });    	
     }
@@ -208,10 +218,14 @@ public class VDBPresenter extends
             public void onSuccess(DMRResponse result) {
                 Console.info(mappedRole+ " role added to VDB "+vdbName+"."+version);
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to add role", caught.getMessage());
+            }            
         });    	
     }    
     
-    public void getRequests(String vdbName, int version, boolean includeSourceQueries) {
+    public void getRequests(final String vdbName, final int version, final boolean includeSourceQueries) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -234,6 +248,11 @@ public class VDBPresenter extends
                 	getView().setVDBRequests(null);
                 }
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to get in process requests for VDB "+ vdbName +"."+ version, 
+                        caught.getMessage());
+            }                                                                                    
         });    	
     }
     
@@ -262,6 +281,10 @@ public class VDBPresenter extends
                 	getView().setQueryPlan("<node name=\"query\"><property name=\"noplan\">No Plan found, query might have finished executing!</property></node>");
                 }
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to get query plan", caught.getMessage());
+            }                                                                        
         });    	
     }
     
@@ -280,16 +303,22 @@ public class VDBPresenter extends
                 ModelNode response  = result.get();
                 if (response.get(RESULT).isDefined()) {
 	                getView().cancelSubmitted(request);   
-	                Console.info("Query Cancel Submitted. Session Id:"+request.getSessionId()+", Execution Id:"+request.getExecutionId());
+	                Console.info("Query Cancel Submitted. Session Id:"+request.getSessionId()
+	                        +", Execution Id:"+request.getExecutionId());
                 }
                 else {
                 	getView().cancelSubmitted(null);
                 }
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Filed to submit Query Cancel. Session Id:"+request.getSessionId()
+                        +", Execution Id:"+request.getExecutionId(), caught.getMessage());
+            }                        
         });    	
     }
 
-    public void getSchema(String vdbName, int version, String modelName) {
+    public void getSchema(final String vdbName, final int version, final String modelName) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -311,6 +340,13 @@ public class VDBPresenter extends
                 	getView().setModelSchema(null);
                 }
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to get schema of the model = "+modelName 
+                        + " in vdb = " + vdbName 
+                        + " with version = " + version, 
+                        caught.getMessage());
+            }                                                                                                
         });     	
     }
 
@@ -336,6 +372,11 @@ public class VDBPresenter extends
                 	getView().setVDBRequests(null);
                 }
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to get current sessions for vdb = " + vdbName +"."+ version, 
+                        caught.getMessage());
+            }             
         }); 
 	}
 
@@ -360,6 +401,10 @@ public class VDBPresenter extends
                 	getView().terminateSessionSubmitted(null);
                 }
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to terminate seession '"+session, caught.getMessage());
+            }            
         });    	
 	}
 	
@@ -391,6 +436,10 @@ public class VDBPresenter extends
                 	getView().setQueryResults(null, clazz);
                 }
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to execute query, or timeout occured", caught.getMessage());
+            }                                                
         });    	
 	}	
 	
@@ -417,6 +466,11 @@ public class VDBPresenter extends
             public void onSuccess(DMRResponse result) {
             	Console.info("Cache "+cacheType+" on VDB = "+vdbName+"."+version+" has been cleared");
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to clear Cache " + cacheType + " on VDB = " + vdbName + "." + version, 
+                        caught.getMessage());
+            }                                    
         }); 		
 	}
 
@@ -437,6 +491,12 @@ public class VDBPresenter extends
             	getView().connectionTypeChanged(vdbName, version);
             	Console.info("Changing Connection type to "+connType+" on VDB = "+vdbName+"."+version+" has been cleared");
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to change Connection type to "+connType+" on VDB = "+vdbName+"."+version, 
+                        caught.getMessage());
+            }                        
+            
         }); 
 	}
 
@@ -459,8 +519,16 @@ public class VDBPresenter extends
         dispatcher.execute(new DMRAction(operation), new SimpleCallback<DMRResponse>() {
             @Override
             public void onSuccess(DMRResponse result) {            	
-            	Console.info("Changing the JNDI name of the data source on VDB ="+vdbName+"."+version+" on Model="+modelName+" to "+dataSourceName);
+                Console.info("Changing the JNDI name of the data source on VDB ="
+                                + vdbName + "." + version + " on Model="
+                                + modelName + " to " + dataSourceName);
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Changing the JNDI name of the data source on VDB ="
+                              + vdbName + "." + version+ " on Model=" + modelName + " to "
+                              + dataSourceName, caught.getMessage());
+            }                        
         }); 
 		
 	}
@@ -481,6 +549,11 @@ public class VDBPresenter extends
             	Console.info("VDB "+vdbName+"."+version+" has been submitted for reload");
             	getView().vdbReloaded(vdbName, version);
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to reload the VDB = " +vdbName+"."+version,
+                        caught.getMessage());
+            }                         
         }); 		
 	}
 
@@ -505,6 +578,10 @@ public class VDBPresenter extends
                 	getView().setCacheStatistics(null);
                 }
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to get cache statistics", caught.getMessage());
+            }                                                            
         });		
 	}
 
@@ -529,6 +606,11 @@ public class VDBPresenter extends
                 	getView().setSourceRequests(selection, null);
                 }
             }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to get data source requests for session = "+selection.getSessionId(),
+                        caught.getMessage());
+            }                         
         });    	
 	}
 }
