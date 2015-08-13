@@ -5,13 +5,12 @@
     <groupId>org.jboss.teiid.web-console</groupId>
     <artifactId>teiid-console</artifactId>
     <packaging>war</packaging>
-    <version>2.5.5.Final</version>
-
+    <version>2.5.6.Final</version>
     <!-- Parent -->
     <parent>
         <groupId>org.jboss.as</groupId>
         <artifactId>jboss-as-console-build</artifactId>
-        <version>2.5.5.Final</version>
+        <version>2.5.6.Final</version>
     </parent>
 
     <!-- the GUI extensions -->
