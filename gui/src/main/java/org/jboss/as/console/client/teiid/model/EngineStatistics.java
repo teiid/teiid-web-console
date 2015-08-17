@@ -62,12 +62,7 @@ public interface EngineStatistics {
 	public Integer getWaitingPlansCount();
 	public void setWaitingPlansCount(Integer value);
 	
-    @Binding(detypedName="avg-waitplan-time-milli")
-    public Integer getAverageWaitPlanTimeInMilli();
-    public void setAverageWaitPlanTimeInMilli(Integer value);
-    
-    @Binding(detypedName="max-waitplan-time-milli")
-    public Integer getMaxWaitPlanTimeInMilli();
-    public void setMaxWaitPlanTimeInMilli(Integer value);   
-    
+    @Binding(detypedName="max-waitplan-watermark")
+    public Integer getMaxWaitPlanWatermark();
+    public void setMaxWaitPlanWatermark(Integer value);   
 }
