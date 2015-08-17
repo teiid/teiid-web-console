@@ -66,8 +66,7 @@ public class TeiidView extends DisposableViewImpl implements TeiidPresenter.MyVi
         NumberColumn spaceUsed = new NumberColumn("buffermgr-diskspace-used-mb","Disk Space In Use(MB)");
         NumberColumn activePlanCount = new NumberColumn("active-plans-count","Active Plan Count");
         NumberColumn waitingPlanCount = new NumberColumn("waiting-plans-count","Waiting Plan Count");
-        NumberColumn avgWaitPlanTime = new NumberColumn("avg-waitplan-time-milli","Average Waiting Plan Time In Milli");
-        NumberColumn maxWaitPlanTime = new NumberColumn("max-waitplan-time-milli","Max Waiting Plan Water Mark Time In Milli");
+        NumberColumn maxWaitPlanTime = new NumberColumn("max-waitplan-watermark","Maximum Plans Waiting Water Mark");
 
         Column[] cols = new Column[] {
         		sessionCount,
@@ -80,7 +79,6 @@ public class TeiidView extends DisposableViewImpl implements TeiidPresenter.MyVi
         		spaceUsed,
         		activePlanCount,
         		waitingPlanCount,
-        		avgWaitPlanTime,
         		maxWaitPlanTime
         };
 
@@ -109,8 +107,7 @@ public class TeiidView extends DisposableViewImpl implements TeiidPresenter.MyVi
 				stats.getBufferManagerDiskUsed(),
 				stats.getActivePlansCount(),
 				stats.getWaitingPlansCount(),
-				stats.getAverageWaitPlanTimeInMilli(),
-				stats.getMaxWaitPlanTimeInMilli());
+				stats.getMaxWaitPlanWatermark());
         sampler.addSample(metric);
 	}
 }
