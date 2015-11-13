@@ -18,71 +18,133 @@
  */
 package org.jboss.as.console.client.teiid;
 
-import org.jboss.as.console.client.shared.viewframework.AbstractEntityView;
-import org.jboss.as.console.client.shared.viewframework.Columns.NameColumn;
-import org.jboss.as.console.client.shared.viewframework.EntityToDmrBridge;
-import org.jboss.as.console.client.shared.viewframework.EntityToDmrBridgeImpl;
-import org.jboss.as.console.client.shared.viewframework.FrameworkPresenter;
-import org.jboss.as.console.client.teiid.model.Translator;
-import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
-import org.jboss.ballroom.client.widgets.forms.Form;
-import org.jboss.ballroom.client.widgets.forms.FormAdapter;
-import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
-import org.jboss.dmr.client.dispatch.DispatchAsync;
+import java.util.List;
 
+import org.jboss.as.console.client.Console;
+import org.jboss.as.console.client.core.SuspendableViewImpl;
+import org.jboss.as.console.client.rbac.SecurityFramework;
+import org.jboss.as.console.client.teiid.model.Translator;
+import org.jboss.as.console.client.v3.ResourceDescriptionRegistry;
+import org.jboss.as.console.client.widgets.tabs.DefaultTabLayoutPanel;
+import org.jboss.ballroom.client.rbac.SecurityContext;
+import org.jboss.ballroom.client.widgets.forms.TextBoxItem;
+import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
+import org.jboss.ballroom.client.widgets.tools.ToolButton;
+import org.jboss.ballroom.client.widgets.tools.ToolStrip;
+import org.jboss.ballroom.client.widgets.window.Feedback;
+
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.ProvidesKey;
+import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.inject.Inject;
 
-public class TranslatorView extends AbstractEntityView<Translator> implements TranslatorPresenter.MyView, FrameworkPresenter {
-    private final EntityToDmrBridgeImpl<Translator> bridge;
+public class TranslatorView extends SuspendableViewImpl implements TranslatorPresenter.MyView {
+    private final ResourceDescriptionRegistry descriptionRegistry;
+    private final SecurityFramework securityFramework;
+    private DefaultCellTable<Translator> table;
+    private ListDataProvider<Translator> dataProvider;
+    
+    private TeiidModelForm<Translator> form;
+    private TranslatorPresenter presenter;
     
     @Inject
-    public TranslatorView(ApplicationMetaData propertyMetaData, DispatchAsync dispatcher) {
-        super(Translator.class, propertyMetaData);
-        bridge = new EntityToDmrBridgeImpl<Translator>(propertyMetaData, Translator.class, this, dispatcher);
-        setDescription("Provides translation services for physical sources, which can be integrated using a Teiid's VDB");//$NON-NLS-1$
-    }
+    public TranslatorView(ResourceDescriptionRegistry descriptionRegistry, SecurityFramework securityFramework) {
+        this.descriptionRegistry = descriptionRegistry;
+        this.securityFramework = securityFramework;
+    } 
 
     @Override
-    public Widget createWidget() {
-        return super.createWidget();
+    public void setPresenter(TranslatorPresenter presenter) {
+        this.presenter = presenter;
     }
-
-    @Override
-    public EntityToDmrBridge<Translator> getEntityBridge() {
-        return bridge;
-    }
-
-    @Override
-    protected DefaultCellTable<Translator> makeEntityTable() {
-        DefaultCellTable<Translator> table = new DefaultCellTable<Translator>(5);
-
-        table.addColumn(new NameColumn(), NameColumn.LABEL);
-
-        TextColumn<Translator> cacheContainerColumn = new TextColumn<Translator>() {
-            @Override
-            public String getValue(Translator record) {
-                return record.getModuleName();
-            }
-        };
-        table.addColumn(cacheContainerColumn, "Module Name");//$NON-NLS-1$
-
-        return table;
-    }
-
-    @Override
-    protected FormAdapter<Translator> makeAddEntityForm() {
-        Form<Translator> form = new Form<Translator>(beanType);
-        form.setNumColumns(1);
-
-        form.setFields(formMetaData.findAttribute("name").getFormItemForAdd(),//$NON-NLS-1$
-                       formMetaData.findAttribute("moduleName").getFormItemForAdd());//$NON-NLS-1$
-        return form;
-    }  
     
     @Override
-    protected String getEntityDisplayName() {
-        return "Translators";//$NON-NLS-1$
+    public Widget createWidget() {
+        SecurityContext securityContext = securityFramework.getSecurityContext(this.presenter.getProxy().getNameToken());
+
+        ToolStrip topLevelTools = new ToolStrip();
+        topLevelTools.addToolButtonRight(new ToolButton(Console.CONSTANTS.common_label_add(), new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                presenter.launchTranslatorWizard();
+            }
+        }));
+
+        ClickHandler clickHandler = new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                final Translator selection = getCurrentSelection();
+                Feedback.confirm(
+                        Console.MESSAGES.deleteTitle("Translator"),
+                        Console.MESSAGES.deleteConfirm("Translator " + selection.getName()),
+                        new Feedback.ConfirmationHandler() {
+                            @Override
+                            public void onConfirmation(boolean isConfirmed) {
+                                if (isConfirmed) {
+                                    presenter.delete(selection);
+                                }
+                            }
+                        });
+            }
+        };
+        ToolButton deleteBtn = new ToolButton(Console.CONSTANTS.common_label_delete());
+        deleteBtn.addClickHandler(clickHandler);
+        topLevelTools.addToolButtonRight(deleteBtn);
+        
+        this.table = new DefaultCellTable<Translator>(5, new ProvidesKey<Translator>() {
+                    @Override
+                    public Object getKey(Translator item) {
+                        return item.getName();
+                    }
+                });
+
+        this.dataProvider = new ListDataProvider<Translator>();
+        this.dataProvider.addDataDisplay(this.table);        
+        
+        TextColumn<Translator> nameColumn = new TextColumn<Translator>() {
+            @Override
+            public String getValue(Translator record) {
+                return record.getName();
+            }
+        };
+
+        TextColumn<Translator> moduleNameColumn = new TextColumn<Translator>() {
+            @Override
+            public String getValue(Translator record) {
+                return  record.getModuleName();
+            }
+        };
+        
+        this.table.addColumn(nameColumn, "Name");
+        this.table.addColumn(moduleNameColumn, "Module Name");
+        
+        TextBoxItem name = new TextBoxItem("name", "Name", true);
+        TextBoxItem moduleName = new TextBoxItem("moduleName", "Module Name", true);
+        
+        this.form = new TeiidModelForm<Translator>(Translator.class, this.presenter, name, moduleName);
+
+        DefaultTabLayoutPanel tabLayoutpanel = new DefaultTabLayoutPanel(40, Style.Unit.PX);
+        tabLayoutpanel.addStyleName("default-tabpanel");
+        tabLayoutpanel.add(this.form.asWidget(), "Translators", true);
+        
+        tabLayoutpanel.selectTab(0);
+
+        return tabLayoutpanel;
+        
+    }
+    
+    private Translator getCurrentSelection() {
+        return ((SingleSelectionModel<Translator>) this.table.getSelectionModel()).getSelectedObject();
+    }
+
+    @Override
+    public void setTranslators(List<Translator> translators) {
+        this.dataProvider.setList(translators);
+        this.table.selectDefaultEntity();
     }
 }
