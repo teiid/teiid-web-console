@@ -16,24 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
  * MA  02110-1301, USA.
  */
-package org.jboss.as.console.client.teiid.model;
+package org.jboss.as.console.client.teiid;
 
-import org.jboss.as.console.client.widgets.forms.Address;
-import org.jboss.as.console.client.widgets.forms.Binding;
-import org.jboss.as.console.client.widgets.forms.FormItem;
+import java.util.Map;
 
-/**
- * Model for a Translator
- */
-@Address("/subsystem=teiid/translator={0}")
-public interface Translator {
-    @Binding(detypedName="name", key=true)
-    @FormItem(label="Name",required=true)
-    public String getName();
-    public void setName(String name);
-    
-    @Binding(detypedName="module")
-    @FormItem(label="Module Name")
-    public String getModuleName();
-    public void setModuleName(String name);    
+public interface Persistable<T> {
+    void save(T t, Map<String, Object> changeset);
+    void delete(T t);
+    void create(T t);
 }

@@ -1,7 +1,7 @@
 <!--This script builds a zip for Teiid Server Installation -->
 <assembly>
   
-  <id>jboss-as7</id>
+  <id>wildfly-dist</id>
   
   <formats>
     <format>zip</format>
@@ -12,7 +12,7 @@
   <fileSets>
           
     <fileSet>
-        <directory>target/kits/jboss-as7</directory>
+        <directory>target/kits/wildfly</directory>
         <outputDirectory>/</outputDirectory>      
         <includes>
           <include>**/*.sh</include>
@@ -22,7 +22,7 @@
     </fileSet> 
           
     <fileSet>
-        <directory>target/kits/jboss-as7</directory>
+        <directory>target/kits/wildfly</directory>
         <outputDirectory>/</outputDirectory>      
         <excludes>
           <exclude>**/*.sh</exclude>
