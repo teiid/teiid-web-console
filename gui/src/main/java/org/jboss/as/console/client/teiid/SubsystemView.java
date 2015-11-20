@@ -73,6 +73,7 @@ public class SubsystemView extends SuspendableViewImpl implements SubsystemPrese
         
         // common
         CheckBoxItem allowEnvFunction = new CheckBoxItem("allowEnvFunction", "Allow ENV Function");
+        NumberBoxItem maxAsyncThreadCount = new NumberBoxItem("asyncThreadPoolCount", "Asynchronous Max Thread Count");
         NumberBoxItem maxRowsFetchSize = new NumberBoxItem("maxRowsFetchSize", "Max Rows Fetch Size");
         NumberBoxItem lobChunkSize = new NumberBoxItem("lobChunkSize", "Lob Chunk Size");
         NumberBoxItem queryThreshold = new NumberBoxItem("queryThreshold", "Query Threshhold");
@@ -121,7 +122,7 @@ public class SubsystemView extends SuspendableViewImpl implements SubsystemPrese
         
 
         this.commonForm = new TeiidModelForm<SubsystemConfiguration>(
-                SubsystemConfiguration.class, this.presenter, allowEnvFunction,
+                SubsystemConfiguration.class, this.presenter, allowEnvFunction, maxAsyncThreadCount,
                 maxRowsFetchSize, lobChunkSize, queryThreshold, maxSourceRows,
                 throwExceptionOnMaxSourceRows, detectChangeEvents, queryTimeout);
 
