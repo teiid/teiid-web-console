@@ -31,9 +31,9 @@ public interface SubsystemConfiguration {
     public Boolean isAllowEnvFunction();
     public void setAllowEnvFunction(Boolean allow);    
     
-    @Binding(detypedName="async-thread-pool")
-    public String getAsyncThreadPool();
-    public void setAsyncThreadPool(String pool);
+    @Binding(detypedName="async-thread-pool-max-thread-count")
+    public Integer getAsyncThreadPoolCount();
+    public void setAsyncThreadPoolCount(Integer pool);
     
     @Binding(detypedName="max-threads")    
     public Integer getMaxThreads();
