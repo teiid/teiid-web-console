@@ -18,64 +18,56 @@
  */
 package org.jboss.as.console.client.teiid;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.as.console.client.Console;
-import org.jboss.as.console.client.core.SuspendableViewImpl;
-import org.jboss.as.console.client.rbac.SecurityFramework;
+import org.jboss.as.console.client.layout.MultipleToOneLayout;
 import org.jboss.as.console.client.teiid.model.Translator;
-import org.jboss.as.console.client.v3.ResourceDescriptionRegistry;
-import org.jboss.as.console.client.widgets.tabs.DefaultTabLayoutPanel;
-import org.jboss.ballroom.client.rbac.SecurityContext;
+import org.jboss.ballroom.client.widgets.forms.CheckBoxItem;
+import org.jboss.ballroom.client.widgets.forms.ComboBoxItem;
+import org.jboss.ballroom.client.widgets.forms.FormItem;
+import org.jboss.ballroom.client.widgets.forms.NumberBoxItem;
 import org.jboss.ballroom.client.widgets.forms.TextBoxItem;
 import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
 import org.jboss.ballroom.client.widgets.tools.ToolButton;
 import org.jboss.ballroom.client.widgets.tools.ToolStrip;
+import org.jboss.ballroom.client.widgets.window.DefaultWindow;
 import org.jboss.ballroom.client.widgets.window.Feedback;
 
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SingleSelectionModel;
-import com.google.inject.Inject;
 
-public class TranslatorView extends SuspendableViewImpl implements TranslatorPresenter.MyView {
-    private final ResourceDescriptionRegistry descriptionRegistry;
-    private final SecurityFramework securityFramework;
+public class TranslatorEditor implements Persistable<Translator> {
+    
     private DefaultCellTable<Translator> table;
     private ListDataProvider<Translator> dataProvider;
     
-    private TeiidModelForm<Translator> form;
-    private TranslatorPresenter presenter;
+    private TeiidModelForm<Translator> formCommon;
+    private SubsystemPresenter presenter;
+    private DefaultWindow window;
     
-    @Inject
-    public TranslatorView(ResourceDescriptionRegistry descriptionRegistry, SecurityFramework securityFramework) {
-        this.descriptionRegistry = descriptionRegistry;
-        this.securityFramework = securityFramework;
-    } 
-
-    @Override
-    public void setPresenter(TranslatorPresenter presenter) {
+    public TranslatorEditor(SubsystemPresenter presenter) {
         this.presenter = presenter;
-    }
-    
-    @Override
-    public Widget createWidget() {
-        SecurityContext securityContext = securityFramework.getSecurityContext(this.presenter.getProxy().getNameToken());
+    }    
 
-        ToolStrip topLevelTools = new ToolStrip();
-        topLevelTools.addToolButtonRight(new ToolButton(Console.CONSTANTS.common_label_add(), new ClickHandler() {
+    public Widget asWidget() {
+        
+        ClickHandler addClickHandler = new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                presenter.launchTranslatorWizard();
+                launchTranslatorWizard();
             }
-        }));
+        };
 
-        ClickHandler clickHandler = new ClickHandler() {
+        ClickHandler deleteClickHandler = new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 final Translator selection = getCurrentSelection();
@@ -86,14 +78,20 @@ public class TranslatorView extends SuspendableViewImpl implements TranslatorPre
                             @Override
                             public void onConfirmation(boolean isConfirmed) {
                                 if (isConfirmed) {
-                                    presenter.delete(selection);
+                                    delete(selection);
                                 }
                             }
                         });
             }
         };
+        
+        ToolButton addBtn = new ToolButton(Console.CONSTANTS.common_label_add()); 
+        addBtn.addClickHandler(addClickHandler);
         ToolButton deleteBtn = new ToolButton(Console.CONSTANTS.common_label_delete());
-        deleteBtn.addClickHandler(clickHandler);
+        deleteBtn.addClickHandler(deleteClickHandler);
+        
+        ToolStrip topLevelTools = new ToolStrip();
+        topLevelTools.addToolButtonRight(addBtn);
         topLevelTools.addToolButtonRight(deleteBtn);
         
         this.table = new DefaultCellTable<Translator>(5, new ProvidesKey<Translator>() {
@@ -113,7 +111,7 @@ public class TranslatorView extends SuspendableViewImpl implements TranslatorPre
             }
         };
 
-        TextColumn<Translator> moduleNameColumn = new TextColumn<Translator>() {
+        TextColumn<Translator> protocolColumn = new TextColumn<Translator>() {
             @Override
             public String getValue(Translator record) {
                 return  record.getModuleName();
@@ -121,30 +119,75 @@ public class TranslatorView extends SuspendableViewImpl implements TranslatorPre
         };
         
         this.table.addColumn(nameColumn, "Name");
-        this.table.addColumn(moduleNameColumn, "Module Name");
+        this.table.addColumn(protocolColumn, "Module Name");
+              
+        this.formCommon = new TeiidModelForm<Translator>(Translator.class,
+                this, buildCommonFormItems().toArray(new FormItem<?>[2]));
         
+        this.formCommon.setTable(this.table);
+        
+        MultipleToOneLayout layoutBuilder = new MultipleToOneLayout()
+                .setPlain(true)
+                .setTitle("Translators")
+                .setHeadline("Translators")
+                .setDescription(new SafeHtmlBuilder().appendEscaped("Translator provides a mechanism to "
+                        + "to integrate data from various source systems").toSafeHtml())
+                .setMaster(Console.MESSAGES.available("Translators"), table)
+                .setMasterTools(topLevelTools.asWidget())
+                .addDetail("Common", this.formCommon.asWidget());
+
+        return layoutBuilder.build();
+
+    }
+    
+    static List<FormItem<?>> buildCommonFormItems(){
         TextBoxItem name = new TextBoxItem("name", "Name", true);
         TextBoxItem moduleName = new TextBoxItem("moduleName", "Module Name", true);
         
-        this.form = new TeiidModelForm<Translator>(Translator.class, this.presenter, name, moduleName);
-
-        DefaultTabLayoutPanel tabLayoutpanel = new DefaultTabLayoutPanel(40, Style.Unit.PX);
-        tabLayoutpanel.addStyleName("default-tabpanel");
-        tabLayoutpanel.add(this.form.asWidget(), "Translators", true);
-        
-        tabLayoutpanel.selectTab(0);
-
-        return tabLayoutpanel;
-        
+        return Arrays.asList(name, moduleName);
+    }
+    
+    public void setTranslators(List<Translator> translators) {
+        this.dataProvider.setList(translators);
+        this.table.selectDefaultEntity();
     }
     
     private Translator getCurrentSelection() {
         return ((SingleSelectionModel<Translator>) this.table.getSelectionModel()).getSelectedObject();
     }
+    
+    public void launchTranslatorWizard() {
+        try {
+            this.window = new DefaultWindow(Console.MESSAGES.createTitle("Translator"));
+            this.window.setWidth(480);
+            this.window.setHeight(360);
+
+            TranslatorWizard wizard = new TranslatorWizard(this);
+            
+            this.window.trapWidget(wizard.asWidget());
+
+            this.window.setGlassEnabled(true);
+            this.window.center();
+        } catch (Exception e) {
+            Console.error("Error while starting the wizard for new Translator");
+        }
+    }    
 
     @Override
-    public void setTranslators(List<Translator> translators) {
-        this.dataProvider.setList(translators);
-        this.table.selectDefaultEntity();
+    public void save(Translator translator, Map<String, Object> changeset) {
+        this.presenter.saveTranslator(translator, changeset);
     }
+
+    private void delete(Translator selection) {
+        this.presenter.deleteTranslator(selection);
+    }    
+    
+    public void closeNewTranslatorWizard() {
+        this.window.hide();
+    }
+
+    public void createNewTranslator(Translator translator) {
+        this.window.hide();
+        this.presenter.createTranslator(translator);
+    }    
 }

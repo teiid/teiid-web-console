@@ -39,12 +39,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class TranslatorWizard {
 
-    private TranslatorPresenter presenter;
-    private final Translator bean;
+    private TranslatorEditor editor;
 
-    public TranslatorWizard(TranslatorPresenter presenter, Translator bean) {
-        this.presenter = presenter;
-        this.bean = bean;
+    public TranslatorWizard(TranslatorEditor translatorEditor) {
+        this.editor = translatorEditor;
     }
 
     public Widget asWidget() {
@@ -89,20 +87,19 @@ public class TranslatorWizard {
 
         layout.add(helpPanel.asWidget());
         layout.add(form.asWidget());
-        form.editTransient(bean);
 
         DialogueOptions options = new DialogueOptions(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 FormValidation validation = form.validate();
                 if (!validation.hasErrors()) {
-                    presenter.create(form.getUpdatedEntity());
+                    finishStep(form.getUpdatedEntity());
                 }
             }
         }, new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                presenter.closeDialoge();
+                closeDialogue();
             }
         });
         return new WindowContentBuilder(layout, options).build();
@@ -129,4 +126,12 @@ public class TranslatorWizard {
             }
         }
     }
+    
+    private void finishStep(Translator updated) {
+        this.editor.createNewTranslator(updated);
+    }
+    
+    private void closeDialogue() {
+        this.editor.closeNewTranslatorWizard();
+    }    
 }

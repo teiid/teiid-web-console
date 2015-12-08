@@ -18,12 +18,6 @@
   -->
 
 <module rename-to="app">
-
-    <inherits name="org.jboss.as.console.App"/>
-    <inherits name="com.google.gwt.xml.XML" />
-    
-    <extend-property name="locale" values="en"/>
-    <set-property-fallback name="locale" value="en"/>
-    <set-property name="locale" value="en"/>
+    <inherits name="org.jboss.as.console.composite.WildFlyDev"/>
     <stylesheet src="teiid.css" />
 </module>

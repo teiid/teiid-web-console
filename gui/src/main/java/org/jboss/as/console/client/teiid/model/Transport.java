@@ -20,7 +20,6 @@ package org.jboss.as.console.client.teiid.model;
 
 import org.jboss.as.console.client.widgets.forms.Address;
 import org.jboss.as.console.client.widgets.forms.Binding;
-import org.jboss.as.console.client.widgets.forms.FormItem;
 
 /**
  * Model for a Transport
