@@ -15,11 +15,6 @@
     <name>HAL Release Stream</name>
     <description>HAL release stream master. Implements the assembly.</description>
 
-    <scm>
-        <connection>scm:git:git://https://github.com/hal/release-stream.git</connection>
-        <developerConnection>scm:git:git@github.com:hat/release-stream.git</developerConnection>
-        <url>https://github.com/hal/release-stream</url>
-    </scm>
 
     <properties>
         <!-- Maven -->
