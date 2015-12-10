@@ -24,8 +24,13 @@ import java.util.List;
 import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.core.SuspendableViewImpl;
 import org.jboss.as.console.client.layout.MultipleToOneLayout;
+import org.jboss.as.console.client.teiid.AuditEditor;
+import org.jboss.as.console.client.teiid.ConfigurationEditor;
+import org.jboss.as.console.client.teiid.TranslatorEditor;
+import org.jboss.as.console.client.teiid.TransportEditor;
 import org.jboss.as.console.client.teiid.model.CacheStatistics;
 import org.jboss.as.console.client.teiid.model.DataModelFactory;
+import org.jboss.as.console.client.teiid.model.EngineStatistics;
 import org.jboss.as.console.client.teiid.model.KeyValuePair;
 import org.jboss.as.console.client.teiid.model.Request;
 import org.jboss.as.console.client.teiid.model.Session;
@@ -33,6 +38,7 @@ import org.jboss.as.console.client.teiid.model.VDB;
 import org.jboss.as.console.client.teiid.model.ValidityError;
 import org.jboss.as.console.client.teiid.widgets.TeiidIcons;
 import org.jboss.as.console.client.widgets.pages.PagedView;
+import org.jboss.as.console.client.widgets.tabs.DefaultTabLayoutPanel;
 import org.jboss.ballroom.client.widgets.icons.Icons;
 import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
 import org.jboss.ballroom.client.widgets.tabs.FakeTabPanel;
@@ -62,7 +68,6 @@ import com.google.gwt.view.client.SingleSelectionModel;
 
 @SuppressWarnings("nls")
 public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView {
-	private PagedView pages;
 	private ListDataProvider<VDB> vdbProvider = new ListDataProvider<VDB>();
 	private DefaultCellTable vdbTable;
 	private VDBPresenter presenter;
@@ -71,6 +76,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 	private VDBSessionsTab vdbSessionsTab;
 	private VDBCachingTab vdbCachingTab;
 	private DataModelFactory factory;
+	private TeiidMetricsEditor metricsEditor;
 
 	public void setDataModelFactory(DataModelFactory factory) {
 		this.factory = factory;					
@@ -113,28 +119,25 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 		vdbModelsTab.setSchema(ddl);
 	}
 	
+	
 	@Override
 	public Widget createWidget() {
 
-		pages = new PagedView();
-
-		pages.addPage(Console.CONSTANTS.common_label_back(), mainPageAsWidget());
+        DefaultTabLayoutPanel layout  = new DefaultTabLayoutPanel(40, Style.Unit.PX);
+        layout.addStyleName("default-tabpanel");
+        PagedView pages = new PagedView(true);
+        
+        this.metricsEditor = new TeiidMetricsEditor();
+        
+		pages.addPage("Virtual Databases", mainPageAsWidget());
+		pages.addPage("Metrics", this.metricsEditor.createWidget());
 
 		// default page
 		pages.showPage(0);
 
-		LayoutPanel layout = new LayoutPanel();
-
 		// Top Most Tab
-		FakeTabPanel titleBar = new FakeTabPanel("Virtual Databases");
-		layout.add(titleBar);
-
 		Widget pagesWidget = pages.asWidget();
-		layout.add(pagesWidget);
-
-		layout.setWidgetTopHeight(titleBar, 0, Style.Unit.PX, 40, Style.Unit.PX);
-		layout.setWidgetTopHeight(pagesWidget, 40, Style.Unit.PX, 100,
-				Style.Unit.PCT);
+		layout.add(pagesWidget, "Teiid");
 
 		return layout;
 
@@ -420,5 +423,10 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 	@Override
 	public void setSourceRequests(Request selection, List<Request> requests) {
 		this.vdbRequestsTab.setSourceRequests(selection, requests);
-	}	
+	}
+
+    @Override
+    public void setEngineStatistics(EngineStatistics stats) {
+        this.metricsEditor.setEngineStatistics(stats);
+    }	
 }

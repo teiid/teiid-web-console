@@ -31,6 +31,7 @@ import org.jboss.as.console.client.shared.runtime.RuntimeBaseAddress;
 import org.jboss.as.console.client.shared.subsys.RevealStrategy;
 import org.jboss.as.console.client.teiid.model.CacheStatistics;
 import org.jboss.as.console.client.teiid.model.DataModelFactory;
+import org.jboss.as.console.client.teiid.model.EngineStatistics;
 import org.jboss.as.console.client.teiid.model.MaterializedView;
 import org.jboss.as.console.client.teiid.model.Model;
 import org.jboss.as.console.client.teiid.model.Request;
@@ -39,6 +40,7 @@ import org.jboss.as.console.client.teiid.model.VDB;
 import org.jboss.as.console.client.teiid.model.ValidityError;
 import org.jboss.as.console.client.widgets.forms.ApplicationMetaData;
 import org.jboss.as.console.client.widgets.forms.EntityAdapter;
+import org.jboss.as.console.spi.RequiredResources;
 import org.jboss.as.console.spi.RuntimeExtension;
 import org.jboss.dmr.client.ModelNode;
 import org.jboss.dmr.client.dispatch.DispatchAsync;
@@ -67,17 +69,12 @@ public class VDBPresenter extends
     private EntityAdapter<Session> sessionAdaptor;
     private EntityAdapter<MaterializedView> matViewAdaptor;
     private EntityAdapter<CacheStatistics> cacheAdaptor;
+    private EntityAdapter<EngineStatistics> runtimeAdaptor;
 	
     @ProxyCodeSplit
     @NameToken("vdb-runtime")
-    @RuntimeExtension(name="Virtual Databases", key="teiid")
-    /*
-    @AccessControl(
-        resources = {
-                "/{selected.host}/{selected.server}/subsystem=teiid"
-        } 
-    )
-    */    
+    @RuntimeExtension(name="Teiid", key="teiid")
+    @RequiredResources(resources = {"{selected.profile}/subsystem=teiid"})
     public interface MyProxy extends Proxy<VDBPresenter>, Place {
     }
 
@@ -96,6 +93,7 @@ public class VDBPresenter extends
 		void vdbReloaded(String vdbName, int version);
 		void setCacheStatistics(CacheStatistics cache);
 		void setSourceRequests(Request selection, List<Request> requests);
+		void setEngineStatistics(EngineStatistics stats);
     }
     
 	@Inject
@@ -112,6 +110,7 @@ public class VDBPresenter extends
         this.sessionAdaptor = new EntityAdapter<Session>(Session.class, metaData);
         this.matViewAdaptor = new EntityAdapter<MaterializedView>(MaterializedView.class, metaData);
         this.cacheAdaptor = new EntityAdapter<CacheStatistics>(CacheStatistics.class, metaData);
+        this.runtimeAdaptor = new EntityAdapter<EngineStatistics>(EngineStatistics.class, metaData); 
     }
     
     @Override
@@ -125,6 +124,7 @@ public class VDBPresenter extends
     @Override
     protected void onReset() {
         super.onReset();
+        getEngineStatistics();
         if(isVisible()) refresh(true);
     }    
     
@@ -613,4 +613,30 @@ public class VDBPresenter extends
             }                         
         });    	
 	}
+
+    public void getEngineStatistics() {
+        ModelNode address = RuntimeBaseAddress.get();
+        address.add("subsystem", "teiid");  //$NON-NLS-1$  //$NON-NLS-2$
+        ModelNode operation = new ModelNode();
+        operation.get(OP).set("engine-statistics");  //$NON-NLS-1$ 
+        operation.get(ADDRESS).set(address);
+        
+        dispatcher.execute(new DMRAction(operation), new SimpleCallback<DMRResponse>() {
+            @Override
+            public void onSuccess(DMRResponse result) {             
+                ModelNode response  = result.get();
+                if (response.get(RESULT).isDefined()) {
+                    EngineStatistics stats = runtimeAdaptor.fromDMR(response.get(RESULT));
+                    getView().setEngineStatistics(stats);    
+                }
+                else {
+                    getView().setEngineStatistics(null);
+                }
+            }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to retrieve query engine statistics for Teiid", caught.getMessage());
+            }             
+        });     
+    }	
 }

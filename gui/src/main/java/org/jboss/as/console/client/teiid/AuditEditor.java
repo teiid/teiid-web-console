@@ -19,54 +19,62 @@
 package org.jboss.as.console.client.teiid;
 
 import org.jboss.as.console.client.Console;
-import org.jboss.as.console.client.core.DisposableViewImpl;
-import org.jboss.as.console.client.layout.SimpleLayout;
+import org.jboss.as.console.client.layout.OneToOneLayout;
 import org.jboss.as.console.client.teiid.model.TeiidLogger;
-import org.jboss.ballroom.client.widgets.common.DefaultButton;
+import org.jboss.ballroom.client.widgets.tools.ToolButton;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.CaptionPanel;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 @SuppressWarnings("nls")
-public class AuditView extends DisposableViewImpl implements AuditPresenter.MyView {
+public class AuditEditor {
+    public static final String CTX_COMMANDLOGGING = "org.teiid.COMMAND_LOG"; //$NON-NLS-1$
+    public static final String CTX_AUDITLOGGING = "org.teiid.AUDIT_LOG"; //$NON-NLS-1$
+    public static final String CTX_TRACELOGGING = "org.teiid"; //$NON-NLS-1$
+    
 	private static final String DEBUG = "DEBUG";
-    private AuditPresenter presenter;    
+    private SubsystemPresenter presenter;    
 	
     // buttons
     final CheckBox auditBtn = new CheckBox("Enable Audit Logging");
     final CheckBox commandBtn = new CheckBox("Enable Command Logging");
     final CheckBox traceBtn = new CheckBox("Enable Trace Logging");
     
-    @Override
-    public void setPresenter(AuditPresenter presenter) {
+    public AuditEditor(SubsystemPresenter presenter) {
         this.presenter = presenter;
     }
 
-	@Override
-	public Widget createWidget() {
-		SimpleLayout layout = new SimpleLayout().setTitle("Audit Logging")
-				.setHeadline("Audit/Command Logging")
-				.setDescription("Turn On/Off Audit/Command Logging. By default file handler(s) " +
-				        "will be added. Alternatively, add TEIID_COMMAND_LOG/TEIID_AUDIT_LOG " +
-				        "handlers to override the default handlers")
-				.addContent("Audit/Command Logging for Teiid Subsystem", createLogPanel());
-        return layout.build();	
+	public Widget asWidget() {
+        HTML title = new HTML();
+        title.setStyleName("content-header-label");
+        title.setText("Audit/Command Logging");
+        
+        OneToOneLayout layoutBuilder = new OneToOneLayout()
+                .setPlain(true)
+                .setTitle("Audit/Command Logging")
+                .setHeadlineWidget(title)
+                .setDescription("Turn On/Off Audit/Command Logging. By default file handler(s) " +
+                        "will be added. Alternatively, add TEIID_COMMAND_LOG/TEIID_AUDIT_LOG " +
+                        "handlers to override the default handlers")
+                .addDetail("Logging", createLogPanel());
+        return layoutBuilder.build();        
 	}
 	
     private CaptionPanel createLogPanel() {
         CaptionPanel captionPanel = new CaptionPanel("Select Logging Type");
         
-        DefaultButton applyBtn = new DefaultButton("Apply", new ClickHandler() {
+        ToolButton applyBtn = new ToolButton("Apply", new ClickHandler() {
             @Override
             public void onClick(ClickEvent arg0) {
-                presenter.addOrRemoveLogger(AuditPresenter.CTX_AUDITLOGGING, auditBtn.getValue());
-                presenter.addOrRemoveLogger(AuditPresenter.CTX_COMMANDLOGGING, commandBtn.getValue());
-                presenter.addOrRemoveLogger(AuditPresenter.CTX_TRACELOGGING, traceBtn.getValue());
+                presenter.addOrRemoveLogger(CTX_AUDITLOGGING, auditBtn.getValue());
+                presenter.addOrRemoveLogger(CTX_COMMANDLOGGING, commandBtn.getValue());
+                presenter.addOrRemoveLogger(CTX_TRACELOGGING, traceBtn.getValue());
             }
         });
         
@@ -84,10 +92,9 @@ public class AuditView extends DisposableViewImpl implements AuditPresenter.MyVi
         return captionPanel;
     }	
 
-    @Override
     public void loggingStatus(String context, TeiidLogger logger) {
         
-        if (AuditPresenter.CTX_AUDITLOGGING.equals(context)) {
+        if (CTX_AUDITLOGGING.equals(context)) {
             if (logger != null && logger.getLevel().equals(DEBUG)) {
                 this.auditBtn.setValue(Boolean.TRUE);
             } else {
@@ -95,7 +102,7 @@ public class AuditView extends DisposableViewImpl implements AuditPresenter.MyVi
             }
         }
 
-        if (AuditPresenter.CTX_COMMANDLOGGING.equals(context)) {
+        if (CTX_COMMANDLOGGING.equals(context)) {
             if (logger != null && logger.getLevel().equals(DEBUG)) {
                 this.commandBtn.setValue(Boolean.TRUE);
             } else {
@@ -103,7 +110,7 @@ public class AuditView extends DisposableViewImpl implements AuditPresenter.MyVi
             }
         }
         
-        if (AuditPresenter.CTX_TRACELOGGING.equals(context)) {
+        if (CTX_TRACELOGGING.equals(context)) {
             if (logger != null && logger.getLevel().equals("TRACE")) {
                 this.traceBtn.setValue(Boolean.TRUE);
             } else {
@@ -111,90 +118,77 @@ public class AuditView extends DisposableViewImpl implements AuditPresenter.MyVi
             }
         }
     }
-    
-    public void initialLoad() {
-        presenter.getLogger(AuditPresenter.CTX_AUDITLOGGING);
-        presenter.getLogger(AuditPresenter.CTX_COMMANDLOGGING);
-        presenter.getLogger(AuditPresenter.CTX_TRACELOGGING);
         
-    }
-    
-    @Override
     public void logHandlerAdded(String handlerName, boolean added) {
         if (!added) {
             Console.info("Addition Logging handler "+handlerName+" failed");
         }
     }
 
-    @Override
     public void logHandlerRemoved(String handlerName, boolean removed) {
         if (!removed) {
             Console.info("Removal of Logging handler "+handlerName+" failed");
         }
     }
 
-    @Override
     public void loggerAdded(String context, boolean added) {
         if (!added) {
             Console.info("Addition of Logger "+context+" failed");
         }
     }
 
-    @Override
     public void loggerRemoved(String context, boolean removed) {
         if (!removed) {
             Console.info("Removal of Logger "+context+" failed");
         }
     }
 
-    @Override
     public void addLogger(String context) {
         // first check if DB based handler exists
-        if (context.equals(AuditPresenter.CTX_AUDITLOGGING) ) {
-            presenter.checkHandler(context, "TEIID_AUDIT_LOG", true);
+        if (context.equals(CTX_AUDITLOGGING) ) {
+            presenter.checkLogHandlerStatus(context, "TEIID_AUDIT_LOG", true);
         }
         
-        if (context.equals(AuditPresenter.CTX_COMMANDLOGGING)) {
-            presenter.checkHandler(context, "TEIID_COMMAND_LOG", true);
+        if (context.equals(CTX_COMMANDLOGGING)) {
+            presenter.checkLogHandlerStatus(context, "TEIID_COMMAND_LOG", true);
         }
         
         // no handler for this, should go in root log
-        if (context.equals(AuditPresenter.CTX_TRACELOGGING)) {
+        if (context.equals(CTX_TRACELOGGING)) {
             presenter.addLogger(context, "TRACE", null);
         }
     }
     
-    @Override
-    public void handlerExists(String context, String name, boolean dbAppender, boolean exists) {
+    public void setLogHandlerStatus(String context, String name, boolean dbAppender, boolean exists) {
         // if handler exists, proceed to creating the logger
         if (exists) {            
-            if (context.equals(AuditPresenter.CTX_AUDITLOGGING) ) {
+            if (context.equals(CTX_AUDITLOGGING) ) {
                 presenter.addLogger(context, "DEBUG", "TEIID_AUDIT_LOG");
             }
             
-            if (context.equals(AuditPresenter.CTX_COMMANDLOGGING)) {
+            if (context.equals(CTX_COMMANDLOGGING)) {
                 presenter.addLogger(context, "DEBUG", "TEIID_COMMAND_LOG");
             }            
         }
         else {
             // if the first request was to check db handler, now check for file based handler
             if (dbAppender) {
-                if (context.equals(AuditPresenter.CTX_AUDITLOGGING) ) {
-                    presenter.checkHandler(context, "TEIID_AUDIT_LOG", false);
+                if (context.equals(CTX_AUDITLOGGING) ) {
+                    presenter.checkLogHandlerStatus(context, "TEIID_AUDIT_LOG", false);
                 }
                 
-                if (context.equals(AuditPresenter.CTX_COMMANDLOGGING)) {
-                    presenter.checkHandler(context, "TEIID_COMMAND_LOG", false);
+                if (context.equals(CTX_COMMANDLOGGING)) {
+                    presenter.checkLogHandlerStatus(context, "TEIID_COMMAND_LOG", false);
                 }                
             }
             else {
                 // if file based handler also does not exist, then add a file based handler
-                if (context.equals(AuditPresenter.CTX_AUDITLOGGING) ) {
+                if (context.equals(CTX_AUDITLOGGING) ) {
                     presenter.addFileHandler("TEIID_AUDIT_LOG", "teiid-audit.log");
                     presenter.addLogger(context, "DEBUG", "TEIID_AUDIT_LOG");
                 }
                 
-                if (context.equals(AuditPresenter.CTX_COMMANDLOGGING)) {
+                if (context.equals(CTX_COMMANDLOGGING)) {
                     presenter.addFileHandler("TEIID_COMMAND_LOG", "teiid-command.log");
                     presenter.addLogger(context, "DEBUG", "TEIID_COMMAND_LOG");
                 }     
@@ -202,20 +196,19 @@ public class AuditView extends DisposableViewImpl implements AuditPresenter.MyVi
         }
     }
 
-    @Override
     public void deleteLogger(String context) {
-        if (context.equals(AuditPresenter.CTX_AUDITLOGGING)) {
+        if (context.equals(CTX_AUDITLOGGING)) {
             presenter.removeLogger(context);
             //presenter.removeFileHandler("TEIID_AUDIT_LOG");
         }
         
-        if (context.equals(AuditPresenter.CTX_COMMANDLOGGING)) {
+        if (context.equals(CTX_COMMANDLOGGING)) {
             presenter.removeLogger(context);
             //presenter.removeFileHandler("TEIID_COMMAND_LOG");
         }
         
         // no handler for this, should go in root log
-        if (context.equals(AuditPresenter.CTX_TRACELOGGING)) {
+        if (context.equals(CTX_TRACELOGGING)) {
             presenter.removeLogger(context);
         }
     }

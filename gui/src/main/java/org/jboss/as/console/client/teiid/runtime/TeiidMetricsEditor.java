@@ -19,8 +19,7 @@
 package org.jboss.as.console.client.teiid.runtime;
 
 import org.jboss.as.console.client.Console;
-import org.jboss.as.console.client.core.DisposableViewImpl;
-import org.jboss.as.console.client.layout.SimpleLayout;
+import org.jboss.as.console.client.layout.OneToOneLayout;
 import org.jboss.as.console.client.shared.runtime.Metric;
 import org.jboss.as.console.client.shared.runtime.Sampler;
 import org.jboss.as.console.client.shared.runtime.charts.Column;
@@ -33,20 +32,18 @@ import org.jboss.ballroom.client.widgets.tools.ToolStrip;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
 @SuppressWarnings("nls")
-public class TeiidView extends DisposableViewImpl implements TeiidPresenter.MyView {
-	private TeiidPresenter presenter;
+public class TeiidMetricsEditor {
+	private VDBPresenter presenter;
 	private Sampler sampler;
 	
-	
-    @Override
-    public void setPresenter(TeiidPresenter presenter) {
+    public void setPresenter(VDBPresenter presenter) {
         this.presenter = presenter;
     }
 
-	@Override
 	public Widget createWidget() {
         final ToolStrip toolStrip = new ToolStrip();
         toolStrip.addToolButtonRight(new ToolButton(Console.CONSTANTS.common_label_refresh(), new ClickHandler() {
@@ -86,16 +83,19 @@ public class TeiidView extends DisposableViewImpl implements TeiidPresenter.MyVi
                 .setColumns(cols)
                 .setWidth(100, Style.Unit.PCT);		
 		
-		SimpleLayout layout = new SimpleLayout().setTitle("Teiid")
-				.setHeadline("Teiid Metrics")
-				.setTopLevelTools(toolStrip.asWidget())
-				.setDescription("Metrics for teiid subsystem")
-				.addContent("Teiid Metrics", sampler.asWidget());
-
-        return layout.build();	
+        HTML title = new HTML();
+        title.setStyleName("content-header-label");
+        title.setText("Metrics");
+        
+        OneToOneLayout layoutBuilder = new OneToOneLayout()
+                .setPlain(true)
+                .setTitle("Metrics")
+                .setHeadlineWidget(title)
+                .setDescription( "Teiid subsytem metrics")
+                .addDetail("Common", this.sampler.asWidget());
+        return layoutBuilder.build();
 	}
 
-	@Override
 	public void setEngineStatistics(EngineStatistics stats) {
 		Metric metric = new Metric(stats.getSessionCount(),
 				stats.getTotalMemoryInUse(),

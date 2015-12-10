@@ -22,6 +22,4 @@ import java.util.Map;
 
 public interface Persistable<T> {
     void save(T t, Map<String, Object> changeset);
-    void delete(T t);
-    void create(T t);
 }

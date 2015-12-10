@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.jboss.as</groupId>
         <artifactId>jboss-as-console-bom</artifactId>
-        <version>2.7.4.Final</version>
+        <version>2.8.14.Final</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <name>Teiid Console :: Parent</name>
     <groupId>org.jboss.teiid.web-console</groupId>
     <artifactId>teiid-console-parent</artifactId>
-    <version>2.5.2-SNAPSHOT</version>
+    <version>2.6.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <description>Teiid Wildfly Web Console</description>
@@ -19,7 +19,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Overrides to allow the release process to commit: https://jira.codehaus.org/browse/MRELEASE-812 -->
-        <version.release.plugin>2.5</version.release.plugin>        
+        <version.release.plugin>2.5</version.release.plugin>
     </properties>
 
     <scm>
