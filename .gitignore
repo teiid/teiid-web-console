@@ -18,3 +18,5 @@ app/overlays
 app/war
 app/gwt-unitCache
 target
+dist/war
+dist/gwt-unitCache

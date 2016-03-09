@@ -65,11 +65,6 @@ public interface Transport extends NamedEntity {
     public Integer getSessionExpirationTime();
     public void setSessionExpirationTime(Integer i);   
     
-    @Binding(detypedName= "ssl-enable")
-    @FormItem(label="SSL Enabled", required=false, localTabName = "", tabName="SSL", formItemTypeForEdit="CHECK_BOX", defaultValue="false", formItemTypeForAdd="CHECK_BOX", order=1)
-    public Boolean isSslEnabled();
-    public void setSslEnabled(Boolean b); 
-    
     @Binding(detypedName="ssl-mode")
     @FormItem(label="Mode", localTabName = "", tabName="SSL", formItemTypeForEdit="COMBO_BOX", formItemTypeForAdd="COMBO_BOX", acceptedValues= {"logIn", "disabled", "enabled"}, order=2)
     public String getSslMode();
@@ -90,7 +85,7 @@ public interface Transport extends NamedEntity {
     public String getKeyManagementAlgorithm();
     public void setKeyManagementAlgorithm(String str);    
     
-    @Binding(detypedName="enabled-cipher-suites")
+    @Binding(detypedName="ssl-enabled-cipher-suites")
     @FormItem(label="Enabled Cipher Suites", localTabName = "", tabName="SSL", order=6)
     public String getEnabledCipherSuites();
     public void setEnabledCipherSuites(String str);    
@@ -108,15 +103,20 @@ public interface Transport extends NamedEntity {
     @Binding(detypedName="keystore-type")
     @FormItem(label="Keystore Type", localTabName = "", tabName="SSL", order=8)
     public String getKeystoreType();
-    public void setKeystoreType(String str);   
+    public void setKeystoreType(String str);
+    
+    @Binding(detypedName="keystore-key-alias")
+    @FormItem(label="Keystore Alias", localTabName = "", tabName="SSL", order=9)
+    public String getKeystoreAlias();
+    public void setKeystoreAlias(String str);    
     
     @Binding(detypedName="truststore-name")
-    @FormItem(label="Truststore Name", localTabName = "", tabName="SSL", order=9)
+    @FormItem(label="Truststore Name", localTabName = "", tabName="SSL", order=10)
     public String getTruststoreName();
     public void setTruststoreName(String str);  
     
-    @Binding(detypedName="keystore-password")
-    @FormItem(label="Keystore Password", localTabName = "", tabName="SSL", order=10)
+    @Binding(detypedName="truststore-password")
+    @FormItem(label="Truststore Password", localTabName = "", tabName="SSL", order=11)
     public String getTruststorePassword();
     public void setTruststorePassword(String str);     
 }
