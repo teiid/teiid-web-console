@@ -55,7 +55,7 @@ public interface SubsystemConfiguration {
     public Integer getMaxConcurrentThreads();
     public void setMaxConcurrentThreads(Integer i);
     
-    @Binding(detypedName="time-slice-in-millseconds")
+    @Binding(detypedName="time-slice-in-milliseconds")
     @FormItem(label="Time Slice", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="Threads")
     public Integer getTimeSlice();
     public void setTimeSlice(Integer i);    
