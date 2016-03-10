@@ -23,8 +23,8 @@ import org.jboss.as.console.client.widgets.forms.Binding;
 public interface CacheStatistics {
 
 	@Binding(detypedName="hit-ratio")
-	public Double getHitRatio();
-	public void setHitRatio(Double value);
+	public String getHitRatio();
+	public void setHitRatio(String value);
 	
 	@Binding(detypedName="total-entries")
 	public Integer getTotalEntries();
