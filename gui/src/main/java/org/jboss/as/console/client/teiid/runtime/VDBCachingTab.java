@@ -20,6 +20,7 @@ package org.jboss.as.console.client.teiid.runtime;
 
 import java.util.List;
 
+import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.teiid.model.CacheStatistics;
 import org.jboss.as.console.client.teiid.model.MaterializedView;
 import org.jboss.as.console.client.teiid.model.VDB;
@@ -47,7 +48,7 @@ public class VDBCachingTab extends VDBProvider {
 	static DateTimeFormat dtf = DateTimeFormat.getFormat("MM/dd/yy HH:mm:ss");
 	private ListDataProvider<MaterializedView> matviewProvider = new ListDataProvider<MaterializedView>();
 	private DefaultCellTable matviewTable;
-	NumberLabel<Double> hitRatio = new NumberLabel();
+	Label hitRatio = new Label();
 	NumberLabel<Integer> totalEntries = new NumberLabel();
 	NumberLabel<Integer> requestCount = new NumberLabel();
 			
@@ -289,12 +290,12 @@ public class VDBCachingTab extends VDBProvider {
 
 	public void setCacheStatistics(CacheStatistics cache) {
 		if (cache != null) {
-			this.hitRatio.setValue(cache.getHitRatio());
+			this.hitRatio.setText(cache.getHitRatio());
 			this.totalEntries.setValue(cache.getTotalEntries());
 			this.requestCount.setValue(cache.getRequestCount());
 		}
 		else {
-			this.hitRatio.setValue(0.0);
+			this.hitRatio.setText("0.0");
 			this.totalEntries.setValue(0);
 			this.requestCount.setValue(0);			
 		}
