@@ -20,3 +20,5 @@ app/gwt-unitCache
 target
 dist/war
 dist/gwt-unitCache
+app/bin
+dist/bin
