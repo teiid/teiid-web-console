@@ -271,7 +271,7 @@ public class VDBCachingTab extends VDBProvider {
 	}
 	
 	private void refresh() {
-		this.presenter.executeQuery(getVdbName(), getVdbVersion(), "select * from sysadmin.matviews", MaterializedView.class.getName());
+		this.presenter.executeQuery(getVdbName(), getVdbVersion(), "EXEC SYSADMIN.matViewsStatus()", MaterializedView.class.getName());
 		this.presenter.getCacheStatistics();
 	}
 	
