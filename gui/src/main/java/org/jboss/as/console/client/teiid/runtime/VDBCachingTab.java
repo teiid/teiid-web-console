@@ -271,11 +271,30 @@ public class VDBCachingTab extends VDBProvider {
 	}
 	
 	private void refresh() {
-		this.presenter.executeQuery(getVdbName(), getVdbVersion(), "select * from sysadmin.matviews", MaterializedView.class.getName());
+	    List<String> statusTables = this.presenter.getStatusTables(getVdbName(), getVdbVersion());
+		this.presenter.executeQuery(getVdbName(), getVdbVersion(), formQuerySql(statusTables), MaterializedView.class.getName());
 		this.presenter.getCacheStatistics();
 	}
 	
-	private void invalidateAll() {
+	private String formQuerySql(List<String> tables) {
+	    
+	    String COLUMNS = "SELECT VDBName, SchemaName, Name, TargetSchemaName, TargetName, Valid, LoadState, Updated, Cardinality FROM";
+        String UNION = "UNION";
+        String BLANK = " ";
+        
+        StringBuffer sb = new StringBuffer();
+        sb.append(COLUMNS).append(BLANK);
+        sb.append("SYSADMIN.MatViews").append(BLANK);
+        for(String table : tables){
+            sb.append(UNION).append(BLANK);
+            sb.append(COLUMNS).append(BLANK);
+            sb.append(table).append(BLANK);
+        }
+        
+        return sb.toString();
+    }
+
+    private void invalidateAll() {
 		List<MaterializedView> views = this.matviewProvider.getList();
 		int i = 0;
 		for (i = 0; i < views.size()-1; i++) {
