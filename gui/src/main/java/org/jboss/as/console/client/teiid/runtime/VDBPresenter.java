@@ -444,42 +444,6 @@ public class VDBPresenter extends
         });    	
 	}
 	
-	public List<String> getStatusTables(final String vdbName, final int version) {
-	    
-	    final List<String> list = new ArrayList<>();
-	    
-	    final String sql = "SELECT DISTINCT \"Value\" FROM SYS.Properties WHERE Name = '{http://www.teiid.org/ext/relational/2012}MATVIEW_STATUS_TABLE'";
-	    
-	    ModelNode address = RuntimeBaseAddress.get();
-        address.add("subsystem", "teiid");
-        ModelNode operation = new ModelNode();
-        operation.get(OP).set("execute-query");
-        operation.get(ADDRESS).set(address);
-        operation.get("vdb-name").set(new ModelNode().set(vdbName));
-        operation.get("vdb-version").set(new ModelNode().set(version));
-        operation.get("sql-query").set(new ModelNode().set(sql));
-        operation.get("timeout-in-milli").set(new ModelNode().set(-1));
-        
-        dispatcher.execute(new DMRAction(operation), new SimpleCallback<DMRResponse>(){
-            @Override
-            public void onSuccess(DMRResponse result) {
-                ModelNode response  = result.get();
-                if (response.get(RESULT).isDefined()){
-                    List<ModelNode> rows =response.get(RESULT).asList();
-                    for(ModelNode row : rows) {
-                        list.add(row.get("Value").asString());
-                    }  
-                } 
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                Console.error("Failed to execute query: " + sql, caught.getMessage());
-            }});
-	    
-	    return list;
-	}
-	
 	private <T> EntityAdapter<T> getEntityAdapter(String clazz){
 		if (clazz.equals(MaterializedView.class.getName())) {
 			return (EntityAdapter<T>) this.matViewAdaptor;
