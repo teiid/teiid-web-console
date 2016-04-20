@@ -247,8 +247,7 @@ public class VDBCachingTab extends VDBProvider {
 	}	
 
 	private void invalidate(MaterializedView view, String queryId) {
-		String viewName = view.getModelName()+"."+view.getTableName();
-		String sql = "CALL SYSADMIN.refreshMatView(viewname=>'"+viewName+"', invalidate=>true)";
+		String sql = "CALL SYSADMIN.loadMatView('" +  view.getModelName() + "', '" + view.getTableName() + "', true)";
 		this.presenter.executeQuery(getVdbName(), getVdbVersion(), sql, queryId);
 	}
 	
