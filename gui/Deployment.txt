@@ -3,48 +3,38 @@ How to deploy the teiid console
 
 1.) Build the teiid console (takes some time)
 
-
     mvn clean install
 
 After that the deployable file resides under
 
     target/teiid-console-resources.jar
 
-2.) Create a new module slot for the teiid console (retain the orig one)
+Then back to root path of teiid-web-console
 
-    mkdir modules/org/jboss/as/console/teiid
+    mvn -Pdev clean install
 
-create modules/org/jboss/as/console/teiid/module.xml
+After that the deployable file resides under
 
- <module xmlns="urn:jboss:module:1.1" name="org.jboss.as.console" slot="teiid">
-     <properties>
-         <property name="jboss.api" value="private"/>
-     </properties>
+    dist/target/teiid-hal-console-*-resources.jar
 
-     <resources>
-         <resource-root path="teiid-console-resources.jar"/>
-         <!-- Insert resources here -->
-     </resources>
+2.) Copy file to teiid server
 
-     <dependencies>
-         <!-- Do not add dependencies to the console as resources in any
-              dependencies could be served up through the HTTP interface. -->
-     </dependencies>
- </module>
+Cp teiid-hal-console-*-resources.jar to teiid server
+
+    cp teiid-hal-console-*-resources.jar $TEIID_HOME/build/target/teiid-9.0.0.Beta3-SNAPSHOT/modules/system/layers/dv/org/jboss/as/console/main
 
 
-3.) Update the domain http interface module to reflect the new dependency
+3.) Update the module.xml
+   
+Edit $TEIID_HOME/build/target/teiid-9.0.0.Beta3-SNAPSHOT/modules/system/layers/dv/org/jboss/as/console/main/module.xml
 
-
-edit modules/org/jboss/as/domain-http-interface/main/module.xml
-
-    <module xmlns="urn:jboss:module:1.1" name="org.jboss.as.domain-http-interface">
+    <module xmlns="urn:jboss:module:1.1" name="org.jboss.as.console" slot="main">
 
     [...]
-        <dependencies>
-        [...]
-            <module name="org.jboss.as.console" slot="teiid"/>
-        </dependencies>
+        <resources>
+            <resource-root path="teiid-hal-console-2.6.2-SNAPSHOT-resources.jar"/>
+    	</resources>
+
     </module>
 
 
