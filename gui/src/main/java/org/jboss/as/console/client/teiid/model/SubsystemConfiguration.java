@@ -31,10 +31,6 @@ public interface SubsystemConfiguration {
     public Boolean isAllowEnvFunction();
     public void setAllowEnvFunction(Boolean allow);    
     
-    @Binding(detypedName= "data-roles-required")    
-    public Boolean isDataRolesRequired();
-    public void setDataRolesRequired(Boolean allow);    
-    
     @Binding(detypedName="async-thread-pool-max-thread-count")
     public Integer getAsyncThreadPoolCount();
     public void setAsyncThreadPoolCount(Integer pool);
@@ -92,11 +88,6 @@ public interface SubsystemConfiguration {
     @Binding(detypedName= "buffer-service-use-disk")    
     public Boolean isUseDisk();
     public void setUseDisk(Boolean allow); 
-    
- // buffer manager stuff
-    @Binding(detypedName= "buffer-service-encrypt-files")    
-    public Boolean isEncryptFiles();
-    public void setEncryptFiles(Boolean allow); 
     
     @Binding(detypedName="buffer-service-processor-batch-size")    
     public Integer getProcessorBatchSize();
