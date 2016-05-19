@@ -35,5 +35,10 @@ public interface Translator {
     @Binding(detypedName="module")
     @FormItem(label="Module Name")
     public String getModuleName();
-    public void setModuleName(String name);    
+    public void setModuleName(String name);  
+    
+    @Binding(detypedName="slot")
+    @FormItem(label="Slot")
+    public String getSlot();
+    public void setSlot(String slot);  
 }

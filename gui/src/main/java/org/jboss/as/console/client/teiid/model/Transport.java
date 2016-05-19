@@ -90,6 +90,10 @@ public interface Transport {
     public String getKeystoreType();
     public void setKeystoreType(String str);   
     
+    @Binding(detypedName= "truststore-check-expired")    
+    public Boolean isTruststoreCheckExpired();
+    public void setTruststoreCheckExpired(Boolean b); 
+    
     @Binding(detypedName="truststore-name")    
     public String getTruststoreName();
     public void setTruststoreName(String str);  

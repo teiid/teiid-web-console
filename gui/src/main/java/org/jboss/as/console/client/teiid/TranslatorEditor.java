@@ -118,8 +118,16 @@ public class TranslatorEditor implements Persistable<Translator> {
             }
         };
         
+        TextColumn<Translator> slotColumn = new TextColumn<Translator>() {
+            @Override
+            public String getValue(Translator record) {
+                return  record.getSlot();
+            }
+        };
+        
         this.table.addColumn(nameColumn, "Name");
         this.table.addColumn(protocolColumn, "Module Name");
+        this.table.addColumn(slotColumn, "Slot");
               
         this.formCommon = new TeiidModelForm<Translator>(Translator.class,
                 this, buildCommonFormItems().toArray(new FormItem<?>[2]));
@@ -143,8 +151,8 @@ public class TranslatorEditor implements Persistable<Translator> {
     static List<FormItem<?>> buildCommonFormItems(){
         TextBoxItem name = new TextBoxItem("name", "Name", true);
         TextBoxItem moduleName = new TextBoxItem("moduleName", "Module Name", true);
-        
-        return Arrays.asList(name, moduleName);
+        TextBoxItem slot = new TextBoxItem("slot", "Slot", true);
+        return Arrays.asList(name, moduleName, slot);
     }
     
     public void setTranslators(List<Translator> translators) {

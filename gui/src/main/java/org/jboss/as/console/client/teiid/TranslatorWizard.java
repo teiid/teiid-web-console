@@ -54,6 +54,7 @@ public class TranslatorWizard {
 
         TextBoxItem name = new TextBoxItem("name", "Name", true);
         final TextBoxItem moduleName = new TextBoxItem("moduleName", "Module Name", true);
+        final TextBoxItem slot = new TextBoxItem("slot", "Slot", true);
 
         form.setFields(name, moduleName);
 
