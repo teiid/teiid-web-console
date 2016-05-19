@@ -53,6 +53,7 @@ public class ConfigurationEditor {
     public Widget asWidget() {
         // common
         CheckBoxItem allowEnvFunction = new CheckBoxItem("allowEnvFunction", "Allow ENV Function");
+        CheckBoxItem dataRolesRequired = new CheckBoxItem("dataRolesRequired", "Data Roles Required");
         NumberBoxItem maxAsyncThreadCount = new NumberBoxItem("asyncThreadPoolCount", "Asynchronous Max Thread Count");
         NumberBoxItem maxRowsFetchSize = new NumberBoxItem("maxRowsFetchSize", "Max Rows Fetch Size");
         NumberBoxItem lobChunkSize = new NumberBoxItem("lobChunkSize", "Lob Chunk Size");
@@ -72,7 +73,8 @@ public class ConfigurationEditor {
         
         // Buffer Manager
         // subgroup Batch Sizes
-        CheckBoxItem useDisk = new CheckBoxItem("useDisk", "Use Disk");               
+        CheckBoxItem useDisk = new CheckBoxItem("useDisk", "Use Disk");   
+        CheckBoxItem encryptFiles = new CheckBoxItem("encryptFiles", "Encrypt Files");   
         NumberBoxItem processorBatchSize = new NumberBoxItem("processorBatchSize", "Processor Batch Size");
         NumberBoxItem connectorBatchSize = new NumberBoxItem("connectorBatchSize", "Connector Batch Size");
         NumberBoxItem maxProcessingSize = new NumberBoxItem("maxProcessingSize", "Max Processing Size(KB)", true);
@@ -102,7 +104,7 @@ public class ConfigurationEditor {
         
 
         this.commonForm = new TeiidModelForm<SubsystemConfiguration>(
-                SubsystemConfiguration.class, this.presenter, allowEnvFunction, maxAsyncThreadCount,
+                SubsystemConfiguration.class, this.presenter, allowEnvFunction, dataRolesRequired, maxAsyncThreadCount,
                 maxRowsFetchSize, lobChunkSize, queryThreshold, maxSourceRows,
                 throwExceptionOnMaxSourceRows, detectChangeEvents, queryTimeout);
 
@@ -111,7 +113,7 @@ public class ConfigurationEditor {
                 maxActivePlans, maxConcurrentThreads, timeSlice, workManager);
 
         this.bufferManagerForm = new TeiidModelForm<SubsystemConfiguration>(
-                SubsystemConfiguration.class, this.presenter, useDisk, processorBatchSize,
+                SubsystemConfiguration.class, this.presenter, useDisk, encryptFiles, processorBatchSize,
                 connectorBatchSize, maxProcessingSize, maxReserveSize,
                 maxFileSize, maxBufferSize, maxOpenFiles, directMemorySize,
                 useOffHeapMemory, objectStorageSize, inlineLobs);

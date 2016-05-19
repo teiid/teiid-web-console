@@ -189,11 +189,16 @@ public class TransportEditor implements Persistable<Transport> {
         TextBoxItem keystoreName = new TextBoxItem("keystoreName", "Keystore Name");
         TextBoxItem keystorePassword = new TextBoxItem("keystorePassword", "Keystore Password");        
         TextBoxItem keystoreType = new TextBoxItem("keystoreType", "Keystore Type");
+        
+        CheckBoxItem truststoreCheckExpired = new CheckBoxItem("truststoreCheckExpired","Truststore Check Expired");
+        truststoreCheckExpired.setValue(false);
+        
         TextBoxItem truststoreName = new TextBoxItem("truststoreName", "Truststore Name");
         TextBoxItem truststorePassword = new TextBoxItem("truststorePassword", "Truststore Password");
+        
         return Arrays.asList(sslEnabled, sslMode, sslAuthMode, sslProtocol,
                 keyManagementAlgorithm, enabledCipherSuites, keystoreName,
-                keystorePassword, keystoreType, truststoreName,
+                keystorePassword, keystoreType,truststoreCheckExpired, truststoreName,
                 truststorePassword);
     }
 
