@@ -93,7 +93,7 @@ public interface SubsystemConfiguration {
     public Boolean isUseDisk();
     public void setUseDisk(Boolean allow); 
     
- // buffer manager stuff
+  
     @Binding(detypedName= "buffer-service-encrypt-files")    
     public Boolean isEncryptFiles();
     public void setEncryptFiles(Boolean allow); 
@@ -102,9 +102,6 @@ public interface SubsystemConfiguration {
     public Integer getProcessorBatchSize();
     public void setProcessorBatchSize(Integer i);
     
-    @Binding(detypedName="buffer-service-connector-batch-size")
-    public Integer getConnectorBatchSize();
-    public void setConnectorBatchSize(Integer i);
     
     @Binding(detypedName="buffer-service-max-processing-kb")    
     public Integer getMaxProcessingSize();
@@ -159,9 +156,6 @@ public interface SubsystemConfiguration {
     public String getDcJGroupsStack();
     public void setDcJGroupsStack(String str);    
     
-    @Binding(detypedName="distributed-cache-channel")    
-    public String getInfinispanChannel();
-    public void setInfinispanChannel(String str);     
     
     @Binding(detypedName= "resultset-cache-enable")
     public Boolean isRscEnable();

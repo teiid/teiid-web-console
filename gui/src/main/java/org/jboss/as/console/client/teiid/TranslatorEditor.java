@@ -25,10 +25,7 @@ import java.util.Map;
 import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.layout.MultipleToOneLayout;
 import org.jboss.as.console.client.teiid.model.Translator;
-import org.jboss.ballroom.client.widgets.forms.CheckBoxItem;
-import org.jboss.ballroom.client.widgets.forms.ComboBoxItem;
 import org.jboss.ballroom.client.widgets.forms.FormItem;
-import org.jboss.ballroom.client.widgets.forms.NumberBoxItem;
 import org.jboss.ballroom.client.widgets.forms.TextBoxItem;
 import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
 import org.jboss.ballroom.client.widgets.tools.ToolButton;
@@ -44,6 +41,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SingleSelectionModel;
+
+ 
 
 public class TranslatorEditor implements Persistable<Translator> {
     
