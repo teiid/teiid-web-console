@@ -117,7 +117,6 @@ public class ConfigurationEditor {
                 connectorBatchSize, maxProcessingSize, maxReserveSize,
                 maxFileSize, maxBufferSize, maxOpenFiles, directMemorySize,
                 useOffHeapMemory, objectStorageSize, inlineLobs);
-
         this.distributedCacheForm = new TeiidModelForm<SubsystemConfiguration>(
                 SubsystemConfiguration.class, this.presenter, dcJGroupsStack, infinispanChannel);
 

@@ -93,7 +93,7 @@ public interface SubsystemConfiguration {
     public Boolean isUseDisk();
     public void setUseDisk(Boolean allow); 
     
- // buffer manager stuff
+  
     @Binding(detypedName= "buffer-service-encrypt-files")    
     public Boolean isEncryptFiles();
     public void setEncryptFiles(Boolean allow); 
