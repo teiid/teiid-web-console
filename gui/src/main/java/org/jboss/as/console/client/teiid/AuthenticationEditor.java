@@ -71,10 +71,10 @@ public class AuthenticationEditor implements Persistable<Authentication> {
 				"sessionExpirationTimelimit", "Session Expiration Timelimit",
 				true);
 		TextBoxItem type = new TextBoxItem("type", "Type");
-		 
+		CheckBoxItem trustAllLocal = new CheckBoxItem("trustAllLocal", "Trust All Local");
 
 		return Arrays.asList(securityDomain, maxSessionsAllowed,
-				sessionExpirationTimelimit, type);
+				sessionExpirationTimelimit, type, trustAllLocal);
 	}
 
 	@Override

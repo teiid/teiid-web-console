@@ -76,7 +76,6 @@ public class ConfigurationEditor {
         CheckBoxItem useDisk = new CheckBoxItem("useDisk", "Use Disk");   
         CheckBoxItem encryptFiles = new CheckBoxItem("encryptFiles", "Encrypt Files");   
         NumberBoxItem processorBatchSize = new NumberBoxItem("processorBatchSize", "Processor Batch Size");
-        NumberBoxItem connectorBatchSize = new NumberBoxItem("connectorBatchSize", "Connector Batch Size");
         NumberBoxItem maxProcessingSize = new NumberBoxItem("maxProcessingSize", "Max Processing Size(KB)", true);
         NumberBoxItem maxReserveSize = new NumberBoxItem("maxReserveSize", "Max Reserved Memory(KB)", true);
         NumberBoxItem maxFileSize = new NumberBoxItem("maxFileSize", "Max Buffer File Size (MB)");
@@ -114,11 +113,11 @@ public class ConfigurationEditor {
 
         this.bufferManagerForm = new TeiidModelForm<SubsystemConfiguration>(
                 SubsystemConfiguration.class, this.presenter, useDisk, encryptFiles, processorBatchSize,
-                connectorBatchSize, maxProcessingSize, maxReserveSize,
+                maxProcessingSize, maxReserveSize,
                 maxFileSize, maxBufferSize, maxOpenFiles, directMemorySize,
                 useOffHeapMemory, objectStorageSize, inlineLobs);
         this.distributedCacheForm = new TeiidModelForm<SubsystemConfiguration>(
-                SubsystemConfiguration.class, this.presenter, dcJGroupsStack, infinispanChannel);
+                SubsystemConfiguration.class, this.presenter, dcJGroupsStack);
 
         this.preparedPlanForm = new TeiidModelForm<SubsystemConfiguration>(
                 SubsystemConfiguration.class, this.presenter, ppcEnable, ppcName,

@@ -70,7 +70,7 @@ public interface Transport {
     public String getKeyManagementAlgorithm();
     public void setKeyManagementAlgorithm(String str);    
     
-    @Binding(detypedName="enabled-cipher-suites")
+    @Binding(detypedName="ssl-enabled-cipher-suites")
     public String getEnabledCipherSuites();
     public void setEnabledCipherSuites(String str);    
     
@@ -78,7 +78,7 @@ public interface Transport {
     public String getKeystoreName();
     public void setKeystoreName(String str);  
     
-    @Binding(detypedName="keystore-password")    
+    @Binding(detypedName="keystore-key-password")    
     public String getKeystorePassword();
     public void setKeystorePassword(String str);  
     

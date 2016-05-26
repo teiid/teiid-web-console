@@ -35,17 +35,19 @@ public interface Authentication {
     @Binding(detypedName="authentication-max-sessions-allowed")    
     public Integer getMaxSessionsAllowed();
     public void setMaxSessionsAllowed(Integer i);
-    
-//   @Binding(detypedName="authentication-sessions-expiration-timelimit")    
-//    public Integer getSessionsExpirationTimelimit();
-//    public void setSessionsExpirationTimelimit(Integer i);   
+ 
     @Binding(detypedName="authentication-sessions-expiration-timelimit")    
     public Integer getSessionExpirationTimelimit();
     public void setSessionExpirationTimelimit(Integer i);   
 
-    
     @Binding(detypedName="authentication-type")    
     public String getType();
     public void setType(String str);   
+    
+    @Binding(detypedName= "authentication-trust-all-local")    
+    public Boolean isTrustAllLocal();
+    public void setTrustAllLocal(Boolean b); 
+    
+    
     
 }
