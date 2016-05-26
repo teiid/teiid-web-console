@@ -57,7 +57,7 @@ public class AuthenticationEditor implements Persistable<Authentication> {
 
 		OneToOneLayout layoutBuilder = new OneToOneLayout().setPlain(true)
 				.setTitle("Authentication").setHeadlineWidget(title)
-				.setDescription("Description of Authentication")
+				.setDescription("Authentication provides a way to control security, maximum session, etc")
 				.addDetail("Common", this.commonForm.asWidget());
 		return layoutBuilder.build();
 	}
