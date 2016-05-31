@@ -102,10 +102,6 @@ public interface SubsystemConfiguration {
     public Integer getProcessorBatchSize();
     public void setProcessorBatchSize(Integer i);
     
-    @Binding(detypedName="buffer-service-connector-batch-size")
-    public Integer getConnectorBatchSize();
-    public void setConnectorBatchSize(Integer i);
-    
     @Binding(detypedName="buffer-service-max-processing-kb")    
     public Integer getMaxProcessingSize();
     public void setMaxProcessingSize(Integer i);
