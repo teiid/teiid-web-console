@@ -93,7 +93,6 @@ public class ConfigurationEditor {
         
         // Distributed Cache
         TextBoxItem dcJGroupsStack = new TextBoxItem("dcJGroupsStack", "JGroups Stack");
-        TextBoxItem infinispanChannel = new TextBoxItem("infinispanChannel", "Infinispan Channel");
         
         // Resultset Cache
         TextBoxItem rscName = new TextBoxItem("rscName", "Infinispan Cache Name");
@@ -118,7 +117,7 @@ public class ConfigurationEditor {
                 useOffHeapMemory, objectStorageSize, inlineLobs);
 
         this.distributedCacheForm = new TeiidModelForm<SubsystemConfiguration>(
-                SubsystemConfiguration.class, this.presenter, dcJGroupsStack, infinispanChannel);
+                SubsystemConfiguration.class, this.presenter, dcJGroupsStack);
 
         this.preparedPlanForm = new TeiidModelForm<SubsystemConfiguration>(
                 SubsystemConfiguration.class, this.presenter, ppcEnable, ppcName,
