@@ -95,7 +95,7 @@ public class TransportEditor implements Persistable<Transport> {
         topLevelTools.addToolButtonRight(addBtn);
         topLevelTools.addToolButtonRight(deleteBtn);
         
-        this.table = new DefaultCellTable<Transport>(5, new ProvidesKey<Transport>() {
+        this.table = new DefaultCellTable<Transport>(7, new ProvidesKey<Transport>() {
                     @Override
                     public Object getKey(Transport item) {
                         return item.getName();
@@ -123,7 +123,7 @@ public class TransportEditor implements Persistable<Transport> {
         this.table.addColumn(protocolColumn, "Protocol");
               
         this.formCommon = new TeiidModelForm<Transport>(Transport.class,
-                this, buildCommonFormItems().toArray(new FormItem<?>[6]));
+                this, buildCommonFormItems().toArray(new FormItem<?>[4]));
 
         this.formSSL = new TeiidModelForm<Transport>(Transport.class,
                 this, buildSSLFormItems().toArray(new FormItem<?>[11]));
@@ -158,17 +158,13 @@ public class TransportEditor implements Persistable<Transport> {
         NumberBoxItem maxSocketThreads = new NumberBoxItem("maxSocketThreads", "Max Socket Threads");
         maxSocketThreads.setValue(0);
         
-        TextBoxItem authenticationDomain = new TextBoxItem("authenticationDomain", "Authentication Security Domain");
-        authenticationDomain.setValue("teiid-security");
-        
-        NumberBoxItem maxSessionsAllowed = new NumberBoxItem("maxSessionsAllowed", "Max Sessions Allowed");
-        maxSessionsAllowed.setValue(5000);
-        
-        NumberBoxItem sessionExpirationTime = new NumberBoxItem("sessionExpirationTime", "Session Expiration Time Limit");
-        maxSessionsAllowed.setValue(0);
-        
-        return Arrays.asList(name, protocol, socketBinding,
-                authenticationDomain, maxSessionsAllowed, sessionExpirationTime);
+        NumberBoxItem inputBufferSize = new NumberBoxItem("inputBufferSize",
+				"Input Buffer Size");
+		NumberBoxItem outputBufferSize = new NumberBoxItem("outputBufferSize",
+				"Output Buffer Size");
+
+		return Arrays.asList(name, protocol, socketBinding, maxSocketThreads,
+				inputBufferSize, outputBufferSize);
     }
     
     static List<FormItem<?>> buildSSLFormItems(){
