@@ -42,17 +42,13 @@ public interface Transport {
     public Integer getMaxSocketThreads();
     public void setMaxSocketThreads(Integer i);
     
-    @Binding(detypedName="authentication-security-domain")    
-    public String getAuthenticationDomain();
-    public void setAuthenticationDomain(String str);
+    @Binding(detypedName="input-buffer-size")    
+    public Integer getInputBufferSize();
+    public void setInputBufferSize(Integer i);
     
-    @Binding(detypedName="authentication-max-sessions-allowed")    
-    public Integer getMaxSessionsAllowed();
-    public void setMaxSessionsAllowed(Integer i); 
-
-    @Binding(detypedName="authentication-sessions-expiration-timelimit")    
-    public Integer getSessionExpirationTime();
-    public void setSessionExpirationTime(Integer i);   
+    @Binding(detypedName="output-buffer-size")    
+    public Integer getOutputBufferSize();
+    public void setOutputBufferSize(Integer i);
     
     @Binding(detypedName= "ssl-enable")    
     public Boolean isSslEnabled();
@@ -74,17 +70,17 @@ public interface Transport {
     public String getKeyManagementAlgorithm();
     public void setKeyManagementAlgorithm(String str);    
     
-    @Binding(detypedName="enabled-cipher-suites")
+    @Binding(detypedName="ssl-enabled-cipher-suites")
     public String getEnabledCipherSuites();
-    public void setEnabledCipherSuites(String str);    
+    public void setEnabledCipherSuites(String str);   
     
     @Binding(detypedName="keystore-name")    
     public String getKeystoreName();
     public void setKeystoreName(String str);  
     
-    @Binding(detypedName="keystore-password")    
+    @Binding(detypedName="keystore-key-password")    
     public String getKeystorePassword();
-    public void setKeystorePassword(String str);  
+    public void setKeystorePassword(String str); 
     
     @Binding(detypedName="keystore-type")
     public String getKeystoreType();

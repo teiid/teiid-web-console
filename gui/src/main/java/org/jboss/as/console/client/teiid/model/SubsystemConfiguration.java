@@ -169,5 +169,25 @@ public interface SubsystemConfiguration {
     
     @Binding(detypedName="resultset-cache-max-staleness")
     public Integer getRscMaxStaleness();
-    public void setRscMaxStaleness(Integer str);     
+    public void setRscMaxStaleness(Integer str);    
+    
+    @Binding(detypedName="authentication-security-domain") 
+    public String getSecurityDomain();
+    public void setSecurityDomain(String str);
+    
+    @Binding(detypedName="authentication-max-sessions-allowed")    
+    public Integer getMaxSessionsAllowed();
+    public void setMaxSessionsAllowed(Integer i);
+ 
+    @Binding(detypedName="authentication-sessions-expiration-timelimit")    
+    public Integer getSessionExpirationTimelimit();
+    public void setSessionExpirationTimelimit(Integer i);   
+
+    @Binding(detypedName="authentication-type")    
+    public String getType();
+    public void setType(String str);   
+    
+    @Binding(detypedName= "authentication-trust-all-local")    
+    public Boolean isTrustAllLocal();
+    public void setTrustAllLocal(Boolean b); 
 }

@@ -36,6 +36,7 @@ public class ConfigurationEditor {
     private TeiidModelForm<SubsystemConfiguration> preparedPlanForm;
     private TeiidModelForm<SubsystemConfiguration> resultsetCacheForm;
     private TeiidModelForm<SubsystemConfiguration> distributedCacheForm;    
+    private TeiidModelForm<SubsystemConfiguration> authenticationForm;
 
     public ConfigurationEditor(SubsystemPresenter presenter) {
         this.presenter = presenter;
@@ -48,6 +49,7 @@ public class ConfigurationEditor {
         this.preparedPlanForm.edit(bean);
         this.resultsetCacheForm.edit(bean);
         this.distributedCacheForm.edit(bean);
+        this.authenticationForm.edit(bean);
     }    
     
     public Widget asWidget() {
@@ -100,6 +102,12 @@ public class ConfigurationEditor {
         TextBoxItem rscContainerName = new TextBoxItem("rscContainerName", "Infinispan Cache Container Name");
         NumberBoxItem rscMaxStaleness = new NumberBoxItem("rscMaxStaleness", "Max Staleness", true);
         
+        //Authentication
+        TextBoxItem securityDomain = new TextBoxItem("securityDomain","Security Domain");
+		NumberBoxItem maxSessionsAllowed = new NumberBoxItem("maxSessionsAllowed", "Max Sessions Allowed");  
+		NumberBoxItem sessionExpirationTimelimit = new NumberBoxItem("sessionExpirationTimelimit", "Session Expiration Timelimit",true);
+		TextBoxItem type = new TextBoxItem("type", "Type");
+		CheckBoxItem trustAllLocal = new CheckBoxItem("trustAllLocal", "Trust All Local");
 
         this.commonForm = new TeiidModelForm<SubsystemConfiguration>(
                 SubsystemConfiguration.class, this.presenter, allowEnvFunction, dataRolesRequired, maxAsyncThreadCount,
@@ -127,6 +135,10 @@ public class ConfigurationEditor {
                 SubsystemConfiguration.class, this.presenter, rscName, rscEnable,
                 rscContainerName, rscMaxStaleness);
         
+        this.authenticationForm = new TeiidModelForm<SubsystemConfiguration>(
+                SubsystemConfiguration.class, this.presenter,securityDomain, maxSessionsAllowed,
+				sessionExpirationTimelimit, type, trustAllLocal);
+        
         HTML title = new HTML();
         title.setStyleName("content-header-label");
         title.setText("Query Engine");
@@ -142,7 +154,9 @@ public class ConfigurationEditor {
                 .addDetail("Buffer Manager", this.bufferManagerForm.asWidget())
                 .addDetail("Prepared Plan Cache", this.preparedPlanForm.asWidget())
                 .addDetail("Resultset Cache", this.resultsetCacheForm.asWidget())
-                .addDetail("Distributed Cache", this.distributedCacheForm.asWidget());     
+                .addDetail("Distributed Cache", this.distributedCacheForm.asWidget())
+                .addDetail("Resultset Cache", this.resultsetCacheForm.asWidget())
+                .addDetail("Authentication", this.authenticationForm.asWidget());
         return layoutBuilder.build();
     }
 }
