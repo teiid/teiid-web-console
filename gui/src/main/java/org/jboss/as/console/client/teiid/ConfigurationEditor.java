@@ -153,7 +153,6 @@ public class ConfigurationEditor {
                 .addDetail("Threads", this.threadsForm.asWidget())
                 .addDetail("Buffer Manager", this.bufferManagerForm.asWidget())
                 .addDetail("Prepared Plan Cache", this.preparedPlanForm.asWidget())
-                .addDetail("Resultset Cache", this.resultsetCacheForm.asWidget())
                 .addDetail("Distributed Cache", this.distributedCacheForm.asWidget())
                 .addDetail("Resultset Cache", this.resultsetCacheForm.asWidget())
                 .addDetail("Authentication", this.authenticationForm.asWidget());
