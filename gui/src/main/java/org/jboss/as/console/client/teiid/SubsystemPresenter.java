@@ -106,7 +106,6 @@ public class SubsystemPresenter extends
         //transport
         void setTransports(List<Transport> transports);
         void setTranslators(List<Translator> translators);
-        
     }
 
     @Inject
@@ -648,8 +647,5 @@ public class SubsystemPresenter extends
                 loadTranslators();
             }            
         });
-    } 
-    
- 
-    
+    }
 }

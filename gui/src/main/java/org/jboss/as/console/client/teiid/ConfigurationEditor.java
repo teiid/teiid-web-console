@@ -103,16 +103,11 @@ public class ConfigurationEditor {
         NumberBoxItem rscMaxStaleness = new NumberBoxItem("rscMaxStaleness", "Max Staleness", true);
         
         //Authentication
-        TextBoxItem securityDomain = new TextBoxItem("securityDomain",
-				"Security Domain");
-		NumberBoxItem maxSessionsAllowed = new NumberBoxItem(
-				"maxSessionsAllowed", "Max Sessions Allowed");  
-		NumberBoxItem sessionExpirationTimelimit = new NumberBoxItem(
-				"sessionExpirationTimelimit", "Session Expiration Timelimit",
-				true);
+        TextBoxItem securityDomain = new TextBoxItem("securityDomain","Security Domain");
+		NumberBoxItem maxSessionsAllowed = new NumberBoxItem("maxSessionsAllowed", "Max Sessions Allowed");  
+		NumberBoxItem sessionExpirationTimelimit = new NumberBoxItem("sessionExpirationTimelimit", "Session Expiration Timelimit",true);
 		TextBoxItem type = new TextBoxItem("type", "Type");
 		CheckBoxItem trustAllLocal = new CheckBoxItem("trustAllLocal", "Trust All Local");
-		
 
         this.commonForm = new TeiidModelForm<SubsystemConfiguration>(
                 SubsystemConfiguration.class, this.presenter, allowEnvFunction, dataRolesRequired, maxAsyncThreadCount,

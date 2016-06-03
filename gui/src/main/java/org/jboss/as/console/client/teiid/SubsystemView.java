@@ -63,7 +63,6 @@ public class SubsystemView extends SuspendableViewImpl implements SubsystemPrese
     public void setTranslators(List<Translator> translators) {
         this.translatorEditor.setTranslators(translators);
     }     
-     
     
     @Override
     public Widget createWidget() {
@@ -81,7 +80,6 @@ public class SubsystemView extends SuspendableViewImpl implements SubsystemPrese
         panel.addPage("Logging", this.auditEditor.asWidget());
         panel.addPage("Transports", this.transportEditor.asWidget());
         panel.addPage("Translators", this.translatorEditor.asWidget());
-//        panel.addPage("Authentication", this.authenticationEditor.asWidget());
         
         // default page
         panel.showPage(0);
