@@ -41,7 +41,6 @@ import org.jboss.as.console.client.domain.model.SimpleCallback;
 import org.jboss.as.console.client.shared.runtime.RuntimeBaseAddress;
 import org.jboss.as.console.client.shared.subsys.Baseadress;
 import org.jboss.as.console.client.shared.subsys.RevealStrategy;
-import org.jboss.as.console.client.teiid.model.Authentication;
 import org.jboss.as.console.client.teiid.model.SubsystemConfiguration;
 import org.jboss.as.console.client.teiid.model.TeiidLogger;
 import org.jboss.as.console.client.teiid.model.Translator;
@@ -80,7 +79,6 @@ public class SubsystemPresenter extends
     private EntityAdapter<TeiidLogger> loggerAdaptor;
     private EntityAdapter<Transport> transportEntityAdapter;
     private EntityAdapter<Translator> translatorAdapter;
-    private EntityAdapter<Authentication> authenticationAdapter;
     private ApplicationMetaData metadata;
     
     @ProxyCodeSplit
@@ -109,7 +107,6 @@ public class SubsystemPresenter extends
         void setTransports(List<Transport> transports);
         void setTranslators(List<Translator> translators);
         
-        void setAuthentication(Authentication authentication);
     }
 
     @Inject
@@ -125,8 +122,6 @@ public class SubsystemPresenter extends
         this.loggerAdaptor = new EntityAdapter<TeiidLogger>(TeiidLogger.class, metadata);
         this.transportEntityAdapter = new EntityAdapter<Transport>(Transport.class, metadata);
         this.translatorAdapter = new EntityAdapter<>(Translator.class, metadata);
-        this.authenticationAdapter = new EntityAdapter<>(Authentication.class,
-				metadata);
     }
 
     @Override
@@ -147,7 +142,6 @@ public class SubsystemPresenter extends
         loadLoggingConfiguration();
         loadTransports();
         loadTranslators();
-        loadAuthenticationl();
     }
     
     public void loadLoggingConfiguration() {
@@ -656,70 +650,6 @@ public class SubsystemPresenter extends
         });
     } 
     
-
-	// Authentication
-	public void saveAuthentication(Authentication authentication,
-			Map<String, Object> changeset) {
-
-		ModelNode address = new ModelNode();
-		address.get(ADDRESS).set(Baseadress.get());
-		address.get(ADDRESS).add("subsystem", "teiid");
-		address.get(OP).set(WRITE_ATTRIBUTE_OPERATION);
-
-		ModelNode operation = this.authenticationAdapter.fromChangeset(
-				changeset, address);
-
-		dispatcher.execute(new DMRAction(operation),
-				new SimpleCallback<DMRResponse>() {
-					@Override
-					public void onSuccess(DMRResponse result) {
-						ModelNode response = result.get();
-						boolean success = response.get(OUTCOME).asString()
-								.equals(SUCCESS);
-
-						if (success) {
-							Console.info(Console.MESSAGES
-									.saved("Teiid configuration modified"));
-						} else {
-							Console.error(
-									Console.MESSAGES
-											.saveFailed("Teiid configuration modification failed"),
-									response.getFailureDescription());
-						}
-						loadAuthenticationl();
-					}
-
-					@Override
-					public void onFailure(Throwable caught) {
-						super.onFailure(caught);
-						loadAuthenticationl();
-					}
-				});
-	}
-
-	private void loadAuthenticationl() {
-		ModelNode operation = new ModelNode();
-		operation.get(OP).set(READ_RESOURCE_OPERATION);
-		operation.get(ADDRESS).set(Baseadress.get());
-		operation.get(ADDRESS).add("subsystem", "teiid");
-
-		dispatcher.execute(new DMRAction(operation),
-				new SimpleCallback<DMRResponse>() {
-					@Override
-					public void onSuccess(DMRResponse dmrResponse) {
-						ModelNode response = dmrResponse.get();
-						Authentication bean = authenticationAdapter
-								.fromDMR(response.get(RESULT));
-						getView().setAuthentication(bean);
-					}
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Console.error(
-								"Failed to retrieve configuration for Teiid subsystem",
-								caught.getMessage());
-					}
-				});
-	}
+ 
     
 }

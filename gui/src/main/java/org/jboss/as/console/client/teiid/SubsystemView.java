@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.jboss.as.console.client.core.SuspendableViewImpl;
 import org.jboss.as.console.client.rbac.SecurityFramework;
-import org.jboss.as.console.client.teiid.model.Authentication;
 import org.jboss.as.console.client.teiid.model.SubsystemConfiguration;
 import org.jboss.as.console.client.teiid.model.TeiidLogger;
 import org.jboss.as.console.client.teiid.model.Translator;
@@ -43,7 +42,6 @@ public class SubsystemView extends SuspendableViewImpl implements SubsystemPrese
     private AuditEditor auditEditor;
     private SubsystemPresenter presenter;
     private TranslatorEditor translatorEditor;
-    private AuthenticationEditor authenticationEditor;
     
     @Inject
     public SubsystemView(ResourceDescriptionRegistry descriptionRegistry, SecurityFramework securityFramework) {
@@ -65,11 +63,7 @@ public class SubsystemView extends SuspendableViewImpl implements SubsystemPrese
     public void setTranslators(List<Translator> translators) {
         this.translatorEditor.setTranslators(translators);
     }     
-    
-    @Override
-	public void setAuthentication(Authentication bean) {
-		this.authenticationEditor.setAuthentication(bean);
-	}
+     
     
     @Override
     public Widget createWidget() {
@@ -82,13 +76,12 @@ public class SubsystemView extends SuspendableViewImpl implements SubsystemPrese
         this.auditEditor = new AuditEditor(this.presenter);
         this.transportEditor = new TransportEditor(this.presenter);
         this.translatorEditor = new TranslatorEditor(this.presenter);
-        this.authenticationEditor = new AuthenticationEditor(this.presenter);
 
         panel.addPage("Query Engine", this.configurationEditor.asWidget());
         panel.addPage("Logging", this.auditEditor.asWidget());
         panel.addPage("Transports", this.transportEditor.asWidget());
         panel.addPage("Translators", this.translatorEditor.asWidget());
-        panel.addPage("Authentication", this.authenticationEditor.asWidget());
+//        panel.addPage("Authentication", this.authenticationEditor.asWidget());
         
         // default page
         panel.showPage(0);

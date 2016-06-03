@@ -28,7 +28,6 @@ public interface DataModelFactory {
 	AutoBean<SubsystemConfiguration> getSubSystemModel();
 	AutoBean<Translator> getTranslatorModel();
 	AutoBean<Transport> getTransportModel();
-	AutoBean<Authentication> getAuthenticationModel();
 	AutoBean<VDB> getVDB();
 	AutoBean<Model> getModel();
 	AutoBean<SourceMapping> getSourceMapping();
