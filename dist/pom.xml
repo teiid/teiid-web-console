@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jboss.teiid.hal</groupId>
     <artifactId>dist</artifactId>
-    <version>2.6.2-SNAPSHOT</version>
+    <version>2.7</version>
     <packaging>war</packaging>
     <name>HAL Release Stream</name>
     <description>HAL release stream master. Implements the assembly.</description>
@@ -211,4 +211,8 @@
             </properties>
         </profile>
     </profiles>
+
+  <scm>
+    <tag>2.7</tag>
+  </scm>
 </project>

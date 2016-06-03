@@ -12,7 +12,7 @@
     <name>Teiid Console :: Parent</name>
     <groupId>org.jboss.teiid.web-console</groupId>
     <artifactId>teiid-console-parent</artifactId>
-    <version>2.6.2-SNAPSHOT</version>
+    <version>2.7</version>
     <packaging>pom</packaging>
 
     <description>Teiid Wildfly Web Console</description>
@@ -27,7 +27,7 @@
         <connection>scm:git:git://github.com/teiid/teiid-web-console.git</connection>
         <developerConnection>scm:git:git@github.com:teiid/teiid-web-console.git</developerConnection>
         <url>http://github.com/teiid/teiid-web-console</url>
-        <tag>HEAD</tag>
+        <tag>2.7</tag>
     </scm>
 
     <licenses>
