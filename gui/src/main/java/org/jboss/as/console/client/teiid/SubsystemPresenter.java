@@ -647,5 +647,5 @@ public class SubsystemPresenter extends
                 loadTranslators();
             }            
         });
-    }
+    }    
 }
