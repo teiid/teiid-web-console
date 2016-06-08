@@ -37,6 +37,7 @@ import org.jboss.as.console.client.teiid.model.Session;
 import org.jboss.as.console.client.teiid.model.VDB;
 import org.jboss.as.console.client.teiid.model.ValidityError;
 import org.jboss.as.console.client.teiid.widgets.TeiidIcons;
+import org.jboss.as.console.client.teiid.widgets.TextAreaCell;
 import org.jboss.as.console.client.widgets.pages.PagedView;
 import org.jboss.as.console.client.widgets.tabs.DefaultTabLayoutPanel;
 import org.jboss.ballroom.client.widgets.icons.Icons;
@@ -340,7 +341,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 				return record.getPath();
 			}
 		};
-		TextColumn<ValidityError> errorMsg = new TextColumn<ValidityError>() {
+		Column<ValidityError, String> errorMsg = new Column<ValidityError, String>(new TextAreaCell()) {
 			@Override
 			public String getValue(ValidityError record) {
 				return record.getMessage();
