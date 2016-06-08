@@ -32,11 +32,13 @@ import org.jboss.as.console.client.teiid.model.CacheStatistics;
 import org.jboss.as.console.client.teiid.model.DataModelFactory;
 import org.jboss.as.console.client.teiid.model.EngineStatistics;
 import org.jboss.as.console.client.teiid.model.KeyValuePair;
+import org.jboss.as.console.client.teiid.model.Model;
 import org.jboss.as.console.client.teiid.model.Request;
 import org.jboss.as.console.client.teiid.model.Session;
 import org.jboss.as.console.client.teiid.model.VDB;
 import org.jboss.as.console.client.teiid.model.ValidityError;
 import org.jboss.as.console.client.teiid.widgets.TeiidIcons;
+import org.jboss.as.console.client.teiid.widgets.TextAreaCell;
 import org.jboss.as.console.client.widgets.pages.PagedView;
 import org.jboss.as.console.client.widgets.tabs.DefaultTabLayoutPanel;
 import org.jboss.ballroom.client.widgets.icons.Icons;
@@ -46,9 +48,11 @@ import org.jboss.ballroom.client.widgets.tools.ToolButton;
 import org.jboss.ballroom.client.widgets.tools.ToolStrip;
 
 import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.ImageResourceCell;
 import com.google.gwt.cell.client.NumberCell;
+import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -58,6 +62,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -340,13 +345,15 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 				return record.getPath();
 			}
 		};
-		TextColumn<ValidityError> errorMsg = new TextColumn<ValidityError>() {
-			@Override
+	
+		
+		 Column<ValidityError, String> errorMsg = new Column<ValidityError, String>(new TextAreaCell()) {
+		@Override
 			public String getValue(ValidityError record) {
 				return record.getMessage();
 			}
 		};
-		
+	    errors.addColumnStyleName(1,"cellTablColumCell");
 		errors.setTitle("Validation Errors");
 		errors.addColumn(modelPath, "Path");
 		errors.addColumn(errorMsg, "Error/Warnings");
