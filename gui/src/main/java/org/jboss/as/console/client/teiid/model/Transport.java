@@ -95,28 +95,33 @@ public interface Transport extends NamedEntity {
     public String getKeystoreName();
     public void setKeystoreName(String str);  
     
+    @Binding(detypedName="keystore-key-password")
+    @FormItem(label="Keystore Key Password", localTabName = "", tabName="SSL", order=8)
+    public String getKeystoreKeyPassword();
+    public void setKeystoreKeyPassword(String str); 
+    
     @Binding(detypedName="keystore-password")
-    @FormItem(label="Keystore Password", localTabName = "", tabName="SSL", order=7)
+    @FormItem(label="Keystore Password", localTabName = "", tabName="SSL", order=9)
     public String getKeystorePassword();
     public void setKeystorePassword(String str);  
     
     @Binding(detypedName="keystore-type")
-    @FormItem(label="Keystore Type", localTabName = "", tabName="SSL", order=8)
+    @FormItem(label="Keystore Type", localTabName = "", tabName="SSL", order=10)
     public String getKeystoreType();
     public void setKeystoreType(String str);
     
     @Binding(detypedName="keystore-key-alias")
-    @FormItem(label="Keystore Alias", localTabName = "", tabName="SSL", order=9)
+    @FormItem(label="Keystore Alias", localTabName = "", tabName="SSL", order=11)
     public String getKeystoreAlias();
     public void setKeystoreAlias(String str);    
     
     @Binding(detypedName="truststore-name")
-    @FormItem(label="Truststore Name", localTabName = "", tabName="SSL", order=10)
+    @FormItem(label="Truststore Name", localTabName = "", tabName="SSL", order=12)
     public String getTruststoreName();
     public void setTruststoreName(String str);  
     
     @Binding(detypedName="truststore-password")
-    @FormItem(label="Truststore Password", localTabName = "", tabName="SSL", order=11)
+    @FormItem(label="Truststore Password", localTabName = "", tabName="SSL", order=13)
     public String getTruststorePassword();
     public void setTruststorePassword(String str);     
 }

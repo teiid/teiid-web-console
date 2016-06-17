@@ -112,11 +112,6 @@ public interface SubsystemConfiguration {
     public Integer getProcessorBatchSize();
     public void setProcessorBatchSize(Integer i);
     
-    @Binding(detypedName="buffer-service-connector-batch-size")
-    @FormItem(label="Connector Batch Size", required=false, formItemTypeForEdit="NUMBER_BOX", formItemTypeForAdd="NUMBER_BOX", localTabName = "", tabName="BufferManager", subgroup="Batch Sizes")
-    public Integer getConnectorBatchSize();
-    public void setConnectorBatchSize(Integer i);
-    
     @Binding(detypedName="buffer-service-max-processing-kb")
     @FormItem(label="Max Processing Size(KB)", required=false, formItemTypeForEdit="NUMBER_BOX_ALLOW_NEGATIVE", formItemTypeForAdd="NUMBER_BOX_ALLOW_NEGATIVE", localTabName = "", tabName="BufferManager")
     public Integer getMaxProcessingSize();
@@ -182,11 +177,6 @@ public interface SubsystemConfiguration {
     @FormItem(label="JGroups Stack", required=false, localTabName = "", tabName="Distributed Cache")
     public String getDcJGroupsStack();
     public void setDcJGroupsStack(String str);    
-    
-    @Binding(detypedName="distributed-cache-channel")
-    @FormItem(label="Infinispan Channel", required=false, localTabName = "", tabName="Distributed Cache")
-    public String getInfinispanChannel();
-    public void setInfinispanChannel(String str);     
     
     @Binding(detypedName= "resultset-cache-enable")
     @FormItem(label="Enable", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", localTabName = "", tabName="Resultset Cache")
