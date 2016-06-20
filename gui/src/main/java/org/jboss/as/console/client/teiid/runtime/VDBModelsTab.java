@@ -46,6 +46,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 public class VDBModelsTab extends VDBProvider {
 	private DataModelFactory factory;
 	private VDBPresenter presenter;
+	public DefaultCellTable modelsTable ;
 	
 	public VDBModelsTab(VDBPresenter presenter) {
 		this.presenter = presenter;
@@ -58,13 +59,34 @@ public class VDBModelsTab extends VDBProvider {
     	final ListDataProvider<ValidityError> errorProvider = new ListDataProvider<ValidityError>();
     	ListHandler<Model> sortHandler = new ListHandler<Model>(modelProvider.getList());
     	
-        final DefaultCellTable modelsTable = getModelTable(sortHandler);
+        modelsTable = getModelTable(sortHandler);
         modelProvider.addDataDisplay(modelsTable);
         
         VDBView.onTableSectionChange(vdbTable, new TableSelectionCallback<VDB> (){
 			@Override
 			public void onSelectionChange(VDB selection) {
 				if (selection != null && !selection.getModels().isEmpty()) {
+					if (isActive(selection)) {      
+						Column<Model, String> schemaBtn = new Column<Model, String>(new ButtonCell()) {
+				            @Override
+				            public String getValue(Model record) {
+				        		return "DDL";
+				            }
+				        };
+				        schemaBtn.setFieldUpdater(new FieldUpdater<Model, String>() {
+							@Override
+							public void update(int index, Model model, String value) {
+							    showSchema(model);
+							}
+				        });
+				        modelsTable.addColumn(schemaBtn,"Schema");
+						 modelProvider.refresh();
+					}
+					else{
+						modelsTable.removeColumn(8);
+						modelProvider.refresh();
+					}
+					
 					setVdbName(selection.getName());
 					setVdbVersion(selection.getVersion());
 					modelProvider.getList().clear();
@@ -299,7 +321,6 @@ public class VDBModelsTab extends VDBProvider {
                 return o1.getMetadataStatus().compareTo(o2.getMetadataStatus());
             }
         });        
-        
         Column<Model, String> schemaBtn = new Column<Model, String>(new ButtonCell()) {
             @Override
             public String getValue(Model record) {
@@ -331,7 +352,6 @@ public class VDBModelsTab extends VDBProvider {
 		return modelsTable;
 	}
 
-    
     private boolean isSource(Model model) {
     	if (model.getModelType() == null || model.getModelType().equals("PHYSICAL")) {
     		return true;
@@ -405,3 +425,4 @@ public class VDBModelsTab extends VDBProvider {
 		}
 	}	
 }
+
