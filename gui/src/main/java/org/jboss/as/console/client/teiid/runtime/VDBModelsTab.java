@@ -46,7 +46,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 public class VDBModelsTab extends VDBProvider {
 	private DataModelFactory factory;
 	private VDBPresenter presenter;
-	public DefaultCellTable modelsTable ;
+	private DefaultCellTable modelsTable ;
 	
 	public VDBModelsTab(VDBPresenter presenter) {
 		this.presenter = presenter;
@@ -425,4 +425,3 @@ public class VDBModelsTab extends VDBProvider {
 		}
 	}	
 }
-
