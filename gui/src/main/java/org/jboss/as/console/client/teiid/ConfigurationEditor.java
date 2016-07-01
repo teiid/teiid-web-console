@@ -21,6 +21,7 @@ package org.jboss.as.console.client.teiid;
 import org.jboss.as.console.client.layout.OneToOneLayout;
 import org.jboss.as.console.client.teiid.model.SubsystemConfiguration;
 import org.jboss.ballroom.client.widgets.forms.CheckBoxItem;
+import org.jboss.ballroom.client.widgets.forms.ComboBoxItem;
 import org.jboss.ballroom.client.widgets.forms.NumberBoxItem;
 import org.jboss.ballroom.client.widgets.forms.TextBoxItem;
 
@@ -106,7 +107,9 @@ public class ConfigurationEditor {
         TextBoxItem securityDomain = new TextBoxItem("securityDomain","Security Domain");
 		NumberBoxItem maxSessionsAllowed = new NumberBoxItem("maxSessionsAllowed", "Max # of Sessions Allowed");  
 		NumberBoxItem sessionExpirationTimelimit = new NumberBoxItem("sessionExpirationTimelimit", "Session Expiration Timelimit",true);
-		TextBoxItem type = new TextBoxItem("type", "Type");
+		ComboBoxItem type = new ComboBoxItem("type", "Type");
+		type.setValueMap(new String[] {"USERPASSWORD", "GSS"});
+		type.setDefaultToFirstOption(true);
 		CheckBoxItem trustAllLocal = new CheckBoxItem("trustAllLocal", "Trust All Local Connections");
 
         this.commonForm = new TeiidModelForm<SubsystemConfiguration>(

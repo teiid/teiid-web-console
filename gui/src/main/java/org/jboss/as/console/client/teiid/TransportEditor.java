@@ -172,10 +172,12 @@ public class TransportEditor implements Persistable<Transport> {
         sslEnabled.setValue(false);
         
         ComboBoxItem sslMode = new ComboBoxItem("sslMode", "Mode");
-        sslMode.setValueMap(new String[] {"logIn", "disabled", "enabled"});
+        sslMode.setValueMap(new String[] {"login", "disabled", "enabled"});
+        sslMode.setDefaultToFirstOption(true);
         
         ComboBoxItem sslAuthMode = new ComboBoxItem("sslAuthMode", "Auth Mode");
         sslAuthMode.setValueMap(new String[] {"1-way", "2-way", "anonymous"});
+        sslAuthMode.setDefaultToFirstOption(true);
         
         TextBoxItem sslProtocol = new TextBoxItem("sslProtocol", "Protocol");
         TextBoxItem keyManagementAlgorithm = new TextBoxItem("keyManagementAlgorithm", "Key Management Algorithm");
