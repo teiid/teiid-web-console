@@ -66,6 +66,7 @@ to a specific inet address that can be access from the virtual machine:
 ### configure
 
     Modify *gui/src/main/resources/org/jboss/as/console/TeiidExtension.gwt.xml* for Super Dev Mode.
+
 ~~~~
 <module rename-to="app">
     <inherits name="org.jboss.as.console.composite.WildFlyDev"/>
@@ -104,8 +105,8 @@ Modify the value of  resource-root to teiid-console-app-***-resources.jar
 >The server is ready when you can see *[INFO] The code server is ready at http://127.0.0.1:9876/* in terminal.
 
 * Teiid Server
-    
-    ./bin/standalone.sh  
+
+`./bin/standalone.sh`
 
 ### Debug
 
