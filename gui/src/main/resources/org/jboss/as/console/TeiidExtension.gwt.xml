@@ -15,9 +15,13 @@
   ~ v.2.1 along with this distribution; if not, write to the Free Software
   ~ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
   ~ MA  02110-1301, USA.
+  
   -->
 
 <module rename-to="app">
     <inherits name="org.jboss.as.console.composite.WildFlyDev"/>
+    <inherits name='edu.ycp.cs.dh.acegwt.AceGWT'/>
+    <script name='ace/theme-twilight.js'/>
     <stylesheet src="teiid.css" />
+    <add-linker name="xsiframe"/> 
 </module>
