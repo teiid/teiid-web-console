@@ -20,6 +20,7 @@ package org.jboss.as.console.client.teiid.runtime;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.core.SuspendableViewImpl;
@@ -45,6 +46,7 @@ import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
 import org.jboss.ballroom.client.widgets.tabs.FakeTabPanel;
 import org.jboss.ballroom.client.widgets.tools.ToolButton;
 import org.jboss.ballroom.client.widgets.tools.ToolStrip;
+import org.jboss.dmr.client.ModelNode;
 
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -58,6 +60,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.cellview.client.Header;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -78,6 +81,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 	private VDBCachingTab vdbCachingTab;
 	private DataModelFactory factory;
 	private TeiidMetricsEditor metricsEditor;
+	private SQLWorkbenchEditor sqlWorkbenchEditor;
 
 	public void setDataModelFactory(DataModelFactory factory) {
 		this.factory = factory;					
@@ -129,9 +133,10 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
         PagedView pages = new PagedView(true);
         
         this.metricsEditor = new TeiidMetricsEditor();
-        
+        this.sqlWorkbenchEditor = new SQLWorkbenchEditor();
 		pages.addPage("Virtual Databases", mainPageAsWidget());
 		pages.addPage("Metrics", this.metricsEditor.createWidget());
+		pages.addPage("SQL Workbench", this.sqlWorkbenchEditor.createWidget(presenter));
 
 		// default page
 		pages.showPage(0);
@@ -355,6 +360,29 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 		return errors;
 	}
 	
+	
+	
+	static DefaultCellTable<ModelNode> buildSQLResultTable( List<ModelNode> list) {
+		
+		DefaultCellTable<ModelNode> errors = new DefaultCellTable<ModelNode>(10);
+		errors.setTitle("SQL Result");
+		Object[] attributes = list.get(0).keys().toArray();
+		
+		for(int i = 0;i<attributes.length;i++) {
+			String name = attributes[i].toString();
+			TextColumn<ModelNode> modelPath = new TextColumn<ModelNode>() {
+				@Override
+				public String getValue(ModelNode record) {
+					return record.get(name).asString();
+				}
+			};
+			errors.addColumn(modelPath, name);
+		}
+	 
+		return errors;
+	}
+	
+	
 	static DefaultCellTable<KeyValuePair> buildPropertiesTable() {
 		ProvidesKey<KeyValuePair> keyProvider = new ProvidesKey<KeyValuePair>() {
 			@Override
@@ -429,5 +457,17 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
     @Override
     public void setEngineStatistics(EngineStatistics stats) {
         this.metricsEditor.setEngineStatistics(stats);
-    }	
+    }
+
+	@Override
+	public void setSQLResult(List<ModelNode> list) {
+		// TODO Auto-generated method stub
+		this.sqlWorkbenchEditor.setResultList(list);
+	}
+
+//	@Override
+//	public void setSQLResult(String result) {
+//		// TODO Auto-generated method stub
+//		this.presenter.refresh(false);
+//	}	
 }

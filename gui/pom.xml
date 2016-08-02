@@ -13,4 +13,7 @@
     <artifactId>teiid-console-gui</artifactId>
     <packaging>jar</packaging>
     <version>2.8-SNAPSHOT</version>
+    
+    
+    
 </project>
