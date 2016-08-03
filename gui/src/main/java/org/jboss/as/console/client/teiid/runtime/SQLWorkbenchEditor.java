@@ -60,36 +60,25 @@ import edu.ycp.cs.dh.acegwt.client.ace.AceEditorTheme;
 @SuppressWarnings("nls")
 public class SQLWorkbenchEditor {
 	private AceEditor editor;
-	private TextArea result;
 	private VerticalPanel resultPanel;
 	private ListDataProvider<VDB> vdbProvider = new ListDataProvider<VDB>();
 	private List<ModelNode> resultList;
 	private VDBPresenter presenter;
-	private ArrayList<String> vdbNameList;
 	private List<VDB> vdblist;
 
 	public void setPresenter(VDBPresenter presenter) {
 		this.presenter = presenter;
 	}
-	
+
 	public void setResultList(List<ModelNode> reusltlist) {
 		this.resultList = reusltlist;
 	}
 
-	
 	public void setVDBList(List<VDB> vdblist) {
 		this.vdblist = vdblist;
 	}
-	
-	public Widget createWidget(VDBPresenter presenter) {
 
-		vdbNameList = new ArrayList();
-		String jsfile = "app/ace/ace.js";
-		ScriptInjector.fromUrl(jsfile).inject();
-		String jsfile2 = "app/ace/theme-twilight.js ";
-		ScriptInjector.fromUrl(jsfile2).inject();
-		String jsfile3 = "app/ace/mode-sql.js ";
-		ScriptInjector.fromUrl(jsfile3).inject();
+	public Widget createWidget(VDBPresenter presenter) {
 
 		this.presenter = presenter;
 		final ToolStrip toolStrip = new ToolStrip();
@@ -98,19 +87,10 @@ public class SQLWorkbenchEditor {
 			public void onClick(ClickEvent event) {
 			}
 		}));
-		
+
 		VerticalPanel workBenchPanel = new VerticalPanel();
-		// result = new TextArea();
 		HorizontalPanel variablePanel = new HorizontalPanel();
-		
-		ComboBoxItem vdbNames = new ComboBoxItem("vdb-name", "VDB Name");
-		 vdbNames.setValueMap(new String[] { "Portfolio", "GSS" });
-//		vdbNames.setValueMap(getVdbNames());
-		vdbNames.setDefaultToFirstOption(true);
-		
-		
-		
-		variablePanel.add(vdbNames.asWidget());
+
 		Label vdbNameLabel = new Label("VDB Name");
 		vdbNameLabel.getElement().setAttribute("style",
 				"margin-top:10px;margin-bottom:10px;margin-right:10px;font-weight:bold;");
@@ -127,15 +107,12 @@ public class SQLWorkbenchEditor {
 		TextBoxItem vdbVersion = new TextBoxItem("VDB Version", "Deployed Virtual Database Version ");
 		variablePanel.add(vdbVersion.asWidget());
 
-		// result.setSize("800px", "600px");
-
 		ToolButton applyBtn = new ToolButton("Run", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent arg0) {
 				String SQL = editor.getText();
 				String VDB = vdbName.getValue();
 				int VDB_Version = Integer.parseInt(vdbVersion.getValue());
-				editor.setText(getVdbNames().toString());
 				setSqlResult(SQL, VDB, VDB_Version);
 			}
 		});
@@ -151,19 +128,7 @@ public class SQLWorkbenchEditor {
 		workBenchPanel.add(this.editor);
 
 		editor.startEditor();
-		// editor.setAutocompleteEnabled(true);
-		// editor.setMode(AceEditorMode.SQL);
-		// editor.setModeByName("SQL");
-
-		editor.setTheme(AceEditorTheme.TWILIGHT);
-		// AceEditor.removeAllExistingCompleters();
-
-		// AceEditor.addCompletionProvider(new
-		// SqlWorkbenchCompletionProvider());
-		// editor.setMode(AceEditorMode.SQL);
-
 		workBenchPanel.add(resultLabel);
-		// workBenchPanel.add(result);
 		resultPanel = new VerticalPanel();
 		resultPanel.setSize("800px", "500px");
 
@@ -181,28 +146,6 @@ public class SQLWorkbenchEditor {
 				.addDetail("SQL workbench", workBenchPanel);
 		return layoutBuilder.build();
 	}
-
-	private String[] getVdbNames() {
-		// TODO Auto-generated method stub
-		if (vdblist != null) {
-			if (!vdblist.isEmpty()) {
-				for (VDB vdb : vdblist) {
-					vdbNameList.add(vdb.getName());
-				}
-				String[] resu = (String[]) vdbNameList.toArray(new String[vdbNameList.size()]);
-				return resu;
-			}
-			else {
-				String[] resu = { "1" };
-				return resu;
-			}
-		} else {
-			String[] resu = {  "2" };
-			return resu;
-		}
-	}
-
-	
 
 	public void setSqlResult(String SQL, String VDB, int VDB_Version) {
 
@@ -225,70 +168,4 @@ public class SQLWorkbenchEditor {
 		resultPanel.add(resultTablePager);
 	}
 
-	public void provideAsText(List<ModelNode> list) {
-		Set<String> attributes = list.get(0).keys();
-		TextArea resultAstxt = new TextArea();
-		// String result = attributes.toString();
-		String result = "---------";
-		for (String title : attributes) {
-			result = result + title + "----------------";
-		}
-		result += "\n\n" + "                ";
-		for (ModelNode k : list) {
-			for (String title : attributes) {
-				result += k.get(title) + "                ";
-			}
-			result += "\n" + "                ";
-		}
-		resultAstxt.setText(result);
-		resultAstxt.setSize("800px", "600px");
-		resultPanel.add(resultAstxt);
-	}
-
-	
-
-	private static class SqlWorkbenchCompletionProvider implements AceCompletionProvider {
-		@Override
-
-		public void getProposals(AceEditor editor, AceEditorCursorPosition pos, String prefix,
-				AceCompletionCallback callback) {
-			GWT.log("sending completion proposals");
-			callback.invokeWithCompletions(new AceCompletion[] {
-					new AceCompletionValue("first", "firstcompletion", "custom", 10),
-					new AceCompletionValue("second", "secondcompletion", "custom", 11),
-					new AceCompletionValue("third", "thirdcompletion", "custom", 12),
-					new AceCompletionSnippet("fourth (snippets)",
-							new AceCompletionSnippetSegment[] { new AceCompletionSnippetSegmentLiteral("filler_"),
-									new AceCompletionSnippetSegmentTabstopItem("tabstop1"),
-									new AceCompletionSnippetSegmentLiteral("_\\filler_"), // putting
-																							// backslash
-																							// in
-																							// here
-																							// to
-																							// prove
-																							// escaping
-																							// is
-																							// working
-									new AceCompletionSnippetSegmentTabstopItem("tabstop2"),
-									new AceCompletionSnippetSegmentLiteral("_$filler_"), // putting
-																							// dollar
-																							// in
-																							// here
-																							// to
-																							// prove
-																							// escaping
-																							// is
-																							// working
-									new AceCompletionSnippetSegmentTabstopItem("tabstop3"),
-									new AceCompletionSnippetSegmentLiteral("\nnextlinefiller_"),
-									new AceCompletionSnippetSegmentTabstopItem("tabstop}4"),
-									new AceCompletionSnippetSegmentLiteral("_filler_"),
-									new AceCompletionSnippetSegmentTabstopItem(
-											"") /*
-												 * Empty tabstop -- tab to end
-												 * of replacement text
-												 */
-							}, "csnip", 14) });
-		}
-	}
 }
