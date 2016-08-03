@@ -71,7 +71,8 @@ public class VDBPresenter extends
     private EntityAdapter<MaterializedView> matViewAdaptor;
     private EntityAdapter<CacheStatistics> cacheAdaptor;
     private EntityAdapter<EngineStatistics> runtimeAdaptor;
-    public 	List<ModelNode> list  ;
+    public 	List<ModelNode> list;
+    
 	
     @ProxyCodeSplit
     @NameToken("vdb-runtime")
@@ -97,6 +98,7 @@ public class VDBPresenter extends
 		void setSourceRequests(Request selection, List<Request> requests);
 		void setEngineStatistics(EngineStatistics stats);
 		void setSQLResult(List<ModelNode> list);
+		void setVDBList(List<VDB> list);
     }
     
 	@Inject
@@ -177,6 +179,45 @@ public class VDBPresenter extends
             }                         
         });        
     }	
+    
+    
+public void getVDBS( ) {
+        ModelNode address = RuntimeBaseAddress.get();
+        address.add("subsystem", "teiid");
+        ModelNode operation = new ModelNode();
+        operation.get(OP).set("list-vdbs");
+        operation.get(ADDRESS).set(address);
+
+        dispatcher.execute(new DMRAction(operation), new SimpleCallback<DMRResponse>() {
+            @Override
+            public void onSuccess(DMRResponse result) {
+                ModelNode response  = result.get();
+                if (response.get(RESULT).isDefined()) {
+	                List<VDB> vdbs = vdbAdaptor.fromDMRList(response.get(RESULT).asList());
+	                for (VDB vdb:vdbs) {
+	                	boolean valid = true;
+	                	for (Model m:vdb.getModels()) {
+	                		if (!m.getValidityErrors().isEmpty()) {
+	                			for (ValidityError ve: m.getValidityErrors()) {
+	                				if (ve.getSeverity().equals("ERROR")) {
+	                					valid = false;
+	                				}
+	                			}
+	                		}
+	                	}
+	                	vdb.setValid(valid);
+	                }
+	                getView().setVDBList(vdbs);
+                }
+            }
+            @Override
+            public void onFailure(Throwable caught) {
+                Console.error("Failed to get list of current VDBs deployed in the system",
+                        caught.getMessage());
+            }                         
+        });    
+    }	
+    
     
     public void removeRoleName(final String vdbName, final int version, final String dataRole, final String mappedRole) {
         
@@ -672,8 +713,6 @@ public class VDBPresenter extends
                 Console.error("Failed to execute SQL query", caught.getMessage());
             }             
         }); 
-    	
-//    	return vdbName+version+sql;
-        
-    }	
+    }
+    
 }

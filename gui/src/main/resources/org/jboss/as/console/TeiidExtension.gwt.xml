@@ -21,7 +21,6 @@
 <module rename-to="app">
     <inherits name="org.jboss.as.console.composite.WildFlyDev"/>
     <inherits name='edu.ycp.cs.dh.acegwt.AceGWT'/>
-    <script name='ace/theme-twilight.js'/>
     <stylesheet src="teiid.css" />
     <add-linker name="xsiframe"/> 
 </module>

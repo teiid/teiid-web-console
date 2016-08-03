@@ -83,6 +83,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 	private TeiidMetricsEditor metricsEditor;
 	private SQLWorkbenchEditor sqlWorkbenchEditor;
 
+	public static List<VDB> deployedVDBs = null;
 	public void setDataModelFactory(DataModelFactory factory) {
 		this.factory = factory;					
 	}
@@ -93,6 +94,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 			this.vdbProvider.getList().clear();
 			this.vdbProvider.getList().addAll(vdbs);
 	        this.vdbTable.getSelectionModel().setSelected(vdbs.get(0), true);
+	    	
 		}
 		else {
 			this.vdbProvider.getList().clear();
@@ -157,6 +159,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
             @Override
             public void onClick(ClickEvent event) {
                 presenter.refresh(false);
+            	deployedVDBs = vdbProvider.getList();
             }
         }));		
         
@@ -274,6 +277,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 
 		this.vdbTable = table;
 		this.vdbProvider.addDataDisplay(table);
+		deployedVDBs = this.vdbProvider.getList();
 		
 		this.vdbRequestsTab = new VDBRequestsTab(presenter);
 		this.vdbModelsTab = new VDBModelsTab(this.presenter);
@@ -364,8 +368,8 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 	
 	static DefaultCellTable<ModelNode> buildSQLResultTable( List<ModelNode> list) {
 		
-		DefaultCellTable<ModelNode> errors = new DefaultCellTable<ModelNode>(10);
-		errors.setTitle("SQL Result");
+		DefaultCellTable<ModelNode> result = new DefaultCellTable<ModelNode>(10);
+		result.setTitle("SQL Result");
 		Object[] attributes = list.get(0).keys().toArray();
 		
 		for(int i = 0;i<attributes.length;i++) {
@@ -376,10 +380,10 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 					return record.get(name).asString();
 				}
 			};
-			errors.addColumn(modelPath, name);
+			result.addColumn(modelPath, name);
 		}
 	 
-		return errors;
+		return result;
 	}
 	
 	
@@ -465,9 +469,10 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 		this.sqlWorkbenchEditor.setResultList(list);
 	}
 
-//	@Override
-//	public void setSQLResult(String result) {
-//		// TODO Auto-generated method stub
-//		this.presenter.refresh(false);
-//	}	
+	@Override
+	public void setVDBList(List<VDB> list) {
+		// TODO Auto-generated method stub
+		this.sqlWorkbenchEditor.setVDBList(list);
+	}
+ 
 }
