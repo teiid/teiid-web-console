@@ -57,7 +57,6 @@ public class SQLWorkbenchEditor {
 		this.presenter = presenter;
 	}
 
-
 	public void setVDBList(List<VDB> vdblist) {
 		this.vdblist = vdblist;
 		vdbName.setValueMap(getVdbNames());
@@ -158,7 +157,5 @@ public class SQLWorkbenchEditor {
 		String[] vdbNames = (String[]) names.toArray(new String[names.size()]);
 		return vdbNames;
 	}
-	
-	 
 
 }

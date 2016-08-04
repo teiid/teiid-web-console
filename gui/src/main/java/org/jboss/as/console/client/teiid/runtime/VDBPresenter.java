@@ -72,7 +72,6 @@ public class VDBPresenter extends
     private EntityAdapter<CacheStatistics> cacheAdaptor;
     private EntityAdapter<EngineStatistics> runtimeAdaptor;
     public 	List<ModelNode> list;
-    
 	
     @ProxyCodeSplit
     @NameToken("vdb-runtime")
@@ -106,6 +105,7 @@ public class VDBPresenter extends
 			DispatchAsync dispatcher, ApplicationMetaData metaData,
 			RevealStrategy revealStrategy, BeanFactory factory) {
         super(eventBus, view, proxy);
+        
         this.dispatcher = dispatcher;
         this.revealStrategy = revealStrategy;
         this.factory = (DataModelFactory)factory;

@@ -20,7 +20,6 @@ package org.jboss.as.console.client.teiid.runtime;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.core.SuspendableViewImpl;
@@ -60,7 +59,6 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.google.gwt.user.cellview.client.Header;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -83,7 +81,6 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 	private TeiidMetricsEditor metricsEditor;
 	private SQLWorkbenchEditor sqlWorkbenchEditor;
 
-	public static List<VDB> deployedVDBs = null;
 	public void setDataModelFactory(DataModelFactory factory) {
 		this.factory = factory;					
 	}
@@ -136,6 +133,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
         
         this.metricsEditor = new TeiidMetricsEditor();
         this.sqlWorkbenchEditor = new SQLWorkbenchEditor();
+        
 		pages.addPage("Virtual Databases", mainPageAsWidget());
 		pages.addPage("Metrics", this.metricsEditor.createWidget());
 		pages.addPage("SQL Workbench", this.sqlWorkbenchEditor.createWidget(presenter));
@@ -159,7 +157,6 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
             @Override
             public void onClick(ClickEvent event) {
                 presenter.refresh(false);
-            	deployedVDBs = vdbProvider.getList();
             }
         }));		
         
@@ -277,7 +274,6 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 
 		this.vdbTable = table;
 		this.vdbProvider.addDataDisplay(table);
-		deployedVDBs = this.vdbProvider.getList();
 		
 		this.vdbRequestsTab = new VDBRequestsTab(presenter);
 		this.vdbModelsTab = new VDBModelsTab(this.presenter);
