@@ -57,9 +57,6 @@ public class SQLWorkbenchEditor {
 		this.presenter = presenter;
 	}
 
-	public void setResultList(List<ModelNode> reusltlist) {
-		this.resultList = reusltlist;
-	}
 
 	public void setVDBList(List<VDB> vdblist) {
 		this.vdblist = vdblist;
@@ -138,13 +135,8 @@ public class SQLWorkbenchEditor {
 	}
 
 	public void setSqlResult(String SQL, String VDB, int VDB_Version) {
-
-		presenter.getExecuteSQL(VDB, VDB_Version, SQL);
-		if (resultList.size() == 0) {
-			return;
-		}
 		resultPanel.clear();
-		provideAsTable(resultList);
+		presenter.getExecuteSQL(VDB, VDB_Version, SQL);
 	}
 
 	public void provideAsTable(List<ModelNode> list) {
@@ -166,5 +158,7 @@ public class SQLWorkbenchEditor {
 		String[] vdbNames = (String[]) names.toArray(new String[names.size()]);
 		return vdbNames;
 	}
+	
+	 
 
 }
