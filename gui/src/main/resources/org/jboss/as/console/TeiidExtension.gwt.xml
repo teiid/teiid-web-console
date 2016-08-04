@@ -19,6 +19,5 @@
 
 <module rename-to="app">
     <inherits name="org.jboss.as.console.composite.WildFlyDev"/>
-    <inherits name='edu.ycp.cs.dh.acegwt.AceGWT'/>
     <stylesheet src="teiid.css" />
 </module>
