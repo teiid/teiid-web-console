@@ -21,8 +21,6 @@ package org.jboss.as.console.client.teiid.runtime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-
 import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.layout.OneToOneLayout;
 import org.jboss.as.console.client.teiid.model.VDB;
@@ -34,29 +32,16 @@ import org.jboss.ballroom.client.widgets.tools.ToolButton;
 import org.jboss.ballroom.client.widgets.tools.ToolStrip;
 import org.jboss.dmr.client.ModelNode;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 
-import edu.ycp.cs.dh.acegwt.client.ace.AceCompletion;
-import edu.ycp.cs.dh.acegwt.client.ace.AceCompletionCallback;
-import edu.ycp.cs.dh.acegwt.client.ace.AceCompletionProvider;
-import edu.ycp.cs.dh.acegwt.client.ace.AceCompletionSnippet;
-import edu.ycp.cs.dh.acegwt.client.ace.AceCompletionSnippetSegment;
-import edu.ycp.cs.dh.acegwt.client.ace.AceCompletionSnippetSegmentLiteral;
-import edu.ycp.cs.dh.acegwt.client.ace.AceCompletionSnippetSegmentTabstopItem;
-import edu.ycp.cs.dh.acegwt.client.ace.AceCompletionValue;
 import edu.ycp.cs.dh.acegwt.client.ace.AceEditor;
-import edu.ycp.cs.dh.acegwt.client.ace.AceEditorCursorPosition;
-import edu.ycp.cs.dh.acegwt.client.ace.AceEditorTheme;
 
 @SuppressWarnings("nls")
 public class SQLWorkbenchEditor {
@@ -65,7 +50,7 @@ public class SQLWorkbenchEditor {
 	private ListDataProvider<VDB> vdbProvider = new ListDataProvider<VDB>();
 	private List<ModelNode> resultList;
 	private VDBPresenter presenter;
-	private List<VDB> vdblist  = new LinkedList<VDB>();
+	private List<VDB> vdblist = new LinkedList<VDB>();
 	private ComboBoxItem vdbName;
 
 	public void setPresenter(VDBPresenter presenter) {
@@ -101,11 +86,9 @@ public class SQLWorkbenchEditor {
 
 		vdbName = new ComboBoxItem("type", "Type");
 		vdbName.setDefaultToFirstOption(true);
-		
-		
-//		TextBoxItem vdbName = new TextBoxItem("VDB Name", "Deployed Virtual Database Name ");
+
 		variablePanel.add(vdbName.asWidget());
- 
+
 		Label vdbVersionLabel = new Label("VDB Version");
 		vdbVersionLabel.getElement().setAttribute("style",
 				"margin-top:10px;margin-bottom:10px;margin-right:10px;margin-left:10px;font-weight:bold;");
@@ -174,17 +157,14 @@ public class SQLWorkbenchEditor {
 		resultPanel.add(resultTable.asWidget());
 		resultPanel.add(resultTablePager);
 	}
-	
-	
-	
-	private String[] getVdbNames() {
-       List<String> names = new ArrayList<String>();
-       for (VDB item : vdblist) {
-               names.add(item.getName());
-       }
-       String[] vdbNames = (String[]) names.toArray(new String[names.size()]);
-       return vdbNames;
-		       }
 
+	private String[] getVdbNames() {
+		List<String> names = new ArrayList<String>();
+		for (VDB item : vdblist) {
+			names.add(item.getName());
+		}
+		String[] vdbNames = (String[]) names.toArray(new String[names.size()]);
+		return vdbNames;
+	}
 
 }
