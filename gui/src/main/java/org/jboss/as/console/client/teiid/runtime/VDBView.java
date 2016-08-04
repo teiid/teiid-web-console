@@ -465,13 +465,11 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 
 	@Override
 	public void setSQLResult(List<ModelNode> list) {
-		// TODO Auto-generated method stub
-		this.sqlWorkbenchEditor.setResultList(list);
+		this.sqlWorkbenchEditor.provideAsTable(list);
 	}
 
 	@Override
 	public void setVDBList(List<VDB> list) {
-		// TODO Auto-generated method stub
 		this.sqlWorkbenchEditor.setVDBList(list);
 	}
  
