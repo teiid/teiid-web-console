@@ -19,6 +19,7 @@
 package org.jboss.as.console.client.teiid.runtime;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -64,7 +65,8 @@ public class SQLWorkbenchEditor {
 	private ListDataProvider<VDB> vdbProvider = new ListDataProvider<VDB>();
 	private List<ModelNode> resultList;
 	private VDBPresenter presenter;
-	private List<VDB> vdblist;
+	private List<VDB> vdblist  = new LinkedList<VDB>();
+	private ComboBoxItem vdbName;
 
 	public void setPresenter(VDBPresenter presenter) {
 		this.presenter = presenter;
@@ -76,6 +78,7 @@ public class SQLWorkbenchEditor {
 
 	public void setVDBList(List<VDB> vdblist) {
 		this.vdblist = vdblist;
+		vdbName.setValueMap(getVdbNames());
 	}
 
 	public Widget createWidget(VDBPresenter presenter) {
@@ -96,12 +99,16 @@ public class SQLWorkbenchEditor {
 				"margin-top:10px;margin-bottom:10px;margin-right:10px;font-weight:bold;");
 		variablePanel.add(vdbNameLabel);
 
-		TextBoxItem vdbName = new TextBoxItem("VDB Name", "Deployed Virtual Database Name ");
+		vdbName = new ComboBoxItem("type", "Type");
+		vdbName.setDefaultToFirstOption(true);
+		
+		
+//		TextBoxItem vdbName = new TextBoxItem("VDB Name", "Deployed Virtual Database Name ");
 		variablePanel.add(vdbName.asWidget());
-
+ 
 		Label vdbVersionLabel = new Label("VDB Version");
 		vdbVersionLabel.getElement().setAttribute("style",
-				"margin-top:10px;margin-bottom:10px;margin-right:10px;font-weight:bold;");
+				"margin-top:10px;margin-bottom:10px;margin-right:10px;margin-left:10px;font-weight:bold;");
 		variablePanel.add(vdbVersionLabel);
 
 		TextBoxItem vdbVersion = new TextBoxItem("VDB Version", "Deployed Virtual Database Version ");
@@ -167,5 +174,17 @@ public class SQLWorkbenchEditor {
 		resultPanel.add(resultTable.asWidget());
 		resultPanel.add(resultTablePager);
 	}
+	
+	
+	
+	private String[] getVdbNames() {
+       List<String> names = new ArrayList<String>();
+       for (VDB item : vdblist) {
+               names.add(item.getName());
+       }
+       String[] vdbNames = (String[]) names.toArray(new String[names.size()]);
+       return vdbNames;
+		       }
+
 
 }

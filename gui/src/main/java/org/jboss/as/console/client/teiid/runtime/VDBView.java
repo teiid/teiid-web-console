@@ -94,7 +94,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 			this.vdbProvider.getList().clear();
 			this.vdbProvider.getList().addAll(vdbs);
 	        this.vdbTable.getSelectionModel().setSelected(vdbs.get(0), true);
-	    	
+	        this.presenter.getVDBS();
 		}
 		else {
 			this.vdbProvider.getList().clear();
