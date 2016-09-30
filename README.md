@@ -18,6 +18,12 @@ When the hosted browser is started, it's enough to hit the 'refresh' button to r
 and verify changes. You can get the OOPHM Plugin, required for attaching your browser to the
 hosted mode execution here: http://gwt.google.com/samples/MissingPlugin/MissingPlugin.html
 
+To allow the CORS support
+
+````
+  /core-service=management/management-interface=http-interface:list-add(name=allowed-origins,value=http://127.0.0.1:8888)
+  :reload
+````
 
 ## Running in web mode:
 
