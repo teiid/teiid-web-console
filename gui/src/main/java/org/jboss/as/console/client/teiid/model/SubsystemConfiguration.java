@@ -155,7 +155,13 @@ public interface SubsystemConfiguration {
     @Binding(detypedName= "buffer-service-inline-lobs")
     @FormItem(label="Inline LOBs", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", localTabName = "", tabName="BufferManager")
     public Boolean isInlineLobs();
-    public void setInlineLobs(Boolean allow);   
+    public void setInlineLobs(Boolean allow);
+    
+    @Binding(detypedName= "buffer-service-encrypt-files")
+    @FormItem(label="Encrypt Files", required=false, formItemTypeForEdit="CHECK_BOX", formItemTypeForAdd="CHECK_BOX", localTabName = "", tabName="BufferManager")
+    public Boolean isBufferServiceEncryptFiles();
+    public void setBufferServiceEncryptFiles(Boolean allow);
+    
     
     // cache settings
     @Binding(detypedName= "preparedplan-cache-enable")
