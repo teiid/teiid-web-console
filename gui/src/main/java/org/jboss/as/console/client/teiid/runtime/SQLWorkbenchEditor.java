@@ -93,10 +93,19 @@ public class SQLWorkbenchEditor {
 			public void onClick(ClickEvent arg0) {
 				String sqlCommand = editor.getText();
 				String name = vdbSelector.getValue();
-				setSqlResult(sqlCommand, name);
+				if (!sqlCommand.trim().isEmpty()){
+					setSqlResult(sqlCommand, name);
+				}
 			}
 		});
 		toolbarPanel.add(applyBtn);
+
+		Label descriptionLabel = new Label("   Enter SQL in below window, then select the text and click Run");
+		vdbNameLabel.getElement().setAttribute("style",
+				"margin-top:10px;margin-bottom:10px;margin-right:10px;");
+		toolbarPanel.add(descriptionLabel);
+		
+		
 		workBenchPanel.add(toolbarPanel);
 		workBenchPanel.setCellHeight(toolbarPanel, "50px");
 
@@ -128,7 +137,7 @@ public class SQLWorkbenchEditor {
                 }
             }
         });
-		
+
         HorizontalPanel editorPanel = new HorizontalPanel();
         editorPanel.setStyleName("fill-layout-width");
         editorPanel.add(editor);
@@ -163,7 +172,7 @@ public class SQLWorkbenchEditor {
 
 			VerticalPanel resultTab = new VerticalPanel();
 			resultTab.setStyleName("fill-layout-width");
-			resultTab.setSpacing(5);
+			resultTab.setSpacing(2);
 			resultTab.add(new HTML("<h4>"+sql+"</h4>"));
 			
 	        DefaultPager resultTablePager = new DefaultPager();
@@ -175,6 +184,11 @@ public class SQLWorkbenchEditor {
 		}
 	}	
 
+	public <T> void setDDL(List<T> results, String sql, String clazz) {
+		if (clazz.equals("SQLWorkbench")) {
+			
+		}
+	}	
 	private String[] getVdbNames(List<VDB> vdblist) {
 		List<String> names = new ArrayList<String>();
 		for (VDB item : vdblist) {
