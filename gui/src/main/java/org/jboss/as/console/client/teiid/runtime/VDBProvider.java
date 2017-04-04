@@ -23,7 +23,7 @@ import org.jboss.as.console.client.teiid.runtime.VDBView.TabProvider;
 
 public abstract class VDBProvider implements TabProvider{
 	private String vdbName;
-	private int vdbVersion;
+	private String vdbVersion;
 	private String modelName;
 	private String policyName;
 	
@@ -33,10 +33,10 @@ public abstract class VDBProvider implements TabProvider{
 	public void setVdbName(String vdbName) {
 		this.vdbName = vdbName;
 	}
-	public int getVdbVersion() {
+	public String getVdbVersion() {
 		return vdbVersion;
 	}
-	public void setVdbVersion(int vdbVersion) {
+	public void setVdbVersion(String vdbVersion) {
 		this.vdbVersion = vdbVersion;
 	}
 	public String getModelName() {

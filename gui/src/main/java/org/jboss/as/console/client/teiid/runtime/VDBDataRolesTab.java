@@ -75,7 +75,7 @@ public class VDBDataRolesTab extends VDBProvider {
 				}
 				else {
 					setVdbName(null);
-					setVdbVersion(0);	
+					setVdbVersion("0");	
 				}	
 				
 				if (policies == null || policies.isEmpty()) {

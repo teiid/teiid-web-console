@@ -22,7 +22,6 @@ import static org.jboss.dmr.client.ModelDescriptionConstants.ADDRESS;
 import static org.jboss.dmr.client.ModelDescriptionConstants.OP;
 import static org.jboss.dmr.client.ModelDescriptionConstants.RESULT;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.as.console.client.Console;
@@ -88,10 +87,10 @@ public class VDBPresenter extends
         void setDataModelFactory(DataModelFactory factory);
         void setModelSchema(String ddl);
         void terminateSessionSubmitted(Session session);
-        void setVDBSessions(String vdbName, int version, List<Session> sessions);
-        <T> void setQueryResults(List<T> results, String clazz);
-        void connectionTypeChanged(String vdbName, int version);
-		void vdbReloaded(String vdbName, int version);
+        void setVDBSessions(String vdbName, String version, List<Session> sessions);
+        <T> void setQueryResults(List<T> results, String sql, String clazz);
+        void connectionTypeChanged(String vdbName, String version);
+		void vdbReloaded(String vdbName, String version);
 		void setCacheStatistics(CacheStatistics cache);
 		void setSourceRequests(Request selection, List<Request> requests);
 		void setEngineStatistics(EngineStatistics stats);
@@ -102,7 +101,7 @@ public class VDBPresenter extends
 			DispatchAsync dispatcher, ApplicationMetaData metaData,
 			RevealStrategy revealStrategy, BeanFactory factory) {
         super(eventBus, view, proxy);
-
+        
         this.dispatcher = dispatcher;
         this.revealStrategy = revealStrategy;
         this.factory = (DataModelFactory)factory;
@@ -140,8 +139,11 @@ public class VDBPresenter extends
 	}
 	
     public void refresh(final boolean paging) {
-        
-        ModelNode address = RuntimeBaseAddress.get();
+        getVDBs();        
+    }
+
+	public void getVDBs() {
+		ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
         ModelNode operation = new ModelNode();
         operation.get(OP).set("list-vdbs");
@@ -174,10 +176,10 @@ public class VDBPresenter extends
                 Console.error("Failed to get list of current VDBs deployed in the system",
                         caught.getMessage());
             }                         
-        });        
-    }	
+        });
+	}	
     
-    public void removeRoleName(final String vdbName, final int version, final String dataRole, final String mappedRole) {
+    public void removeRoleName(final String vdbName, final String version, final String dataRole, final String mappedRole) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -202,7 +204,7 @@ public class VDBPresenter extends
         });    	
     }
     
-    public void addRoleName(final String vdbName, final int version, final String dataRole, final String mappedRole) {
+    public void addRoleName(final String vdbName, final String version, final String dataRole, final String mappedRole) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -226,7 +228,7 @@ public class VDBPresenter extends
         });    	
     }    
     
-    public void getRequests(final String vdbName, final int version, final boolean includeSourceQueries) {
+    public void getRequests(final String vdbName, final String version, final boolean includeSourceQueries) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -319,7 +321,7 @@ public class VDBPresenter extends
         });    	
     }
 
-    public void getSchema(final String vdbName, final int version, final String modelName) {
+    public void getSchema(final String vdbName, final String version, final String modelName) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -351,7 +353,7 @@ public class VDBPresenter extends
         });     	
     }
 
-	public void getSessions(final String vdbName, final int version) {
+	public void getSessions(final String vdbName, final String version) {
 
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -409,7 +411,7 @@ public class VDBPresenter extends
         });    	
 	}
 	
-	public <T> void executeQuery(final String vdbName, final int version, final String sql, final String clazz) {
+	public <T> void executeQuery(final String vdbName, final String version, final String sql, final String clazz) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -427,14 +429,14 @@ public class VDBPresenter extends
                 ModelNode response  = result.get();
                 if (response.get(RESULT).isDefined()) {
                 		if (getEntityAdapter(clazz) != null) {
-                			getView().setQueryResults(matViewAdaptor.fromDMRList(response.get(RESULT).asList()), clazz);
+                			getView().setQueryResults(matViewAdaptor.fromDMRList(response.get(RESULT).asList()), sql, clazz);
                 		}
                 		else {
-                			getView().setQueryResults(null, clazz);
+                			getView().setQueryResults(response.get(RESULT).asList(), sql, clazz);
                 		}
                 }
                 else {
-                	getView().setQueryResults(null, clazz);
+                	getView().setQueryResults(response.get(RESULT).asList(), sql, clazz);
                 }
             }
             @Override
@@ -443,7 +445,7 @@ public class VDBPresenter extends
             }                                                
         });    	
 	}
-	
+
 	private <T> EntityAdapter<T> getEntityAdapter(String clazz){
 		if (clazz.equals(MaterializedView.class.getName())) {
 			return (EntityAdapter<T>) this.matViewAdaptor;
@@ -451,7 +453,7 @@ public class VDBPresenter extends
 		return null;
 	}
 
-	public void clearCache(final String vdbName, final int version, final String cacheType) {
+	public void clearCache(final String vdbName, final String version, final String cacheType) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -475,7 +477,7 @@ public class VDBPresenter extends
         }); 		
 	}
 
-	public void changeConnectionType(final String vdbName, final int version, final String connType) {
+	public void changeConnectionType(final String vdbName, final String version, final String connType) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -501,7 +503,7 @@ public class VDBPresenter extends
         }); 
 	}
 
-	public void assignDataSource(final String vdbName, final int version,
+	public void assignDataSource(final String vdbName, final String version,
 			final String modelName, final String sourceName,
 			final String translatorName, final String dataSourceName) {
 
@@ -534,7 +536,7 @@ public class VDBPresenter extends
 		
 	}
 
-	public void reloadVDB(final String vdbName, final int version) {
+	public void reloadVDB(final String vdbName, final String version) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");

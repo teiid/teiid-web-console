@@ -20,7 +20,6 @@ package org.jboss.as.console.client.teiid.runtime;
 
 import java.util.List;
 
-import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.teiid.model.CacheStatistics;
 import org.jboss.as.console.client.teiid.model.MaterializedView;
 import org.jboss.as.console.client.teiid.model.VDB;
