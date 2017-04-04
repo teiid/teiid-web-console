@@ -22,7 +22,6 @@ import static org.jboss.dmr.client.ModelDescriptionConstants.ADDRESS;
 import static org.jboss.dmr.client.ModelDescriptionConstants.OP;
 import static org.jboss.dmr.client.ModelDescriptionConstants.RESULT;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.as.console.client.Console;
@@ -71,7 +70,6 @@ public class VDBPresenter extends
     private EntityAdapter<MaterializedView> matViewAdaptor;
     private EntityAdapter<CacheStatistics> cacheAdaptor;
     private EntityAdapter<EngineStatistics> runtimeAdaptor;
-    public 	List<ModelNode> list;
 	
     @ProxyCodeSplit
     @NameToken("vdb-runtime")
@@ -89,15 +87,13 @@ public class VDBPresenter extends
         void setDataModelFactory(DataModelFactory factory);
         void setModelSchema(String ddl);
         void terminateSessionSubmitted(Session session);
-        void setVDBSessions(String vdbName, int version, List<Session> sessions);
-        <T> void setQueryResults(List<T> results, String clazz);
-        void connectionTypeChanged(String vdbName, int version);
-		void vdbReloaded(String vdbName, int version);
+        void setVDBSessions(String vdbName, String version, List<Session> sessions);
+        <T> void setQueryResults(List<T> results, String sql, String clazz);
+        void connectionTypeChanged(String vdbName, String version);
+		void vdbReloaded(String vdbName, String version);
 		void setCacheStatistics(CacheStatistics cache);
 		void setSourceRequests(Request selection, List<Request> requests);
 		void setEngineStatistics(EngineStatistics stats);
-		void setSQLResult(List<ModelNode> list);
-		void setVDBList(List<VDB> list);
     }
     
 	@Inject
@@ -143,8 +139,11 @@ public class VDBPresenter extends
 	}
 	
     public void refresh(final boolean paging) {
-        
-        ModelNode address = RuntimeBaseAddress.get();
+        getVDBs();        
+    }
+
+	public void getVDBs() {
+		ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
         ModelNode operation = new ModelNode();
         operation.get(OP).set("list-vdbs");
@@ -177,49 +176,10 @@ public class VDBPresenter extends
                 Console.error("Failed to get list of current VDBs deployed in the system",
                         caught.getMessage());
             }                         
-        });        
-    }	
+        });
+	}	
     
-    
-public void getVDBS( ) {
-        ModelNode address = RuntimeBaseAddress.get();
-        address.add("subsystem", "teiid");
-        ModelNode operation = new ModelNode();
-        operation.get(OP).set("list-vdbs");
-        operation.get(ADDRESS).set(address);
-
-        dispatcher.execute(new DMRAction(operation), new SimpleCallback<DMRResponse>() {
-            @Override
-            public void onSuccess(DMRResponse result) {
-                ModelNode response  = result.get();
-                if (response.get(RESULT).isDefined()) {
-	                List<VDB> vdbs = vdbAdaptor.fromDMRList(response.get(RESULT).asList());
-	                for (VDB vdb:vdbs) {
-	                	boolean valid = true;
-	                	for (Model m:vdb.getModels()) {
-	                		if (!m.getValidityErrors().isEmpty()) {
-	                			for (ValidityError ve: m.getValidityErrors()) {
-	                				if (ve.getSeverity().equals("ERROR")) {
-	                					valid = false;
-	                				}
-	                			}
-	                		}
-	                	}
-	                	vdb.setValid(valid);
-	                }
-	                getView().setVDBList(vdbs);
-                }
-            }
-            @Override
-            public void onFailure(Throwable caught) {
-                Console.error("Failed to get list of current VDBs deployed in the system",
-                        caught.getMessage());
-            }                         
-        });    
-    }	
-    
-    
-    public void removeRoleName(final String vdbName, final int version, final String dataRole, final String mappedRole) {
+    public void removeRoleName(final String vdbName, final String version, final String dataRole, final String mappedRole) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -244,7 +204,7 @@ public void getVDBS( ) {
         });    	
     }
     
-    public void addRoleName(final String vdbName, final int version, final String dataRole, final String mappedRole) {
+    public void addRoleName(final String vdbName, final String version, final String dataRole, final String mappedRole) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -268,7 +228,7 @@ public void getVDBS( ) {
         });    	
     }    
     
-    public void getRequests(final String vdbName, final int version, final boolean includeSourceQueries) {
+    public void getRequests(final String vdbName, final String version, final boolean includeSourceQueries) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -361,7 +321,7 @@ public void getVDBS( ) {
         });    	
     }
 
-    public void getSchema(final String vdbName, final int version, final String modelName) {
+    public void getSchema(final String vdbName, final String version, final String modelName) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -393,7 +353,7 @@ public void getVDBS( ) {
         });     	
     }
 
-	public void getSessions(final String vdbName, final int version) {
+	public void getSessions(final String vdbName, final String version) {
 
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -451,7 +411,7 @@ public void getVDBS( ) {
         });    	
 	}
 	
-	public <T> void executeQuery(final String vdbName, final int version, final String sql, final String clazz) {
+	public <T> void executeQuery(final String vdbName, final String version, final String sql, final String clazz) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -469,14 +429,14 @@ public void getVDBS( ) {
                 ModelNode response  = result.get();
                 if (response.get(RESULT).isDefined()) {
                 		if (getEntityAdapter(clazz) != null) {
-                			getView().setQueryResults(matViewAdaptor.fromDMRList(response.get(RESULT).asList()), clazz);
+                			getView().setQueryResults(matViewAdaptor.fromDMRList(response.get(RESULT).asList()), sql, clazz);
                 		}
                 		else {
-                			getView().setQueryResults(null, clazz);
+                			getView().setQueryResults(response.get(RESULT).asList(), sql, clazz);
                 		}
                 }
                 else {
-                	getView().setQueryResults(null, clazz);
+                	getView().setQueryResults(response.get(RESULT).asList(), sql, clazz);
                 }
             }
             @Override
@@ -485,7 +445,7 @@ public void getVDBS( ) {
             }                                                
         });    	
 	}
-	
+
 	private <T> EntityAdapter<T> getEntityAdapter(String clazz){
 		if (clazz.equals(MaterializedView.class.getName())) {
 			return (EntityAdapter<T>) this.matViewAdaptor;
@@ -493,7 +453,7 @@ public void getVDBS( ) {
 		return null;
 	}
 
-	public void clearCache(final String vdbName, final int version, final String cacheType) {
+	public void clearCache(final String vdbName, final String version, final String cacheType) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -517,7 +477,7 @@ public void getVDBS( ) {
         }); 		
 	}
 
-	public void changeConnectionType(final String vdbName, final int version, final String connType) {
+	public void changeConnectionType(final String vdbName, final String version, final String connType) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -543,7 +503,7 @@ public void getVDBS( ) {
         }); 
 	}
 
-	public void assignDataSource(final String vdbName, final int version,
+	public void assignDataSource(final String vdbName, final String version,
 			final String modelName, final String sourceName,
 			final String translatorName, final String dataSourceName) {
 
@@ -576,7 +536,7 @@ public void getVDBS( ) {
 		
 	}
 
-	public void reloadVDB(final String vdbName, final int version) {
+	public void reloadVDB(final String vdbName, final String version) {
         
         ModelNode address = RuntimeBaseAddress.get();
         address.add("subsystem", "teiid");
@@ -682,37 +642,4 @@ public void getVDBS( ) {
             }             
         });     
     }	
-    
-    public void getExecuteSQL(String vdbName, int version, String sql) {
-    	
-    	ModelNode address = RuntimeBaseAddress.get();
-		address.add("subsystem", "teiid");
-		ModelNode operation = new ModelNode();
-		operation.get(OP).set("execute-query");
-        operation.get(ADDRESS).set(address);
-        operation.get("vdb-name").set(new ModelNode().set(vdbName));
-        operation.get("vdb-version").set(new ModelNode().set(version));
-        operation.get("sql-query").set(new ModelNode().set(sql));
-        operation.get("timeout-in-milli").set(new ModelNode().set(-1));
-        dispatcher.execute(new DMRAction(operation), new SimpleCallback<DMRResponse>() {
-            @Override 
-            public void onSuccess(DMRResponse result) {             
-                ModelNode response  = result.get();
-                if (response.get(RESULT).isDefined()) {
-                	list = response.get(RESULT).asList();
-                	 getView().setSQLResult(list);
-                	Console.info("VDB "+vdbName+"."+version+" has been execute SQL query. "+sql);
-//                	getView().vdbReloaded(vdbName, version);
-                }else {
-//                	 getView().setSQLResult(sqlResult);
-                }
-                
-            }
-            @Override
-            public void onFailure(Throwable caught) {
-                Console.error("Failed to execute SQL query", caught.getMessage());
-            }             
-        }); 
-    }
-    
 }

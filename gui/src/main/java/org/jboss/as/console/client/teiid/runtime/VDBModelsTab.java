@@ -46,7 +46,6 @@ import com.google.gwt.view.client.SingleSelectionModel;
 public class VDBModelsTab extends VDBProvider {
 	private DataModelFactory factory;
 	private VDBPresenter presenter;
-	private DefaultCellTable modelsTable ;
 	
 	public VDBModelsTab(VDBPresenter presenter) {
 		this.presenter = presenter;
@@ -59,7 +58,7 @@ public class VDBModelsTab extends VDBProvider {
     	final ListDataProvider<ValidityError> errorProvider = new ListDataProvider<ValidityError>();
     	ListHandler<Model> sortHandler = new ListHandler<Model>(modelProvider.getList());
     	
-        modelsTable = getModelTable(sortHandler);
+    	DefaultCellTable modelsTable = getModelTable(sortHandler);
         modelProvider.addDataDisplay(modelsTable);
         
         VDBView.onTableSectionChange(vdbTable, new TableSelectionCallback<VDB> (){
@@ -99,7 +98,7 @@ public class VDBModelsTab extends VDBProvider {
 				}
 				else {
 					setVdbName(null);
-					setVdbVersion(0);					
+					setVdbVersion("0");					
 					modelProvider.getList().clear();
 					propertyProvider.getList().clear();
 					errorProvider.getList().clear();
@@ -321,18 +320,6 @@ public class VDBModelsTab extends VDBProvider {
                 return o1.getMetadataStatus().compareTo(o2.getMetadataStatus());
             }
         });        
-        Column<Model, String> schemaBtn = new Column<Model, String>(new ButtonCell()) {
-            @Override
-            public String getValue(Model record) {
-        		return "DDL";
-            }        	
-        };
-        schemaBtn.setFieldUpdater(new FieldUpdater<Model, String>() {
-			@Override
-			public void update(int index, Model model, String value) {
-			    showSchema(model);
-			}
-        });        
         
         modelsTable.setTitle("Models");
         modelsTable.addColumn(nameColumn, "Name");
@@ -343,7 +330,6 @@ public class VDBModelsTab extends VDBProvider {
         modelsTable.addColumn(translatorNameColumn, "Translator Name");
         modelsTable.addColumn(jndiNameColumn, "Datasource JNDI Name");
         modelsTable.addColumn(schemaStatusColumn, "Schema Status");
-        modelsTable.addColumn(schemaBtn, "Schema");
         
         modelsTable.setSelectionModel(new SingleSelectionModel<Model>(keyProvider));
         

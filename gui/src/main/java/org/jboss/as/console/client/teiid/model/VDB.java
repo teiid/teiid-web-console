@@ -30,8 +30,8 @@ public interface VDB {
     public void setName(String name);
     
     @Binding(detypedName="vdb-version")
-    public Integer getVersion();
-    public void setVersion(Integer version);
+    public String getVersion();
+    public void setVersion(String version);
 	
     @Binding(detypedName="models", listType="org.jboss.as.console.client.teiid.model.Model")
 	public List<Model> getModels();

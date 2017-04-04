@@ -19,21 +19,23 @@
 package org.jboss.as.console.client.teiid.runtime;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+
 import org.jboss.as.console.client.Console;
-import org.jboss.as.console.client.layout.OneToOneLayout;
 import org.jboss.as.console.client.teiid.model.VDB;
+import org.jboss.as.console.client.widgets.tabs.DefaultTabLayoutPanel;
 import org.jboss.ballroom.client.widgets.forms.ComboBoxItem;
-import org.jboss.ballroom.client.widgets.forms.TextBoxItem;
 import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
 import org.jboss.ballroom.client.widgets.tables.DefaultPager;
 import org.jboss.ballroom.client.widgets.tools.ToolButton;
 import org.jboss.ballroom.client.widgets.tools.ToolStrip;
 import org.jboss.dmr.client.ModelNode;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -42,120 +44,143 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 
 import edu.ycp.cs.dh.acegwt.client.ace.AceEditor;
+import edu.ycp.cs.dh.acegwt.client.ace.AceEditorMode;
+import edu.ycp.cs.dh.acegwt.client.ace.AceEditorTheme;
 
 @SuppressWarnings("nls")
 public class SQLWorkbenchEditor {
 	private AceEditor editor;
-	private VerticalPanel resultPanel;
-	private ListDataProvider<VDB> vdbProvider = new ListDataProvider<VDB>();
-	private List<ModelNode> resultList;
+	private DefaultTabLayoutPanel resultPanelTabs;
 	private VDBPresenter presenter;
-	private List<VDB> vdblist = new LinkedList<VDB>();
-	private ComboBoxItem vdbName;
+	private ComboBoxItem vdbSelector;
 
 	public void setPresenter(VDBPresenter presenter) {
 		this.presenter = presenter;
 	}
 
 	public void setVDBList(List<VDB> vdblist) {
-		this.vdblist = vdblist;
-		vdbName.setValueMap(getVdbNames());
+		vdbSelector.setValueMap(getVdbNames(vdblist));
 	}
 
 	public Widget createWidget(VDBPresenter presenter) {
-
 		this.presenter = presenter;
 		final ToolStrip toolStrip = new ToolStrip();
 		toolStrip.addToolButtonRight(new ToolButton(Console.CONSTANTS.common_label_refresh(), new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				presenter.getVDBs();
 			}
 		}));
 
 		VerticalPanel workBenchPanel = new VerticalPanel();
-		HorizontalPanel variablePanel = new HorizontalPanel();
-
+		workBenchPanel.setBorderWidth(1);
+		workBenchPanel.setSpacing(10);
+		
+		HorizontalPanel toolbarPanel = new HorizontalPanel();
+		toolbarPanel.getElement().getStyle().setPadding(10, Style.Unit.PX);
 		Label vdbNameLabel = new Label("VDB Name");
 		vdbNameLabel.getElement().setAttribute("style",
 				"margin-top:10px;margin-bottom:10px;margin-right:10px;font-weight:bold;");
-		variablePanel.add(vdbNameLabel);
+		toolbarPanel.add(vdbNameLabel);
 
-		vdbName = new ComboBoxItem("type", "Type");
-		vdbName.setDefaultToFirstOption(true);
+		vdbSelector = new ComboBoxItem("type", "Type");
+		vdbSelector.setDefaultToFirstOption(true);
 
-		variablePanel.add(vdbName.asWidget());
-
-		Label vdbVersionLabel = new Label("VDB Version");
-		vdbVersionLabel.getElement().setAttribute("style",
-				"margin-top:10px;margin-bottom:10px;margin-right:10px;margin-left:10px;font-weight:bold;");
-		variablePanel.add(vdbVersionLabel);
-
-		TextBoxItem vdbVersion = new TextBoxItem("VDB Version", "Deployed Virtual Database Version ");
-		variablePanel.add(vdbVersion.asWidget());
+		toolbarPanel.add(vdbSelector.asWidget());
 
 		ToolButton applyBtn = new ToolButton("Run", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent arg0) {
-				String SQL = editor.getText();
-				String VDB = vdbName.getValue();
-				int VDB_Version = Integer.parseInt(vdbVersion.getValue());
-				setSqlResult(SQL, VDB, VDB_Version);
+				String sqlCommand = editor.getText();
+				String name = vdbSelector.getValue();
+				setSqlResult(sqlCommand, name);
 			}
 		});
-		variablePanel.add(applyBtn);
-		workBenchPanel.add(variablePanel);
+		toolbarPanel.add(applyBtn);
+		workBenchPanel.add(toolbarPanel);
+		workBenchPanel.setCellHeight(toolbarPanel, "50px");
 
-		Label resultLabel = new Label("Result");
-		resultLabel.getElement().setAttribute("style",
-				"margin-top:10px;margin-bottom:20px;margin-right:10px;font-weight:bold;");
-		editor = new AceEditor();
-		editor.setWidth("800px");
-		editor.setHeight("100px");
-		workBenchPanel.add(this.editor);
+		editor = new AceEditor() {
+			public native String getText() /*-{
+				var editor = this.@edu.ycp.cs.dh.acegwt.client.ace.AceEditor::editor;
+				return editor.getSelectedText();
+			}-*/;			
+		};
+		editor.setHeight("200px");	
+        editor.addAttachHandler(new AttachEvent.Handler() {
+            @Override
+            public void onAttachOrDetach(AttachEvent event) {
+                if (event.isAttached()) {
+                    Scheduler.get().scheduleDeferred(
+                            new Scheduler.ScheduledCommand() {
+                                @Override
+                                public void execute() {
+                                    editor.startEditor();                                	
+                                    editor.setAutocompleteEnabled(true);
+                                    editor.setShowGutter(true);
+                                    editor.setShowPrintMargin(false);
+                            	    editor.setMode(AceEditorMode.SQL);
+                            	    editor.setTheme(AceEditorTheme.TWILIGHT);
+                                    editor.setFontSize("11px");
+                                }
+                            }
+                    );
+                }
+            }
+        });
+		
+        HorizontalPanel editorPanel = new HorizontalPanel();
+        editorPanel.setStyleName("fill-layout-width");
+        editorPanel.add(editor);
+        
+        workBenchPanel.add(editorPanel);		
+        workBenchPanel.setCellHeight(editorPanel, "200px");
+		
+		this.resultPanelTabs = new DefaultTabLayoutPanel(40, Style.Unit.PX, true, true);
+		this.resultPanelTabs.addStyleName("default-tabpanel");
+		
+		VerticalPanel resultPanel = new VerticalPanel();
+		resultPanel.add(new HTML("<h3> No Results</h3>"));
+		this.resultPanelTabs.add(resultPanel, "No Results");
+		
+		workBenchPanel.add(this.resultPanelTabs);
 
-		editor.startEditor();
-		workBenchPanel.add(resultLabel);
-		resultPanel = new VerticalPanel();
-		resultPanel.setSize("800px", "500px");
-
-		Label resultPanelLabel = new Label("No result !");
-		resultPanelLabel.getElement().setAttribute("style", "font-size :15px;font-weight:bold;");
-		resultPanel.add(resultPanelLabel);
-		workBenchPanel.add(resultPanel);
-
-		HTML title = new HTML();
-		title.setStyleName("content-header-label");
-		title.setText("SQL");
-
-		OneToOneLayout layoutBuilder = new OneToOneLayout().setPlain(true).setTitle("SQL workbench")
-				.setHeadlineWidget(title).setDescription("Run queries against a deployed VDB. ")
-				.addDetail("SQL workbench", workBenchPanel);
-		return layoutBuilder.build();
+		return workBenchPanel.asWidget();
 	}
 
-	public void setSqlResult(String SQL, String VDB, int VDB_Version) {
-		resultPanel.clear();
-		presenter.getExecuteSQL(VDB, VDB_Version, SQL);
+	public void setSqlResult(String sqlCommand, String vdb) {
+		int index = vdb.indexOf(" version:");
+		presenter.executeQuery(vdb.substring(0, index), vdb.substring(index+9), sqlCommand, "SQLWorkbench");
 	}
 
-	public void provideAsTable(List<ModelNode> list) {
-		DefaultCellTable resultTable = VDBView.buildSQLResultTable(list);
-		final ListDataProvider<ModelNode> resultProvider = new ListDataProvider<ModelNode>();
-		resultProvider.addDataDisplay(resultTable);
-		resultProvider.setList(list);
-		DefaultPager resultTablePager = new DefaultPager();
-		resultTablePager.setDisplay(resultTable);
-		resultPanel.add(resultTable.asWidget());
-		resultPanel.add(resultTablePager);
-	}
+	public <T> void setQueryResults(List<T> results, String sql, String clazz) {
+		if (clazz.equals("SQLWorkbench")) {
+			DefaultCellTable resultTable = VDBView.buildSQLResultTable((List<ModelNode>)results);
+			
+			final ListDataProvider<ModelNode> resultProvider = new ListDataProvider<ModelNode>();
+			resultProvider.addDataDisplay(resultTable);
+			resultProvider.setList((List<ModelNode>)results);
 
-	private String[] getVdbNames() {
+			VerticalPanel resultTab = new VerticalPanel();
+			resultTab.setStyleName("fill-layout-width");
+			resultTab.setSpacing(5);
+			resultTab.add(new HTML("<h4>"+sql+"</h4>"));
+			
+	        DefaultPager resultTablePager = new DefaultPager();
+			resultTablePager.setDisplay(resultTable);
+			resultTab.add(resultTable);
+			resultTab.add(resultTablePager);
+			this.resultPanelTabs.add(resultTab, sql);
+			resultPanelTabs.selectTab(resultTab);
+		}
+	}	
+
+	private String[] getVdbNames(List<VDB> vdblist) {
 		List<String> names = new ArrayList<String>();
 		for (VDB item : vdblist) {
-			names.add(item.getName());
+			names.add(item.getName()+" version:"+item.getVersion());
 		}
 		String[] vdbNames = (String[]) names.toArray(new String[names.size()]);
 		return vdbNames;
 	}
-
 }
