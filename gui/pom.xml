@@ -12,5 +12,9 @@
     <groupId>org.jboss.teiid.web-console</groupId>
     <artifactId>teiid-console-gui</artifactId>
     <packaging>jar</packaging>
-    <version>2.8-SNAPSHOT</version>
+    <version>3.0</version>
+
+  <scm>
+    <tag>teiid-console-parent-3.0</tag>
+  </scm>
 </project>
