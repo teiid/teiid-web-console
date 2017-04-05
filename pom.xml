@@ -21,6 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Overrides to allow the release process to commit: https://jira.codehaus.org/browse/MRELEASE-812 -->
         <version.release.plugin>2.5</version.release.plugin>
+        <version.assembly.plugin>3.0.0</version.assembly.plugin>
     </properties>
 
     <scm>
