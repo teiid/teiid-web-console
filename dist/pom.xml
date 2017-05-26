@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jboss.teiid.hal</groupId>
     <artifactId>dist</artifactId>
-    <version>3.1-SNAPSHOT</version>
+    <version>3.0.1</version>
     <packaging>war</packaging>
     <name>HAL Release Stream</name>
     <description>HAL release stream master. Implements the assembly.</description>
@@ -211,4 +211,8 @@
             </properties>
         </profile>
     </profiles>
+
+  <scm>
+    <tag>teiid-console-parent-3.0.1</tag>
+  </scm>
 </project>
