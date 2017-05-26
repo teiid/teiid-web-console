@@ -55,9 +55,11 @@ public interface Model {
     public List<ValidityError> getValidityErrors();
     public void setValidityErrors(List<ValidityError> mappings);	
     
+    /*
     @Binding(detypedName="metadata")
     public String getMetadata();
     public void setMetadata(String metadata);
+    */
     
     @Binding(detypedName="metadata-type")
     public String getMetadataType();
