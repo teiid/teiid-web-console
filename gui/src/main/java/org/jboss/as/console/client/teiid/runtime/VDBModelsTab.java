@@ -1,20 +1,19 @@
 /* 
- * JBoss, Home of Professional Open Source 
- * Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors
- * as indicated by the @author tags. All rights reserved. 
- * See the copyright.txt in the distribution for a 
- * full listing of individual contributors.
+ * Copyright Red Hat, Inc. and/or its affiliates
+ * and other contributors as indicated by the @author tags and
+ * the COPYRIGHT.txt file distributed with this work.
  *
- * This copyrighted material is made available to anyone wishing to use, 
- * modify, copy, or redistribute it subject to the terms and conditions 
- * of the GNU Lesser General Public License, v. 2.1. 
- * This program is distributed in the hope that it will be useful, but WITHOUT A 
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
- * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details. 
- * You should have received a copy of the GNU Lesser General Public License, 
- * v.2.1 along with this distribution; if not, write to the Free Software 
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
- * MA  02110-1301, USA.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.jboss.as.console.client.teiid.runtime;
 
@@ -58,13 +57,34 @@ public class VDBModelsTab extends VDBProvider {
     	final ListDataProvider<ValidityError> errorProvider = new ListDataProvider<ValidityError>();
     	ListHandler<Model> sortHandler = new ListHandler<Model>(modelProvider.getList());
     	
-        final DefaultCellTable modelsTable = getModelTable(sortHandler);
+    	DefaultCellTable modelsTable = getModelTable(sortHandler);
         modelProvider.addDataDisplay(modelsTable);
         
         VDBView.onTableSectionChange(vdbTable, new TableSelectionCallback<VDB> (){
 			@Override
 			public void onSelectionChange(VDB selection) {
 				if (selection != null && !selection.getModels().isEmpty()) {
+					if (isActive(selection)) {      
+						Column<Model, String> schemaBtn = new Column<Model, String>(new ButtonCell()) {
+				            @Override
+				            public String getValue(Model record) {
+				        		return "DDL";
+				            }
+				        };
+				        schemaBtn.setFieldUpdater(new FieldUpdater<Model, String>() {
+							@Override
+							public void update(int index, Model model, String value) {
+							    showSchema(model);
+							}
+				        });
+				        modelsTable.addColumn(schemaBtn,"Schema");
+						 modelProvider.refresh();
+					}
+					else{
+						modelsTable.removeColumn(8);
+						modelProvider.refresh();
+					}
+					
 					setVdbName(selection.getName());
 					setVdbVersion(selection.getVersion());
 					modelProvider.getList().clear();
@@ -77,7 +97,7 @@ public class VDBModelsTab extends VDBProvider {
 				}
 				else {
 					setVdbName(null);
-					setVdbVersion(0);					
+					setVdbVersion("0");					
 					modelProvider.getList().clear();
 					propertyProvider.getList().clear();
 					errorProvider.getList().clear();
@@ -300,19 +320,6 @@ public class VDBModelsTab extends VDBProvider {
             }
         });        
         
-        Column<Model, String> schemaBtn = new Column<Model, String>(new ButtonCell()) {
-            @Override
-            public String getValue(Model record) {
-        		return "DDL";
-            }        	
-        };
-        schemaBtn.setFieldUpdater(new FieldUpdater<Model, String>() {
-			@Override
-			public void update(int index, Model model, String value) {
-			    showSchema(model);
-			}
-        });        
-        
         modelsTable.setTitle("Models");
         modelsTable.addColumn(nameColumn, "Name");
         modelsTable.addColumn(modelTypeColumn, "Type");
@@ -322,7 +329,6 @@ public class VDBModelsTab extends VDBProvider {
         modelsTable.addColumn(translatorNameColumn, "Translator Name");
         modelsTable.addColumn(jndiNameColumn, "Datasource JNDI Name");
         modelsTable.addColumn(schemaStatusColumn, "Schema Status");
-        modelsTable.addColumn(schemaBtn, "Schema");
         
         modelsTable.setSelectionModel(new SingleSelectionModel<Model>(keyProvider));
         
@@ -331,7 +337,6 @@ public class VDBModelsTab extends VDBProvider {
 		return modelsTable;
 	}
 
-    
     private boolean isSource(Model model) {
     	if (model.getModelType() == null || model.getModelType().equals("PHYSICAL")) {
     		return true;
@@ -360,7 +365,7 @@ public class VDBModelsTab extends VDBProvider {
 					copy.setName(m.getName());
 					copy.setModelType(m.getModelType());
 					copy.setDescription(m.getDescription());
-					copy.setMetadata(m.getMetadata());
+					//copy.setMetadata(m.getMetadata());
 					copy.setMetadataType(m.getMetadataType());
 					copy.setModelPath(m.getModelType());
 					copy.setProperties(m.getProperties());

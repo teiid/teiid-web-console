@@ -9,7 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jboss.teiid.hal</groupId>
     <artifactId>dist</artifactId>
-    <version>2.6.2-SNAPSHOT</version>
+    <version>3.0.2-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>HAL Release Stream</name>
     <description>HAL release stream master. Implements the assembly.</description>
@@ -53,7 +53,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.4</version>
+                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

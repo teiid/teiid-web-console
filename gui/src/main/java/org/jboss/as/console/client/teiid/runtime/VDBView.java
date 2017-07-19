@@ -1,20 +1,19 @@
 /* 
- * JBoss, Home of Professional Open Source 
- * Copyright 2011 Red Hat Inc. and/or its affiliates and other contributors
- * as indicated by the @author tags. All rights reserved. 
- * See the copyright.txt in the distribution for a 
- * full listing of individual contributors.
+ * Copyright Red Hat, Inc. and/or its affiliates
+ * and other contributors as indicated by the @author tags and
+ * the COPYRIGHT.txt file distributed with this work.
  *
- * This copyrighted material is made available to anyone wishing to use, 
- * modify, copy, or redistribute it subject to the terms and conditions 
- * of the GNU Lesser General Public License, v. 2.1. 
- * This program is distributed in the hope that it will be useful, but WITHOUT A 
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
- * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details. 
- * You should have received a copy of the GNU Lesser General Public License, 
- * v.2.1 along with this distribution; if not, write to the Free Software 
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
- * MA  02110-1301, USA.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.jboss.as.console.client.teiid.runtime;
 
@@ -24,10 +23,6 @@ import java.util.List;
 import org.jboss.as.console.client.Console;
 import org.jboss.as.console.client.core.SuspendableViewImpl;
 import org.jboss.as.console.client.layout.MultipleToOneLayout;
-import org.jboss.as.console.client.teiid.AuditEditor;
-import org.jboss.as.console.client.teiid.ConfigurationEditor;
-import org.jboss.as.console.client.teiid.TranslatorEditor;
-import org.jboss.as.console.client.teiid.TransportEditor;
 import org.jboss.as.console.client.teiid.model.CacheStatistics;
 import org.jboss.as.console.client.teiid.model.DataModelFactory;
 import org.jboss.as.console.client.teiid.model.EngineStatistics;
@@ -37,18 +32,19 @@ import org.jboss.as.console.client.teiid.model.Session;
 import org.jboss.as.console.client.teiid.model.VDB;
 import org.jboss.as.console.client.teiid.model.ValidityError;
 import org.jboss.as.console.client.teiid.widgets.TeiidIcons;
+import org.jboss.as.console.client.teiid.widgets.TextAreaCell;
 import org.jboss.as.console.client.widgets.pages.PagedView;
 import org.jboss.as.console.client.widgets.tabs.DefaultTabLayoutPanel;
 import org.jboss.ballroom.client.widgets.icons.Icons;
 import org.jboss.ballroom.client.widgets.tables.DefaultCellTable;
-import org.jboss.ballroom.client.widgets.tabs.FakeTabPanel;
 import org.jboss.ballroom.client.widgets.tools.ToolButton;
 import org.jboss.ballroom.client.widgets.tools.ToolStrip;
+import org.jboss.dmr.client.ModelNode;
+import org.jboss.gwt.circuit.Dispatcher;
 
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.ImageResourceCell;
-import com.google.gwt.cell.client.NumberCell;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -58,13 +54,13 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.google.inject.Inject;
 
 @SuppressWarnings("nls")
 public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView {
@@ -77,7 +73,14 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 	private VDBCachingTab vdbCachingTab;
 	private DataModelFactory factory;
 	private TeiidMetricsEditor metricsEditor;
-
+	private SQLWorkbenchEditor sqlWorkbenchEditor;
+	private Dispatcher circuit;
+	
+    @Inject
+    public VDBView(Dispatcher circuit) {
+        this.circuit = circuit;
+    }	
+	
 	public void setDataModelFactory(DataModelFactory factory) {
 		this.factory = factory;					
 	}
@@ -88,9 +91,11 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 			this.vdbProvider.getList().clear();
 			this.vdbProvider.getList().addAll(vdbs);
 	        this.vdbTable.getSelectionModel().setSelected(vdbs.get(0), true);
+	        sqlWorkbenchEditor.setVDBList(vdbs);
 		}
 		else {
 			this.vdbProvider.getList().clear();
+			sqlWorkbenchEditor.setVDBList(vdbs);
 		}
 	}
 	
@@ -128,9 +133,11 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
         PagedView pages = new PagedView(true);
         
         this.metricsEditor = new TeiidMetricsEditor();
+        this.sqlWorkbenchEditor = new SQLWorkbenchEditor();
         
 		pages.addPage("Virtual Databases", mainPageAsWidget());
 		pages.addPage("Metrics", this.metricsEditor.createWidget());
+		pages.addPage("SQL Workbench", this.sqlWorkbenchEditor.createWidget(presenter));
 
 		// default page
 		pages.showPage(0);
@@ -178,10 +185,9 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 			}
 		});		
 
-		Column<VDB, Number> versionColumn = new Column<VDB, Number>(
-				new NumberCell()) {
+		TextColumn<VDB> versionColumn = new TextColumn<VDB>() {
 			@Override
-			public Number getValue(VDB vdb) {
+			public String getValue(VDB vdb) {
 				return vdb.getVersion();
 			}
 		};
@@ -340,7 +346,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 				return record.getPath();
 			}
 		};
-		TextColumn<ValidityError> errorMsg = new TextColumn<ValidityError>() {
+		Column<ValidityError, String> errorMsg = new Column<ValidityError, String>(new TextAreaCell()) {
 			@Override
 			public String getValue(ValidityError record) {
 				return record.getMessage();
@@ -353,6 +359,25 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 		errors.setSelectionModel(new SingleSelectionModel<ValidityError>(keyProvider));
 		return errors;
 	}
+	
+	static DefaultCellTable<ModelNode> buildSQLResultTable( List<ModelNode> list) {
+		DefaultCellTable<ModelNode> result = new DefaultCellTable<ModelNode>(8);
+		result.setTitle("SQL Result");
+		Object[] attributes = list.get(0).keys().toArray();
+		
+		for(int i = 0;i<attributes.length;i++) {
+			String name = attributes[i].toString();
+			TextColumn<ModelNode> modelPath = new TextColumn<ModelNode>() {
+				@Override
+				public String getValue(ModelNode record) {
+					return record.get(name).asString();
+				}
+			};
+			result.addColumn(modelPath, name);
+		}
+		return result;
+	}
+	
 	
 	static DefaultCellTable<KeyValuePair> buildPropertiesTable() {
 		ProvidesKey<KeyValuePair> keyProvider = new ProvidesKey<KeyValuePair>() {
@@ -393,16 +418,18 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 	}
 
 	@Override
-	public void setVDBSessions(String vdbName, int version, List<Session> sessions) {
+	public void setVDBSessions(String vdbName, String version, List<Session> sessions) {
 		this.vdbSessionsTab.setSessions(sessions);
 	}
 
 	@Override
-	public <T> void setQueryResults(List<T> results, String clazz) {
+	public <T> void setQueryResults(List<T> results, String sql, String clazz) {
 		this.vdbCachingTab.setQueryResults(results, clazz);
+		this.sqlWorkbenchEditor.setQueryResults(results, sql, clazz);
 	}
 	
-	public void connectionTypeChanged(String vdbName, int version) {
+	@Override
+	public void connectionTypeChanged(String vdbName, String version) {
 		this.presenter.refresh(false);
 	}
 	
@@ -411,7 +438,7 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
 	}
 
 	@Override
-	public void vdbReloaded(String vdbName, int version) {
+	public void vdbReloaded(String vdbName, String version) {
 		this.presenter.refresh(false);
 	}
 
@@ -428,5 +455,5 @@ public class VDBView extends SuspendableViewImpl implements VDBPresenter.MyView 
     @Override
     public void setEngineStatistics(EngineStatistics stats) {
         this.metricsEditor.setEngineStatistics(stats);
-    }	
+    }
 }
