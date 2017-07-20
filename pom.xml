@@ -7,7 +7,7 @@
     
     <modelVersion>4.0.0</modelVersion>
     <name>Teiid Console :: Parent</name>
-    <groupId>org.jboss.teiid.web-console</groupId>
+    <groupId>org.teiid.web-console</groupId>
     <artifactId>teiid-console-parent</artifactId>
     <version>3.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -57,19 +57,51 @@
             <timezone>-6</timezone>
         </developer>
     </developers>
-    <profiles>
-        <profile>
-            <id>release</id>
-            <properties>
-                <maven.javadoc.skip>true</maven.javadoc.skip>
-            </properties>
+    
+	<profiles>
+		<profile>
+			<id>final-release</id>
             <modules>
                 <module>gui</module>
                 <module>app</module>
                 <module>dist</module>
-            </modules>
-        </profile>
-    </profiles>
+            </modules>			
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.10.4</version>
+						<configuration>
+							<maxmemory>512m</maxmemory>
+							<failOnError>false</failOnError>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
     <modules>
         <module>gui</module>
         <module>app</module>
