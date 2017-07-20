@@ -9,7 +9,7 @@
     
     <modelVersion>4.0.0</modelVersion>
     <name>Teiid Console :: Webapp</name>
-    <groupId>org.jboss.teiid.web-console</groupId>
+    <groupId>org.teiid.web-console</groupId>
     <artifactId>teiid-console-app</artifactId>
     <packaging>war</packaging>
     <version>3.0.2-SNAPSHOT</version>
@@ -21,12 +21,12 @@
             <artifactId>jboss-as-console-core</artifactId>
         </dependency>    
         <dependency>
-            <groupId>org.jboss.teiid.web-console</groupId>
+            <groupId>org.teiid.web-console</groupId>
             <artifactId>teiid-console-gui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jboss.teiid.web-console</groupId>
+            <groupId>org.teiid.web-console</groupId>
             <artifactId>teiid-console-gui</artifactId>
             <version>${project.version}</version>
             <classifier>sources</classifier>

@@ -7,7 +7,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.jboss.teiid.hal</groupId>
+    <groupId>org.teiid.hal</groupId>
     <artifactId>dist</artifactId>
     <version>3.0.2-SNAPSHOT</version>
     <packaging>war</packaging>
@@ -32,13 +32,13 @@
             <artifactId>jboss-as-console-core</artifactId>
         </dependency>     
         <dependency>
-            <groupId>org.jboss.teiid.web-console</groupId>
+            <groupId>org.teiid.web-console</groupId>
             <artifactId>teiid-console-gui</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.jboss.teiid.web-console</groupId>
+            <groupId>org.teiid.web-console</groupId>
             <artifactId>teiid-console-gui</artifactId>
             <version>${project.version}</version>
             <classifier>sources</classifier>

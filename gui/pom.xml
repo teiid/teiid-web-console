@@ -9,7 +9,7 @@
         
     <modelVersion>4.0.0</modelVersion>
     <name>Teiid Console :: GUI</name>
-    <groupId>org.jboss.teiid.web-console</groupId>
+    <groupId>org.teiid.web-console</groupId>
     <artifactId>teiid-console-gui</artifactId>
     <packaging>jar</packaging>
     <version>3.0.2-SNAPSHOT</version>
