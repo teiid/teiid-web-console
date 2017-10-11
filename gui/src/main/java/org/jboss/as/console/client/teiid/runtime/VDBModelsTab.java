@@ -360,7 +360,7 @@ public class VDBModelsTab extends VDBProvider {
 					copy.setName(m.getName());
 					copy.setModelType(m.getModelType());
 					copy.setDescription(m.getDescription());
-					copy.setMetadata(m.getMetadata());
+					//copy.setMetadata(m.getMetadata());
 					copy.setMetadataType(m.getMetadataType());
 					copy.setModelPath(m.getModelType());
 					copy.setProperties(m.getProperties());
