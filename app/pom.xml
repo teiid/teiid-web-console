@@ -94,7 +94,7 @@
                         <configuration>
                             <processSourceArtifacts>
                                 <processSourceArtifact>org.jboss.as:jboss-as-console-core:sources</processSourceArtifact>
-                                <processSourceArtifact>org.jboss.teiid.web-console:teiid-console-gui:sources</processSourceArtifact>
+                                <processSourceArtifact>org.teiid.web-console:teiid-console-gui:sources</processSourceArtifact>
                             </processSourceArtifacts>
                         </configuration>
                     </execution>

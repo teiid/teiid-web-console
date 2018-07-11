@@ -77,8 +77,11 @@ public class VDBModelsTab extends VDBProvider {
 							    showSchema(model);
 							}
 				        });
+				        if (modelsTable.getColumnCount() > 8) {
+				        	modelsTable.removeColumn(8);
+				        }
 				        modelsTable.addColumn(schemaBtn,"Schema");
-						 modelProvider.refresh();
+						modelProvider.refresh();
 					}
 					else{
 						modelsTable.removeColumn(8);
