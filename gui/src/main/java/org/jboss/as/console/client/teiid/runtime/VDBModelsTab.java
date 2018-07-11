@@ -65,6 +65,29 @@ public class VDBModelsTab extends VDBProvider {
 			@Override
 			public void onSelectionChange(VDB selection) {
 				if (selection != null && !selection.getModels().isEmpty()) {
+					if (isActive(selection)) {      
+						Column<Model, String> schemaBtn = new Column<Model, String>(new ButtonCell()) {
+				            @Override
+				            public String getValue(Model record) {
+				        		return "DDL";
+				            }
+				        };
+				        schemaBtn.setFieldUpdater(new FieldUpdater<Model, String>() {
+							@Override
+							public void update(int index, Model model, String value) {
+							    showSchema(model);
+							}
+				        });
+				        if (modelsTable.getColumnCount() > 8) {
+				        	modelsTable.removeColumn(8);
+				        }
+				        modelsTable.addColumn(schemaBtn,"Schema");
+						modelProvider.refresh();
+					}
+					else{
+						modelsTable.removeColumn(8);
+						modelProvider.refresh();
+					}					
 					setVdbName(selection.getName());
 					setVdbVersion(selection.getVersion());
 					modelProvider.getList().clear();
