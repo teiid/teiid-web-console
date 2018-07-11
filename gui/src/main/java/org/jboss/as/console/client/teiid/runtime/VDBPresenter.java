@@ -144,7 +144,8 @@ public class VDBPresenter extends
         ModelNode operation = new ModelNode();
         operation.get(OP).set("list-vdbs");
         operation.get(ADDRESS).set(address);
-
+        operation.get("include-schema").set(new ModelNode().set(false));
+        
         dispatcher.execute(new DMRAction(operation), new SimpleCallback<DMRResponse>() {
             @Override
             public void onSuccess(DMRResponse result) {
