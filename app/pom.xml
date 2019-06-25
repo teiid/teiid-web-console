@@ -32,8 +32,31 @@
             <classifier>sources</classifier>
         </dependency>
     </dependencies>
+    
+    <distributionManagement>
+        <repository>
+            <id>oss.sonatype.org</id>
+            <name>oss.sonatype.org</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>oss.sonatype.org</id>
+            <name>oss.sonatype.org</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.8</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        
         <plugins>
 		  <plugin>
 		    <groupId>org.codehaus.mojo</groupId>
@@ -99,7 +122,17 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>            
+            </plugin>
+            <plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<serverId>oss.sonatype.org</serverId>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>            
         </plugins>
     </build>
 </project>
